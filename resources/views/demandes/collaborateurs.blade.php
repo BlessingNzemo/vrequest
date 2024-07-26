@@ -49,7 +49,7 @@
                         Date et Heure de deplacement
                     </th> --}}
 
-                    {{-- <th scope="col" class="px-6 py-3">
+                     <th scope="col" class="px-6 py-3">
                         Nbr de passagers
                     </th>
                     <th scope="col" class="px-6 py-3">
@@ -57,7 +57,7 @@
                     </th>
                     <th scope="col" class="px-6 py-3">
                         Traitement
-                    </th> --}}
+                    </th> 
                     
                     <th scope="col" class="px-6 py-3">
                         Action
@@ -94,29 +94,30 @@
                             {{ $item->date_deplacement }}
 
                         </td>
+                        --}}
                         <td class="px-6 py-4">
                             {{ $item->nbre_passagers }}
 
-                        </td> --}}
-                        {{-- <td class="px-6 py-4">
+                        </td> 
+                        <td class="px-6 py-4">
                             @if($item->is_validated == 0)
-                                {{ __("En attente") }}
+                            En attente
                             @elseif($item->is_validated == 1)
-                                {{ __("Validée") }}
+                            Validée
                             @else
-                                {{ __("Annulée") }}   
+                            Annulée
                             @endif
-                            {{-- {{$item->is_validated}} 
-                        </td>--}}
-                        {{-- <td class="px-6 py-4">
+                            
+                        </td>
+                        <td class="px-6 py-4">
                             @if($item->status == 1)
-                                {{ __("Traitée") }}
+                            Traitée
                             @elseif($item->status == 2)
-                                {{ __("Annulée") }}
+                            Annulée
                             @else
-                                {{ __("En attente") }}
+                            En attente
                             @endif
-                        </td> --}} 
+                        </td> 
 
                         <td>
                             <button id="dropdownMenuIconButton" data-dropdown-toggle="dropdownDots{{$i}}" class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button">
@@ -173,7 +174,7 @@
         </table>
     </div>
     <x-deleteDemande :message="__('Voulez-vous vraiment supprimer cette demande ?')" />
-    <x-savecourse :demandes="$demandes" :vehicules="$vehicules" :chauffeurs="$chauffeurs"  :message="__('Voulez-vous enregistrer une course ?')" />
+   
     <script>
         function editdemande(event, demandeId) {
             event.preventDefault();

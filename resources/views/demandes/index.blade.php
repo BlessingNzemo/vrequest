@@ -51,28 +51,27 @@
                     <th scope="col" class="px-6 my-6 py-4">
                         Date
                     </th>
-                    {{-- <th scope="col" class="px-6 py-3">
-                        Ticket
-                    </th> --}}
+                    
                     <th scope="col" class="px-6 py-3">
                         Motifs
                     </th>
-                    {{-- <th scope="col" class="px-6 py-3">
+                     <th scope="col" class="px-6 py-3">
                         Lieu de depart
-                    </th> --}}
+                    </th> 
                     <th scope="col" class="px-6 py-3">
                         Destination
                     </th>
-                    {{-- <th scope="col" class="px-6 py-3">
+                     <th scope="col" class="px-6 py-3">
                         Date et Heure de deplacement
-                    </th> --}}
+                    </th> 
 
-                    {{-- <th scope="col" class="px-6 py-3">
+                     <th scope="col" class="px-6 py-3">
                         Nbr de passagers
                     </th>
-                    <th scope="col" class="px-6 py-3">
+                    
+                     <th scope="col" class="px-6 py-3">
                         Statut
-                    </th> --}}
+                    </th>
 
                     <th scope="col" class="px-6 py-3">
                         Action
@@ -83,7 +82,7 @@
             </thead>
             <tbody>
 
-                @foreach ($demandes->sortByDesc('id') as $i => $item)
+                @foreach ($demandes as $i => $item)
                     <tr class="bg-white border rounded-lg dark:bg-gray-800 ">
                         <td scope="row"
                             class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -96,25 +95,31 @@
                         <td class="px-6 py-4 ">
                             {{ $item->motif }}
                         </td>
-                        {{-- <td class="px-6 py-4">
+                        <td class="px-6 py-4">
                             {{ $item->lieu_depart }}
-                        </td> --}}
+                        </td> 
                         <td class="px-6 py-4 ">
                             {{ $item->destination }}
                         </td>
 
-                        {{-- <td class="px-6 py-4">
+                        <td class="px-6 py-4">
                             {{ $item->date_deplacement }}
-
-                        </td> --}}
-                        {{-- <td class="px-6 py-4">
-                            {{ $item->nbre_passagers }}
 
                         </td>
                         <td class="px-6 py-4">
-                            {{ $item->status }}
+                            {{ $item->nbre_passagers }}
 
-                        </td> --}}
+                        </td>
+                     
+                       <td class="px-6 py-4">
+                        @if ( $item->status ==0)
+                            en attente
+                        @endif
+                        @if ( $item->status ==1)
+                            traitée
+                        @endif
+                       
+                    </td> 
 
                         <td>
                             <button id="dropdownMenuIconButton" data-dropdown-toggle="dropdownDots{{ $i }}"
@@ -152,7 +157,7 @@
                                         @if (Session::get('authUser')->hasRole('charroi'))
                                             @if ( ($item->is_validated == 1)  && ($item->status == 0))
                                                 <li>
-                                                    <a onclick="editdemande(event, {{ $item->id }});"
+                                                     <a  onclick="editdemande(event, {{ $item->id }});" 
                                                         data-modal-target="crud-modal" data-modal-toggle="crud-modal"
                                                         class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Traiter</a>
                                                 </li>
@@ -224,13 +229,15 @@
             form = document.querySelector('#crud-modal div div form div div #demande_id');
             value = form.getAttribute('value');
             form.setAttribute('value', demandeId);
-            console.log(value);
-
+            //console.log(value);
+            /*var nombre_passagers = event.target.getAttribute('href')
+            console.log("nombre_passagers", nombre_passagers)
+            document.cookie = "name = " + nombre_passagers;
+            */
+            
+            
             
         }
     </script>
-
-
-
-
 </x-app-layout>
+

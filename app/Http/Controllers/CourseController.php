@@ -50,6 +50,7 @@ class CourseController extends Controller
         $chauffeurs = Course::where('chauffeur_id',$request->chauffeur_id)->get();
         $date =  date("Y-m-d", strtotime($demande->date_deplacement));
         $time = date("H", strtotime($date));
+        $nombre_passagers = $demande->nbre_passagers;
       
         foreach ($courses as $course) {
             $time_course [] = date("H", strtotime($course->date));
@@ -79,6 +80,10 @@ class CourseController extends Controller
                     return back()->with('success', 'course non traité le chauffeur sera occupé à cette heure');
                 }
             }
+        }
+
+        if($vehicule->capacite<$nombre_passagers){
+            return back()->with('success', 'course non traité car le nombre des passagers depasse la capacité du véhicule');
         }
     
         

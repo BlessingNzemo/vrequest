@@ -32,7 +32,7 @@ class DemandeController extends Controller
         if(Session::get('authUser')->hasRole('charroi')){
             $demandes = Demande::where('is_validated',1)->paginate(10);
             $vehicules = Vehicule::where('disponibilite',0)->get();
-            $demandes = Demande::where('is_validated',1)->paginate(10);
+            $demandes = Demande::where('is_validated',1)->orderBy('id', 'desc')->paginate(10);
             $demandes_validees = $demandes;
             $demandes_traitees = Demande :: where('status',1)->get();
             $demandes_en_attente = Demande :: where('status',0)->get();
@@ -43,9 +43,8 @@ class DemandeController extends Controller
             return view('demandes.index', compact('demandes','chauffeurs','vehicules'));
         }
         $user_id = Session::get('authUser')->id;
-        $demandes = Demande::Where('user_id',$user_id)->paginate(10);
-       
-        $demandes = Demande::Where('user_id',$user_id)->paginate(10);
+        $demandes = Demande::Where('user_id',$user_id)->orderBy('id', 'desc')->paginate(10);
+        
         $demandes_validees = Demande :: where('is_validated',1)->get();
         $demandes_traitees = Demande :: where('status',1)->get();
         // $demandes_en_attente = Demande :: where('')
@@ -279,12 +278,9 @@ class DemandeController extends Controller
         }
      
       $demandes = DB::table('demandes')
-           ->whereIn('user_id', $id)
-           ->get();
-        
-        $vehicules = Vehicule::all();
-        $chauffeurs = Chauffeur::where('status',1)->get();
-        return view('demandes.collaborateurs', compact('demandes','chauffeurs','vehicules'));
+           ->whereIn('user_id', $id)->orderBy('id', 'desc')->paginate(10);
+      
+        return view('demandes.collaborateurs', compact('demandes'));
     }
     
        
