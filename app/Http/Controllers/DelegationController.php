@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
+use Exception;
 use App\Models\User;
 use App\Models\Delegation;
+use App\Notifications\UserDelegueNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -60,7 +62,7 @@ class DelegationController extends Controller
         // dd($user);
         $user_id = $user -> id;
         // dd($user_id);
-        Delegation::create([
+        $delegation =Delegation::create([
             'motif' =>  $request->motif,
             'user_id' => $user_id,
             'manager_id' => $manager_id,
@@ -68,6 +70,22 @@ class DelegationController extends Controller
             'date_fin' => $request->date_fin,
         ]);
 
+        //Envoyer un mail au user qu'on veut déléguer
+
+        $data =(object)[
+            'id' => $delegation -> id ,
+            'subject' => 'Nouvelle Délégation',
+            'name' => $user -> username,
+            'Motif' => $delegation ->motif
+        ];
+        
+        try{
+            $user -> notify(new UserDelegueNotification($data));
+        }
+        catch(Exception $e){
+            //print($e);
+        }
+        // dd($delegation);
         
         return redirect()->route("delegations.index");
     }
@@ -105,20 +123,7 @@ class DelegationController extends Controller
         return back()->with('success', 'délégation supprimée');
     }
 
-    public function selectSearchUser(Request $request){
-        
-        $users = [];
-        
-        if($request -> has('q')){
-            $search = $request -> q;
-            $users = User::select("id","username")
-                    ->where('username','LIKE',"%$search%")
-                    ->get();
-        }
-
-        return response()->json($users);
-
-    }
+    
 }
 
 

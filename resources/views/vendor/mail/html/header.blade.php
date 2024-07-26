@@ -2,8 +2,8 @@
 <tr>
 <td class="header">
 <a href="{{ $url }}" style="display: inline-block;">
-@if (trim($slot) === 'Laravel')
-<img src="orange.png" class="logo" alt="Laravel Logo">
+@if (trim($slot) === env('APP_NAME'))
+<img src="https://prestigesmedia.com/wp-content/uploads/2021/08/orange-840x430-1.png" class="logo" alt="Laravel Logo">
 @else
 {{ $slot }}
 @endif
