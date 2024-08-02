@@ -8,6 +8,17 @@
     <link rel="shortcut icon" href="{{ asset('img/orange.png') }}" type="image/x-icon">
 
     <title>{{ $title ?? 'Projet' }}</title>
+    <style>
+        .icon {
+            font-size: 32px;
+            color: black;
+            transition: color 0.3s ease;
+        }
+
+        .icon.white {
+            color: white;
+        }
+    </style>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -20,24 +31,27 @@
 
     <!-- Link data Tables -->
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css">
-    
+
     <!-- jquery-->
     <link rel="stylesheet" href="jquery.typeahead.css">
-    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+        crossorigin="anonymous"></script>
 
-     <!-- scripts data Tables -->
-     <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
+    <!-- scripts data Tables -->
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
 
     <!--scripts openStreetmap-->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
+    <script src="../path/to/flowbite/dist/flowbite.min.js"></script>
+
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="font-sans antialiased">
-    <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+<body class=" bg-gradient-to-r from-green-50 to-orange-50 font-sans antialiased">
+    <div class="min-h-screen  dark:bg-gray-900">
         @include('layouts.navigation')
         <div class="p-4 sm:ml-64 mt-10">
 
