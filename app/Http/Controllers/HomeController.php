@@ -30,16 +30,16 @@ class HomeController extends Controller
         }else{
             $user_id = Session::get('authUser')->id;
             $demandes = Demande::where('user_id',$user_id);
-            //dd($demandes);
+         
             $demandes_validees = $demandes->where('is_validated',1)->get();
             $courses = Course::leftJoin('demandes','demandes.id','courses.demande_id')  
                                 ->where('demandes.user_id',$user_id)
                                 ->where('chauffeur_id',$user_id);
         }
-
+       
         $demandes_traitees = $demandes->where('status',1)->get();
-        $demandes_en_attente = $demandes->where('status',0)->get();
-
+        $demandes_en_attente =Demande::where('status',0)->get();
+       
 
         $courses_en_attente = $courses->where('demandes.status',0)->get();
         $courses_en_cours = $courses->where('demandes.status',0) ->get();
