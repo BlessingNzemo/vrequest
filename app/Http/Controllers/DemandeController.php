@@ -29,6 +29,8 @@ class DemandeController extends Controller
      */
     public function index()
     {
+      
+        
         if(Session::get('authUser')->hasRole('charroi')){
             $demandes = Demande::where('is_validated',1)->paginate(10);
             $vehicules = Vehicule::where('disponibilite',0)->get();
