@@ -96,11 +96,11 @@
                         <td class="px-6 py-4 ">
                             {{ $item->motif }}
                         </td>
-                        {{-- <td class="px-6 py-4">
-                            {{ $item->lieu_depart }}
-                        </td> --}}
+                        <td class="px-6 py-4">
+                            {{ substr($item->lieu_depart, 0, 50) }}
+                        </td> 
                         <td class="px-6 py-4 ">
-                            {{ $item->destination }}
+                            {{ substr($item->destination, 0, 50) }}
                         </td>
 
                         {{-- <td class="px-6 py-4">
