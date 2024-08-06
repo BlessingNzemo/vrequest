@@ -118,6 +118,9 @@
                         @if ( $item->status ==1)
                             traitée
                         @endif
+                        @if ( $item->status ==2)
+                        rejetée
+                    @endif
                        
                     </td> 
 
