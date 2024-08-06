@@ -19,3 +19,4 @@ yarn-error.log
 /.idea
 /.vscode
 /serveurSocket/node_modules
+server/node_modules
