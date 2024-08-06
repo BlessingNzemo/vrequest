@@ -51,28 +51,28 @@
                     <th scope="col" class="px-6 my-6 py-4">
                         Date
                     </th>
-                    {{-- <th scope="col" class="px-6 py-3">
-                        Ticket
-                    </th> --}}
+                    <th scope="col" class="px-6 py-3">
+                        Tiket
+                    </th>
                     <th scope="col" class="px-6 py-3">
                         Motifs
                     </th>
-                    {{-- <th scope="col" class="px-6 py-3">
+                    <th scope="col" class="px-6 py-3">
                         Lieu de depart
-                    </th> --}}
+                    </th>
                     <th scope="col" class="px-6 py-3">
                         Destination
                     </th>
-                    {{-- <th scope="col" class="px-6 py-3">
+                    <th scope="col" class="px-6 py-3">
                         Date et Heure de deplacement
-                    </th> --}}
+                    </th>
 
-                    {{-- <th scope="col" class="px-6 py-3">
+                    <th scope="col" class="px-6 py-3">
                         Nbr de passagers
                     </th>
                     <th scope="col" class="px-6 py-3">
                         Statut
-                    </th> --}}
+                    </th>
 
                     <th scope="col" class="px-6 py-3">
                         Action

@@ -13,15 +13,15 @@ class DelegationController extends Controller
     public function index()
    {
     if(Session::get('authUser')){
+     
         $manager_id = Session::get('authUser')->id; 
-        // dd($manager_id);
-
+        
         $delegations= Delegation::leftJoin('users','users.id','delegations.manager_id')  
                                     ->where('delegations.manager_id',$manager_id)
                                     ->get();
         
     }
-    // dd($delegations);
+   
     return view ('delegations.index',compact('delegations'));
    }
    public function create()
@@ -51,7 +51,7 @@ class DelegationController extends Controller
         $request->validate([
             'date_debut' => 'required|after:today',
             'date_fin' => 'required|after:date_debut',
-            'user_id' => 'required|different:'. $manager_id 
+            'user_id' => 'required|different:manager_id'
         ]);
         
         

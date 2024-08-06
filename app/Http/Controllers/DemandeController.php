@@ -126,7 +126,9 @@ class DemandeController extends Controller
             'is_validated' => $is_validated,
             'manager_id'=> $manager_id
         ]);
-
+            $demandes->manager_id = $manager_id;
+            $demandes->update();
+            // dd($demandes);
     //CODE POUR ENVOYER UN MAIL AU MANAGER DE L'AGENT QUI SOUMET SA DEMANDE
         
         //Récupération du manager
@@ -136,7 +138,7 @@ class DemandeController extends Controller
         $user_info=UserInfo::where('user_id',$user_id)->first();
         $email_manager=$user_info->email_manager;
         $manager=User::where('email',$email_manager)->first();
-        dd($manager);
+        // dd($manager);
 
         // Données à envoyer
         $data =(object)[
@@ -151,7 +153,7 @@ class DemandeController extends Controller
         catch(Exception $e){
             // print($e);
         }
-        // dd($demande);
+        dd($demande);
           
         return redirect()->route('demandes.index');
     }
@@ -287,10 +289,10 @@ class DemandeController extends Controller
         if(Session::get('userIsManager')){
             $email_manager = Session::get('userIsManager')->email_manager;
         
-        $collaborateurs = Session::get('userIsManager')::where('email_manager',$email_manager)->get();
-        foreach($collaborateurs as $collaborateur){
-            $id[] = $collaborateur->user_id;
-            }
+            $collaborateurs = Session::get('userIsManager')::where('email_manager',$email_manager)->get();
+            foreach($collaborateurs as $collaborateur){
+                $id[] = $collaborateur->user_id;
+                }
      
         $demandes = DB::table('demandes')
             ->whereIn('user_id', $id)->orderBy('id', 'desc')->paginate(10);
@@ -299,9 +301,11 @@ class DemandeController extends Controller
         }
         
         if(Session::get('delegation')){
-            $demandes = DB::table('demandes')
-            ->whereIn('manager', Session::get('delegation'))->orderBy('id', 'desc')->paginate(10);
-      
+            $managers_id =Session::get('delegation');
+            foreach($managers_id as $manager_id){
+                $demandes =Demande::where('manager_id', $manager_id)->orderBy('id', 'desc')->paginate(10);
+            }
+            
         return view('demandes.collaborateurs', compact('demandes')); 
         }
     }
