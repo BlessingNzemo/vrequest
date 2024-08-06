@@ -21,7 +21,7 @@ class MessageResource extends JsonResource
             'user' => [
                 'id' => $this->resource->user->id,
                 'prenom' => $this->resource->user->first_name,
-                'name' => $this->resource->user->username,
+                'username' => $this->resource->user->username,
                 'postnom' => $this->resource->user->last_name,
                 'email' => $this->resource->user->email,
                 'telephone' => $this->resource->user->phone,
