@@ -103,18 +103,27 @@
                             {{ substr($item->destination, 0, 50) }}
                         </td>
 
-                        {{-- <td class="px-6 py-4">
+                        <td class="px-6 py-4">
                             {{ $item->date_deplacement }}
 
-                        </td> --}}
-                        {{-- <td class="px-6 py-4">
-                            {{ $item->nbre_passagers }}
-
-                        </td>
+                        </td> 
                         <td class="px-6 py-4">
-                            {{ $item->status }}
+                            {{ $item->nbre_passagers}}  
+                        </td>
 
-                        </td> --}}
+                       <td class="px-6 py-4">
+                        @if ( $item->status ==0)
+                            en attente
+                        @endif
+                        @if ( $item->status ==1)
+                            traitée
+                        @endif
+                        @if ( $item->status ==2)
+                            rejetée
+                        @endif
+                       
+                        </td> 
+
 
                         <td>
                             <button id="dropdownMenuIconButton" data-dropdown-toggle="dropdownDots{{ $i }}"
