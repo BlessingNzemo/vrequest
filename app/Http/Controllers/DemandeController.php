@@ -129,7 +129,7 @@ class DemandeController extends Controller
         $email_manager=$user_info->email_manager;
         $manager=User::where('email',$email_manager)->first();
         // dd($manager);
-
+        // dd(env('MAIL_FROM_ADDRESS'));
         // Données à envoyer
         $data =(object)[
             'id' => $demande->id ,

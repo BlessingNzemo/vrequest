@@ -75,7 +75,13 @@
                                                 </svg>
                                                 <div
                                                     class="bg-green-500 rounded-full h-6 px-2 flex justify-demandes-center text-white font-semibold text-sm">
-                                                    <span class="flex demandes-center">30%</span>
+                                                    <span id="span1" class="flex demandes-center">
+                                                        @if ($demandes_total==0)
+                                                            0
+                                                        @else
+                                                        {{number_format(($demandes_traitees/$demandes_total)*100,0)}}
+                                                        @endif
+                                                    </span>%
                                                 </div>
                                             </div>
                                             <div class="ml-2 w-full flex-1">
@@ -99,7 +105,13 @@
                                                 </svg>
                                                 <div
                                                     class="bg-red-500 rounded-full h-6 px-2 flex justify-demandes-center text-white font-semibold text-sm">
-                                                    <span class="flex demandes-center">30%</span>
+                                                    <span id="span2" class="flex demandes-center">
+                                                        @if ($demandes_total==0)
+                                                            0
+                                                        @else
+                                                           {{number_format(($demandes_rejetees/$demandes_total)*100,0)}}
+                                                        @endif
+                                                    </span>%
                                                 </div>
                                             </div>
                                             <div class="ml-2 w-full flex-1">
@@ -126,7 +138,13 @@
                                                 </svg>
                                                 <div
                                                     class="bg-yellow-500 rounded-full h-6 px-2 flex justify-demandes-center text-white font-semibold text-sm">
-                                                    <span class="flex demandes-center">30%</span>
+                                                    <span id="span3" class="flex demandes-center">
+                                                        @if ($demandes_total==0)
+                                                            0
+                                                        @else
+                                                            {{number_format(($demandes_en_attente/$demandes_total)*100,0)}}
+                                                        @endif
+                                                    </span>%
                                                 </div>
                                             </div>
                                             <div class="ml-2 w-full flex-1">
@@ -150,7 +168,17 @@
                                                 </svg>
                                                 <div
                                                     class="bg-blue-500 rounded-full h-6 px-2 flex justify-demandes-center text-white font-semibold text-sm">
-                                                    <span class="flex demandes-center">30%</span>
+                                                    <span id="span4" class="flex demandes-center">
+                                                        @if ($courses_total==0)
+                                                            0
+                                                        
+                                                            
+                                                        @else
+
+                                                            {{number_format(($courses_en_attente/$courses_total)*100,0)}}
+                                                        
+                                                        @endif
+                                                    </span>%
                                                 </div>
                                             </div>
                                             <div class="ml-2 w-full flex-1">
@@ -323,8 +351,10 @@
     </script>
     <script>
         var chart = document.querySelector('#chartpie')
+        
         var options = {
-            series: [44, 55, 67, 83],
+            
+            series: [document.querySelector('#span4').textContent,  document.querySelector('#span1').textContent, document.querySelector('#span3').textContent, document.querySelector('#span2').textContent],
             chart: {
                 height: 350,
                 type: 'radialBar',
@@ -350,10 +380,11 @@
                     }
                 }
             },
-          
+            labels: ['Courses en attentes', 'Demande traitées', 'Demandes en attentes', 'Demandes rejetees'],
         };
         var chart = new ApexCharts(chart, options);
         chart.render();
+      
     </script>
 
 
