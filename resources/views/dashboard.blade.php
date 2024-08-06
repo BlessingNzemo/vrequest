@@ -80,7 +80,7 @@
                                             </div>
                                             <div class="ml-2 w-full flex-1">
                                                 <div>
-                                                    <div class="mt-3 text-3xl font-bold leading-8">{{$demandes_traitees->count()}}</div>
+                                                    <div class="mt-3 text-3xl font-bold leading-8">{{$demandes_traitees}}</div>
 
                                                     <div class="mt-1 text-base text-gray-600">Demandes Traitée</div>
                                                 </div>
@@ -104,7 +104,7 @@
                                             </div>
                                             <div class="ml-2 w-full flex-1">
                                                 <div>
-                                                    <div class="mt-3 text-3xl font-bold leading-8">{{$demandes_rejetees->count()}}</div>
+                                                    <div class="mt-3 text-3xl font-bold leading-8">{{$demandes_rejetees}}</div>
 
                                                     <div class="mt-1 text-base text-gray-600">Demandes rejetée</div>
                                                 </div>
@@ -131,7 +131,7 @@
                                             </div>
                                             <div class="ml-2 w-full flex-1">
                                                 <div>
-                                                    <div class="mt-3 text-3xl font-bold leading-8">{{  $demandes_en_attente->count()}}</div>
+                                                    <div class="mt-3 text-3xl font-bold leading-8">{{  $demandes_en_attente}}</div>
 
                                                     <div class="mt-1 text-base text-gray-600">Demandes en attente</div>
                                                 </div>
@@ -155,7 +155,7 @@
                                             </div>
                                             <div class="ml-2 w-full flex-1">
                                                 <div>
-                                                    <div class="mt-3 text-3xl font-bold leading-8">{{$courses_en_attente->count()}}</div>
+                                                    <div class="mt-3 text-3xl font-bold leading-8">{{$courses_en_attente}}</div>
 
                                                     <div class="mt-1 text-base text-gray-600">Courses en attente</div>
                                                 </div>
@@ -167,7 +167,7 @@
                             <div class="col-span-12 mt-5">
                                 <div class="grid gap-2 grid-cols-1 lg:grid-cols-2">
                                     <div class="bg-white shadow-lg p-4" id="chartline"></div>
-                                    <div class="bg-white shadow-lg" id="chartpie"><input type="hidden" id="total" value="{{$demandes->count()}}"></div>
+                                    <div class="bg-white shadow-lg" id="chartpie"><input type="hidden" id="total" value="{{$demandes_total}}"></div>
                                 </div>
                             </div>
                             <div class="col-span-12 mt-5">
