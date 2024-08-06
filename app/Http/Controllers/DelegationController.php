@@ -32,24 +32,10 @@ class DelegationController extends Controller
 
     public function store(Request $request)
     {
-        // $validateData = $request->validate([
-        //     'user_id' => 'required:choix,users',
-        //     'motif' => 'required:delegations',
-        //     'date_debut' => 'required:delegations',
-        //     'date_fin' => 'required_if:delegations',
-            
-        //     ]);
         $manager_id = Session::get('authUser')->id;
-        $user_name=$request->user_id;
-        // dd($user_name);
         
-        // // $user = User::leftJoin('users','users.id','delegations.user_id')  
-        // //                         ->where('delegations.user_id',$user_id)
-        // //                         ->get();
-        // dd($user);
-        // $user_id = $user -> id;
-        // $user = User::where('first_name'.''.'last_name', $user_name)->get();
-        // dd($user);
+        $user_name=$request->user_id;
+        
         $sepNom = explode(" ",$user_name);
         
         $first_name = $sepNom[0];
@@ -62,6 +48,13 @@ class DelegationController extends Controller
         // dd($user);
         $user_id = $user -> id;
         // dd($user_id);
+        $request->validate([
+            'date_debut' => 'required|after:today',
+            'date_fin' => 'required|after:date_debut',
+            'user_id' => 'required|different:'. $manager_id 
+        ]);
+        
+        
         $delegation =Delegation::create([
             'motif' =>  $request->motif,
             'user_id' => $user_id,
@@ -69,6 +62,7 @@ class DelegationController extends Controller
             'date_debut' => $request->date_debut,
             'date_fin' => $request->date_fin,
         ]);
+        // dd($delegation);
 
         //Envoyer un mail au user qu'on veut déléguer
 
