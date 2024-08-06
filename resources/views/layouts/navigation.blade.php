@@ -99,7 +99,7 @@
         
         @endif
 
-        @if(Session::get('userIsManager'))
+        @if(Session::get('userIsManager') || Session::get('delegation'))
 
         <li>
            
@@ -121,7 +121,7 @@
        </li>
        @endif
 
-       @if (Session::get('authUser')->hasRole('admin'))
+       @if (Session::get('authUser')->hasRole('admin') )
        <li>
          <a href="{{route('site')}}" class="flex items-center p-2 text-gray-800 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
             <svg class="w-6 h-6 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">

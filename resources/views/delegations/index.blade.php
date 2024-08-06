@@ -109,7 +109,7 @@
                    @endforeach
                </tbody>
            </table>
-             {{$delegations->links()}}
+             {{-- {{$delegations->links()}} --}}
        </div>
 
 
