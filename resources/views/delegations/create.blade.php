@@ -79,19 +79,6 @@
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     </div>
     
-    {{-- <script>
-        // Ajoutez un écouteur d'événement pour le champ "Nombre de passagers"
-        const passengerInput = document.getElementById('price');
-        passengerInput.addEventListener('input', () => {
-            const value = parseInt(passengerInput.value);
-            if (value < 1 || value > 20) {
-                passengerInput.setCustomValidity('Le nombre de passagers doit être compris entre 1 et 20.');
-            } else {
-                passengerInput.setCustomValidity('');
-            }
-        });
-    </script> --}}
-
     
 
 </x-app-layout>

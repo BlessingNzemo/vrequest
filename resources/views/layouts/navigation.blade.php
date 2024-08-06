@@ -137,6 +137,7 @@
 
 
 
+
                 @if (Session::get('authUser')->hasRole('charroi'))
                     <li>
                         <a href="{{ route('vehicules.index') }}"
@@ -166,8 +167,9 @@
                 @endif
 
 
-                @if (Session::get('userIsManager'))
-                    <li>
+                @if(Session::get('userIsManager') || Session::get('delegation'))
+                    
+
 
         <li>
            
@@ -190,7 +192,7 @@
        @endif
 
 
-                 
+
 
                 @if (Session::get('authUser')->hasRole('admin'))
                     <li>
@@ -248,3 +250,4 @@
         });
     </script>
 </div>
+

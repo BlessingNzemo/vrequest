@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Models\User;
 use App\Models\UserInfo;
 use Illuminate\View\View;
+use App\Models\Delegation;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
@@ -106,7 +107,16 @@ class AuthenticatedSessionController extends Controller
                    
                 }
                 
-              
+               $user_delegation = Delegation::where('user_id',$user->id)->get();
+               $delegation = [];
+               foreach($user_delegation as $item){
+                $delegation[] = $item->manager_id;
+               }
+               if(count($delegation)>0){
+                    Session::put('delegation',$delegation);
+
+               }
+
                 
                 Session::put('authUser',$user);
                 return redirect()->route('dashboard');
