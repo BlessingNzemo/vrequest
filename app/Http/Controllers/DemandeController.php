@@ -9,6 +9,7 @@ use App\Models\Demande;
 use App\Models\UserInfo;
 use App\Models\Vehicule;
 use App\Models\Chauffeur;
+use App\Models\Delegation;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Mail\ChefCharroiEmail;
@@ -16,11 +17,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use App\Notifications\AgentNotification;
 use App\Notifications\ManagerNotification ;
 use Illuminate\Support\Facades\Notification;
-use App\Notifications\ChefCharroiEmail as NotificationsChefCharroiEmail;
 use App\Http\Controllers\envoyerMailAuManager;
-use App\Notifications\AgentNotification;
+use App\Notifications\ChefCharroiEmail as NotificationsChefCharroiEmail;
 
 class DemandeController extends Controller
 {
@@ -88,15 +89,21 @@ class DemandeController extends Controller
             'latitude_depart1' => 'required_if:choix,choix-carte',
             'longitude_destination1' => 'required_if:choix,choix-carte',
             'latitude_destination1' => 'required_if:choix,choix-carte',
-            'date_deplacement' => 'required'
+            'date_deplacement' => 'required|after:today'
 
         ]);
 
         $ticket = Str::random(8);
         $user_id = Session::get('authUser')->id;
-        $status= 0;
+        $status= "0";
         $is_validated=0;
-
+        $user_info = UserInfo::where('user_id',$user_id)->first();
+        // dd($user_info );
+        $email_manager = $user_info -> email_manager;
+        // dd($email_manager);
+        $manager = User::where('email',$email_manager)->first();
+        $manager_id = $manager->id;
+        // dd($manager_id);
         $demandes = Demande::create([
             'ticket' => $ticket,
             'motif' => $request->motif,
@@ -111,7 +118,8 @@ class DemandeController extends Controller
             'date_deplacement' => $request->date_deplacement,
             'user_id' => $user_id,
             'status' => $status,
-            'is_validated' => $is_validated
+            'is_validated' => $is_validated,
+            'manager_id'=> $manager_id
         ]);
 
     //CODE POUR ENVOYER UN MAIL AU MANAGER DE L'AGENT QUI SOUMET SA DEMANDE
@@ -123,7 +131,7 @@ class DemandeController extends Controller
         $user_info=UserInfo::where('user_id',$user_id)->first();
         $email_manager=$user_info->email_manager;
         $manager=User::where('email',$email_manager)->first();
-        // dd($manager);
+        dd($manager);
 
         // Données à envoyer
         $data =(object)[
@@ -270,17 +278,26 @@ class DemandeController extends Controller
 
 
     public function demandeCollaborateurs(){
-       
-        $email_manager = Session::get('userIsManager')->email_manager;
+        if(Session::get('userIsManager')){
+            $email_manager = Session::get('userIsManager')->email_manager;
+        
         $collaborateurs = Session::get('userIsManager')::where('email_manager',$email_manager)->get();
         foreach($collaborateurs as $collaborateur){
             $id[] = $collaborateur->user_id;
-        }
+            }
      
-      $demandes = DB::table('demandes')
-           ->whereIn('user_id', $id)->orderBy('id', 'desc')->paginate(10);
+        $demandes = DB::table('demandes')
+            ->whereIn('user_id', $id)->orderBy('id', 'desc')->paginate(10);
       
         return view('demandes.collaborateurs', compact('demandes'));
+        }
+        
+        if(Session::get('delegation')){
+            $demandes = DB::table('demandes')
+            ->whereIn('manager', Session::get('delegation'))->orderBy('id', 'desc')->paginate(10);
+      
+        return view('demandes.collaborateurs', compact('demandes')); 
+        }
     }
     
        
