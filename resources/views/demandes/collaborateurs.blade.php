@@ -133,7 +133,7 @@
                                             <a href="{{ route('demandes.show', $item->id) }}"
                                                 class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">voir</a>
                                         </li>
-                                        @if (Session::get('userIsManager'))
+                                        @if (Session::get('userIsManager') || Session::get('delegation'))
                                             @if($item->is_validated == 0 )
                                                 <li>
                                                     <a href="{{route('envoyermailauchefcharroi',$item->id)}}" data-modal-target="popup-modal" data-modal-toggle="popup-modal" onclick="valider(event)" id="ButtonValider" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Valider</a> 

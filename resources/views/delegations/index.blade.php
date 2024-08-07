@@ -61,6 +61,7 @@
                            <td class="px-6 py-4">
                                {{$i+1}}
                            </td>
+
                            <td class="px-6 py-4">
                                {{$item->user->username}}
                            </td>
@@ -84,7 +85,9 @@
                                 <!-- Dropdown menu -->
                                     <div id="dropdownDots{{$i}}"  class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
                                         <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconButton">
-                                            
+                                                <li>
+                                                    <a href="{{route('delegations.show', $item->id)}}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Voir</a>
+                                                </li>
                                                 <li>
                                                     <a href="{{route('delegations.edit', $item->id)}}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Editer</a>
                                                 </li>
@@ -93,15 +96,7 @@
                                                     data-modal-toggle="delete-modal" href="{{ route('delegations.destroy', $item->id) }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Supprimer</a>
                                                 </li>
                                            
-{{--                                            
-                                                    <li>
-                                                        <a href="{{route('envoyermailauchefcharroi',$item->id)}} " id="ButtonValider" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Valider</a>  
-                                                    </li> --}}
-                                                    
-                                            
-                                                {{-- <li>
-                                                    <a href="{{route('delegations.show', $item->id)}}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">voir la délégation</a>
-                                                </li> --}}
+
                                         
                                         </ul>
 
