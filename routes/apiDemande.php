@@ -5,3 +5,5 @@ Route::apiResource('/demandes', ApiDemandeController::class);
 Route::post('user-demande',[ApiDemandeController::class,'userDemande']);
 Route::post('last-demande',[ApiDemandeController::class,'lastDemande']);
 Route::post('getdemande',[ApiDemandeController::class,'getdemande']);
+Route::post('cancelDemande', [ApiDemandeController::class, 'cancel']);
+
