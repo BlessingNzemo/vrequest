@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Exception;
 use App\Models\Site;
 use App\Models\User;
+use App\Models\Course;
 use App\Models\Demande;
 use App\Models\UserInfo;
 use App\Models\Vehicule;
@@ -16,11 +17,11 @@ use App\Mail\ChefCharroiEmail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+
 use Illuminate\Support\Facades\Session;
-
 use App\Notifications\AgentNotification;
-use App\Notifications\ManagerNotification ;
 
+use App\Notifications\ManagerNotification ;
 use Illuminate\Support\Facades\Notification;
 use App\Http\Controllers\envoyerMailAuManager;
 use App\Notifications\ChefCharroiEmail as NotificationsChefCharroiEmail;
@@ -174,11 +175,21 @@ class DemandeController extends Controller
     public function show(string $id)
     {
         $demandes = Demande::with('courses')->findOrFail($id);
-        $courses = $demandes->courses;
-        $vehicules = Vehicule::all();
-        $chauffeurs = Chauffeur::all();
+        
+        $courses = Course::where('demande_id',$id)->first();
+        if(!$courses){
+          $vehicules = 0;
+          $chauffeur_name = 0;
+          return view("demandes.show", compact('demandes', 'courses', 'vehicules', 'chauffeur_name'));
+        }
+        $vehicules = Vehicule::where('id',$courses->vehicule_id)->first();
+        
+        $chauffeurs = Chauffeur::where('id',$courses->chauffeur_id)->first();
+        $chauffeur_name = User::where('id',$chauffeurs->user_id)->first();
+      
 
-        return view("demandes.show", compact('demandes', 'courses', 'vehicules', 'chauffeurs'));
+
+        return view("demandes.show", compact('demandes', 'courses', 'vehicules', 'chauffeur_name'));
     }
     
     /**
