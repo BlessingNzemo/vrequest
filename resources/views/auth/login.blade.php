@@ -52,7 +52,7 @@
 <div class="py-48">
     <div class="flex bg-white rounded-lg shadow-lg overflow-hidden mx-auto max-w-sm lg:max-w-4xl">
         <div class="hidden lg:block lg:w-1/2 bg-cover"
-            style="background-image:url('https://plus.unsplash.com/premium_vector-1710425434883-777491e24a16?q=80&w=2128&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')">
+            style="background-image:url('https://images.pexels.com/photos/1587267/pexels-photo-1587267.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')">
         </div>
         <div class="w-full p-8 lg:w-1/2">
             <div class="mb-8 flex flex-col items-center">
