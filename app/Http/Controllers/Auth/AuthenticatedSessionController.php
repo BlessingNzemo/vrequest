@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Models\User;
 use App\Models\UserInfo;
 use Illuminate\View\View;
+use App\Models\Delegation;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
@@ -40,13 +41,10 @@ class AuthenticatedSessionController extends Controller
        $roles = Role::all()->count();
        $permissions = Permission::all()->count();
        
-       if($roles==0){
-        Role::create(['name' => 'charroi']);
-        Role::create(['name' => 'chauffeur']);
-        Role::create(['name' => 'admin']);
-       }
+      
        
        if($permissions == 0){
+        //créations des permissions
         Permission::create(['name'=>'enregistrer']);
         Permission::create(['name'=>'lire']);
         Permission::create(['name'=>'modifier']);
@@ -75,6 +73,40 @@ class AuthenticatedSessionController extends Controller
         Permission::create(['name'=>'enregistrer_delegation']);
         Permission::create(['name'=>'modifier_delegation']);
         Permission::create(['name'=>'supprimer_delegation']);
+       }
+
+       if($roles==0){
+        //création des rôles
+
+        $charroi = Role::create(['name' => 'charroi']);
+        $chauffeur = Role::create(['name' => 'chauffeur']);
+        $admin = Role::create(['name' => 'admin']);
+
+        //on assigne les permissions au charroi
+        $charroi->givePermissionTo('lire_vehicule');
+        $charroi->givePermissionTo('enregistrer_vehicule');
+        $charroi->givePermissionTo('modifier_vehicule');
+        $charroi->givePermissionTo('supprimer_vehicule');
+        $charroi->givePermissionTo('lire_chauffeur');
+        $charroi->givePermissionTo('enregistrer_chauffeur');
+        $charroi->givePermissionTo('modifier_chauffeur');
+        $charroi->givePermissionTo('supprimer_chauffeur');
+        $charroi->givePermissionTo('lire_course');
+        $charroi->givePermissionTo('enregistrer_course');
+        $charroi->givePermissionTo('modifier_course');
+        $charroi->givePermissionTo('supprimer_course');
+
+        //on assigne les permissions à l'admin
+        $admin->givePermissionTo('lire');
+        $admin->givePermissionTo('enregistrer');
+        $admin->givePermissionTo('modifier');
+        $admin->givePermissionTo('supprimer');
+        $admin->givePermissionTo('lire_site');
+        $admin->givePermissionTo('enregistrer_site');
+        $admin->givePermissionTo('modifier_site');
+        $admin->givePermissionTo('supprimer_site');
+        
+
        }
        
        
@@ -106,6 +138,15 @@ class AuthenticatedSessionController extends Controller
                    
                 }
                 
+                $user_delegation = Delegation::where('user_id',$user->id)->get();
+                $delegation = [];
+                foreach($user_delegation as $item){
+                 $delegation[] = $item->manager_id;
+                }
+                if(count($delegation)>0){
+                     Session::put('delegation',$delegation);
+                }
+                
               
                 
                 Session::put('authUser',$user);
@@ -122,6 +163,8 @@ class AuthenticatedSessionController extends Controller
        
         } 
         else {
+            session()->flash('status','username or password incorrect');
+            session()->reflash(1);
             return redirect()->route('login');
         }
 
