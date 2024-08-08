@@ -117,6 +117,24 @@ class DelegationController extends Controller
         return back()->with('success', 'délégation supprimée');
     }
 
+    public function delegueVue(){
+        if(Session::get('authUser')){
+     
+            $user_id = Session::get('authUser')->id; 
+            $delegations= Delegation::where('user_id',$user_id)->get();
+            foreach ($delegations as $delegation){
+                $managers_id[] =$delegation->manager_id;
+            }
+            
+            for($i=0;$i<count($managers_id);$i++){
+                $manager_id = $managers_id[$i];
+                $managers[] = User::where('id',$manager_id)->first();
+            }
+            
+            return view ('delegations.delegue',compact('delegations'));
+        }
+    }
+
     
 }
 

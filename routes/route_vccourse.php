@@ -1,8 +1,9 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CourseController;
 use App\Http\Controllers\VehiculeController;
 use App\Http\Controllers\ChauffeurController;
-use App\Http\Controllers\CourseController;
 
 
 Route::middleware('authenticate')->group(function(){

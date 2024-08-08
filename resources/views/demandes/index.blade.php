@@ -51,9 +51,9 @@
                     <th scope="col" class="px-6 my-6 py-4">
                         Date
                     </th>
-                    <th scope="col" class="px-6 py-3">
+                    {{-- <th scope="col" class="px-6 py-3">
                         Tiket
-                    </th>
+                    </th> --}}
                     <th scope="col" class="px-6 py-3">
                         Motifs
                     </th>
@@ -142,8 +142,8 @@
                                     <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
                                         aria-labelledby="dropdownMenuIconButton">
                                         <li>
-                                            <a href="{{ route('demandes.show', $item->id) }}"
-                                                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">voir</a>
+                                            <a href="{{ route('demandes.show', $item->id) }}" data-modal-target="show-modal" data-modal-toggle="show-modal"
+                                                onclick="show(event);"   class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">voir</a>
                                         </li>
                                         @if ($item->is_validated == 0)
                                             <li>
@@ -225,6 +225,7 @@
     </script>
     <x-deleteDemande :message="__('Voulez-vous vraiment supprimer cette demande ?')" />
 
+    <x-showDemande :message="__('Voulez-vous vraiment voir cette demande?')"/>
     <x-deleteDemande :message="__('Voulez-vous vraiment supprimer cette demande ?')" />
     <x-savecourse :demandes="$demandes" :vehicules="$vehicules" :chauffeurs="$chauffeurs" :message="__('Voulez-vous enregistrer une course ?')" />
     <script>
