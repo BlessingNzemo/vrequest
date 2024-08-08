@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class MessageGroupe extends Model
 {
     use HasFactory;
+
+    protected $fillable=['demande_id'];
 }

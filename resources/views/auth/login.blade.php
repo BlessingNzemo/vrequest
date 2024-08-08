@@ -52,7 +52,7 @@
 <div class="py-48">
     <div class="flex bg-white rounded-lg shadow-lg overflow-hidden mx-auto max-w-sm lg:max-w-4xl">
         <div class="hidden lg:block lg:w-1/2 bg-cover"
-            style="background-image:url('https://plus.unsplash.com/premium_vector-1710425434883-777491e24a16?q=80&w=2128&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')">
+            style="background-image:url('https://images.pexels.com/photos/1587267/pexels-photo-1587267.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')">
         </div>
         <div class="w-full p-8 lg:w-1/2">
             <div class="mb-8 flex flex-col items-center">
@@ -64,7 +64,31 @@
                 <span class="border-b w-1/5 lg:w-1/4"></span>
                 <a href="#" class="block text-gray-700 text-sm font-bold mb-2 text-2xl">Login</a>
                 <span class="border-b w-1/5 lg:w-1/4"></span>
+                
             </div>
+            @if (session('status'))
+            <div id="status"class="flex items-center p-4 mb-4 text-orange-800 rounded-lg bg-orange-50 dark:bg-gray-800 dark:text-orange-400" role="alert" >
+            <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+            </svg>
+            <span class="sr-only">Info</span>
+            <div class="ms-3 text-sm font-medium" >
+            {{session('status')}}
+            </div>
+            <button type="button" class="ms-auto -mx-1.5 -my-1.5 bg-orange-50 text-orange-500 rounded-lg focus:ring-2 focus:ring-orange-400 p-1.5 hover:bg-orange-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-orange-400 dark:hover:bg-gray-700" data-dismiss-target="#alert-3" aria-label="Close">
+            <span class="sr-only">Close</span>
+            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+            </svg>
+            </button>
+            </div>
+            <script>
+                // Faire disparaître le message de succès après 5 secondes
+                setTimeout(function() {
+                    document.getElementById('status').style.display = 'none';
+                }, 5000)
+            </script>
+       @endif
         <form method="POST" action="{{ route('login') }}">
                 @csrf
         
