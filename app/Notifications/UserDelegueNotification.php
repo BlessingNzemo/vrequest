@@ -40,7 +40,7 @@ class UserDelegueNotification extends Notification
                         ->greeting('cher '.$this->data->name)
                         ->line('Delegation n° '.$this->data->id)
                         ->line('Vous avez une nouvelle délégation')
-                        ->action('Voir plus', route('delegations.show',$this->data->id))
+                        ->action('Voir plus', route('delegue-vue'))
                         ->line('Merci d\'utiliser '.env('APP_NAME'));
         
     }
