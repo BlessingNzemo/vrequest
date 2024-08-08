@@ -97,6 +97,13 @@ io.on('connection', (socket) => {
         io.sockets.in("room-"+data.demande.id).emit('sendMessage', data); 
     });
 
+    socket.on('getPosition', (data)=>{
+        
+         console.log('getPosition', data);
+         
+         io.sockets.in("room-"+data.demande.id).emit('sendPosition', data); 
+     });
+
     // socket.on('disconnect', (user_id)=>{
     //     console.log('User '+socket.id+' disconnected');
     //     io.sockets.in("room-"+id).emit('isDisconnected', user_id); 
