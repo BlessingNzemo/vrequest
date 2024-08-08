@@ -47,7 +47,8 @@ class DelegationController extends Controller
                     ->first();
         // dd($user);
         $user_id = $user -> id;
-        // dd($user_id);
+        // dd($user_id );
+        // dd();
         $request->validate([
             'date_debut' => 'required|after:today',
             'date_fin' => 'required|after:date_debut',
@@ -130,7 +131,7 @@ class DelegationController extends Controller
                 $manager_id = $managers_id[$i];
                 $managers[] = User::where('id',$manager_id)->first();
             }
-            
+
             return view ('delegations.delegue',compact('delegations'));
         }
     }
