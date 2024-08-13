@@ -12,7 +12,7 @@ class DelegationController extends Controller
 {
     public function index()
    {
-    if(Session::get('authUser')){
+    if(Session::get('authUser') && Session::get('userIsManager')){
      
         $manager_id = Session::get('authUser')->id; 
         
@@ -20,9 +20,13 @@ class DelegationController extends Controller
                                     ->where('delegations.manager_id',$manager_id)
                                     ->get();
         
+        // dd($delegations);
     }
-   
+        
     return view ('delegations.index',compact('delegations'));
+        
+    
+    
    }
    public function create()
     {
@@ -47,7 +51,8 @@ class DelegationController extends Controller
                     ->first();
         // dd($user);
         $user_id = $user -> id;
-        // dd($user_id);
+        // dd($user_id );
+        // dd();
         $request->validate([
             'date_debut' => 'required|after:today',
             'date_fin' => 'required|after:date_debut',
@@ -114,7 +119,15 @@ class DelegationController extends Controller
     public function destroy(Delegation $delegation)
     {
         $delegation->delete();
-        return back()->with('success', 'délégation supprimée');
+        return back()->with('success', 'La délégation a été supprimée avec succès');
+    }
+    
+    public function restore(Delegation $delegation)
+    {
+        $delegation ->restore();
+
+        return redirect()->route('delegations.index')
+                        ->with('success', 'La délégation a été restauré avec succès.');
     }
 
     public function delegueVue(){
@@ -130,7 +143,7 @@ class DelegationController extends Controller
                 $manager_id = $managers_id[$i];
                 $managers[] = User::where('id',$manager_id)->first();
             }
-            
+
             return view ('delegations.delegue',compact('delegations'));
         }
     }

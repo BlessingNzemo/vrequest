@@ -25,6 +25,7 @@ use App\Notifications\ManagerNotification ;
 use Illuminate\Support\Facades\Notification;
 use App\Http\Controllers\envoyerMailAuManager;
 use App\Notifications\ChefCharroiEmail as NotificationsChefCharroiEmail;
+use App\Notifications\UserDelegueNotification;
 
 class DemandeController extends Controller
 {
@@ -33,35 +34,23 @@ class DemandeController extends Controller
      */
     public function index()
     {
+        if(Session::get('authUser')){
+            $user_id = Session::get('authUser')->id;
 
-        
-        if(Session::get('authUser')->hasRole('charroi')){
-            $demandes = Demande::where('is_validated',1)->paginate(10);
-            $vehicules = Vehicule::where('disponibilite',0)->get();
-            $demandes = Demande::where('is_validated',1)->orderBy('id', 'desc')->paginate(10);
+            $demandes = Demande::Where('user_id', $user_id)->orderBy('id', 'desc')->paginate(10);
 
-            $demandes_validees = $demandes;
+            $demandes_validees = Demande::where('is_validated', 1)->get();
             $demandes_traitees = Demande::where('status', 1)->get();
-            $demandes_en_attente = Demande::where('status', 0)->get();
-
+            // $demandes_en_attente = Demande :: where('')
 
             $vehicules = Vehicule::all();
             $chauffeurs = Chauffeur::all();
 
+            // dd($demandes);
             return view('demandes.index', compact('demandes', 'chauffeurs', 'vehicules'));
         }
-        $user_id = Session::get('authUser')->id;
-
-        $demandes = Demande::Where('user_id', $user_id)->orderBy('id', 'desc')->paginate(10);
-
-        $demandes_validees = Demande::where('is_validated', 1)->get();
-        $demandes_traitees = Demande::where('status', 1)->get();
-        // $demandes_en_attente = Demande :: where('')
-
-        $vehicules = Vehicule::all();
-        $chauffeurs = Chauffeur::all();
-        return view('demandes.index', compact('demandes', 'chauffeurs', 'vehicules'));
-
+        
+        
 
     }
 
@@ -146,21 +135,54 @@ class DemandeController extends Controller
         $user_info = UserInfo::where('user_id', $user_id)->first();
         $email_manager = $user_info->email_manager;
         $manager = User::where('email', $email_manager)->first();
-        // dd($manager);
-        // dd(env('MAIL_FROM_ADDRESS'));
-        // Données à envoyer
-        $data = (object) [
-            'id' => $demande->id,
-            'subject' => 'Nouvelle demande',
-            'name' => $manager->username,
-        ];
+        
+        
+        $delegations = Delegation::where('manager_id',$manager_id)->where('status',1)->get();
+        
+        if($delegations->count()>0){
+            foreach ($delegations as $delegation ){
+                    if($delegation->status == 1){
+                        $users_id[] =$delegation->user_id;
+                        $delegues=[];
 
-        try {
-            $manager->notify(new ManagerNotification($data));
-        } catch (Exception $e) {
-            // print($e);
+                    $data = (object) [
+                        'id' => $demande->id,
+                        'subject' => 'Nouvelle demande',
+                        'name' => $manager->username,
+                    ];
+
+                    for($i=0;$i<count($users_id);$i++){
+                        $delegue[$i]= User::findOrFail($users_id[$i]);
+
+                    try {
+                        $delegue[$i]->notify(new UserDelegueNotification($data));
+                    } catch (Exception $e) {
+                    // print($e);
+                    }
+
+                }
+            }
+                
+
         }
+        }
+        
+        else{
+            // Données à envoyer
+            $data = (object) [
+                'id' => $demande->id,
+                'subject' => 'Nouvelle demande',
+                'name' => $manager->username,
+            ];
 
+            try {
+                $manager->notify(new ManagerNotification($data));
+            } catch (Exception $e) {
+            // print($e);
+            }
+
+        }
+        
        
           
 
@@ -330,6 +352,24 @@ class DemandeController extends Controller
             }
             
         return view('demandes.collaborateurs', compact('demandes')); 
+        }
+    }
+
+    public function demandeCharroi(){
+        if(Session::get('authUser')->hasRole('charroi')){
+            // $demandes = Demande::where('is_validated',1)->paginate(10);
+       
+            $demandes = Demande::where('is_validated',1)->orderBy('id', 'desc')->paginate(10);
+
+            // $demandes_validees = $demandes;
+            // $demandes_traitees = Demande::where('status', 1)->get();
+            // $demandes_en_attente = Demande::where('status', 0)->get();
+
+
+            $vehicules = Vehicule::all();
+            $chauffeurs = Chauffeur::all();
+
+            return view('demandes.charroi', compact('demandes', 'chauffeurs', 'vehicules'));
         }
     }
 
