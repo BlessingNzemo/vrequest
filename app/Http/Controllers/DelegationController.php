@@ -12,7 +12,7 @@ class DelegationController extends Controller
 {
     public function index()
    {
-    if(Session::get('authUser')){
+    if(Session::get('authUser') && Session::get('userIsManager')){
      
         $manager_id = Session::get('authUser')->id; 
         
@@ -20,9 +20,13 @@ class DelegationController extends Controller
                                     ->where('delegations.manager_id',$manager_id)
                                     ->get();
         
+        // dd($delegations);
     }
-   
+        
     return view ('delegations.index',compact('delegations'));
+        
+    
+    
    }
    public function create()
     {
@@ -115,7 +119,15 @@ class DelegationController extends Controller
     public function destroy(Delegation $delegation)
     {
         $delegation->delete();
-        return back()->with('success', 'délégation supprimée');
+        return back()->with('success', 'La délégation a été supprimée avec succès');
+    }
+    
+    public function restore(Delegation $delegation)
+    {
+        $delegation ->restore();
+
+        return redirect()->route('delegations.index')
+                        ->with('success', 'La délégation a été restauré avec succès.');
     }
 
     public function delegueVue(){
