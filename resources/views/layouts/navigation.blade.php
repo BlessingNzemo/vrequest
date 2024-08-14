@@ -14,7 +14,7 @@
                             </path>
                         </svg>
                     </button>
-                    <a href="https://flowbite.com" class="flex ms-2 md:me-24">
+                    <a href="#" class="flex ms-2 md:me-24">
                         <img src="{{ asset('img/orange.png') }}" class="h-8 me-3" alt="FlowBite Logo" />
                         <span
                             class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">Vrequest</span>
@@ -66,9 +66,6 @@
             </div>
         </div>
     </nav>
-
-
-
     <i class="icon">&#128197;</i>
     <aside id="logo-sidebar"
         class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
@@ -121,8 +118,8 @@
                 </li>
                 <li>
                     <a href="{{ route('dashboard') }}"
-                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-500 dark:hover:bg-gray-700 group {{ request()->routeIs('dashboard') ? 'bg-orange-400 text-white' : '' }}">
-                        <svg class="w-5 h-5 text-gray-200 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-300 dark:hover:bg-gray-700 group {{ request()->routeIs('dashboard') ? 'bg-orange-400 text-white' : '' }}">
+                        <svg class="w-5 h-5  transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                             viewBox="0 0 22 21">
                             <path
@@ -134,22 +131,11 @@
                     </a>
                 </li>
                 <li>
-                    {{-- <a href="{{ route('demandes.index') }}"
-                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group {{ request()->routeIs('demandes.index') ? 'bg-orange-400 text-white ' : '' }}">
-
-                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 20">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M1 17V2a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a2 2 0 0 0-2 2Zm0 0a2 2 0 0 0 2 2h12M5 15V1m8 18v-4" />
-                        </svg>
-                        <span class="flex-1 ms-3 whitespace-nowrap">Demandes</span>
-                    </a> --}}
                     <button type="button"
-                        class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group {{ request()->routeIs('demandes.index') ? 'bg-orange-400 text-white ' : '' }} hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                        class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-300 dark:text-white dark:hover:bg-gray-700"
                         aria-controls="dropdown-example" data-collapse-toggle="dropdown-example">
-                        <svg class="w-6 h-6 text-gray-200 dark:text-white" aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 20">
+                        <svg class="w-6 h-6  dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                            fill="none" viewBox="0 0 16 20">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                 stroke-width="2"
                                 d="M1 17V2a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a2 2 0 0 0-2 2Zm0 0a2 2 0 0 0 2 2h12M5 15V1m8 18v-4" />
@@ -161,32 +147,50 @@
                                 stroke-width="2" d="m1 1 4 4 4-4" />
                         </svg>
                     </button>
-                    <ul id="dropdown-example" class="hidden py-2 space-y-2">
+                    <ul id="dropdown-example"
+                        class="{{ request()->routeIs('demandes.index') || request()->routeIs('demandes.create') || request()->routeIs('demande-collaborateurs') ? '' : 'hidden' }} py-2 space-y-2">
                         <li>
                             <a href="{{ route('demandes.index') }}"
-                                class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group {{ request()->routeIs('demandes.index') ? 'bg-orange-400 text-white ' : '' }}  hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Demande</a>
+                                class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group {{ request()->routeIs('demandes.index') ? 'bg-orange-400 text-white' : '' }} hover:bg-gray-300 dark:text-white dark:hover:bg-gray-700">
+                                <svg class="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12h6m-6 4h6m2 6H7a2 2 0 01-2-2V6a2 2 0 012-2h5l5 5v13a2 2 0 01-2 2z" />
+                                </svg>
+                                Demande
+                            </a>
                         </li>
                         <li>
                             <a href="{{ route('demandes.create') }}"
-                                class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group {{ request()->routeIs('demandes.create') ? 'bg-orange-400 text-white ' : '' }} hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Création
-                                de la demande</a>
+                                class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group {{ request()->routeIs('demandes.create') ? 'bg-orange-400 text-white' : '' }} hover:bg-gray-300 dark:text-white dark:hover:bg-gray-700">
+                                <svg class="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 4v16m8-8H4" />
+                                </svg>
+                                Création de la demande
+                            </a>
                         </li>
                         @if (Session::get('userIsManager') || Session::get('delegation'))
                             <li>
                                 <a href="{{ route('demande-collaborateurs') }}"
-                                    class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group {{ request()->routeIs('demande-collaborateurs') ? 'bg-orange-400 text-white ' : '' }} hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Demande Collaborateurs</a>
+                                    class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group {{ request()->routeIs('demande-collaborateurs') ? 'bg-orange-400 text-white' : '' }} hover:bg-gray-300 dark:text-white dark:hover:bg-gray-700">
+                                    <svg class="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M17 20h5v-2a4 4 0 00-3-3.87M12 14a4 4 0 100-8 4 4 0 000 8zm0 2a6 6 0 00-5.33 3H2v2h10m7-4h.01" />
+                                    </svg>
+                                    Demande Collaborateurs
+                                </a>
                             </li>
                         @endif
-
                     </ul>
                 </li>
-
-
                 @if (Session::get('authUser')->hasRole('charroi'))
                     <li>
                         <a href="{{ route('vehicules.index') }}"
-                            class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group {{ request()->routeIs('vehicules.index') ? 'bg-orange-400 text-white ' : '' }}">
-                            <svg class="w-6 h-6 text-gray-500 dark:text-white" aria-hidden="true"
+                            class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-300 dark:hover:bg-gray-700 group {{ request()->routeIs('vehicules.index') ? 'bg-orange-400 text-white ' : '' }}">
+                            <svg class="w-6 h-6  dark:text-white" aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
                                 viewBox="0 0 24 24">
                                 <path fill-rule="evenodd"
@@ -198,8 +202,8 @@
                     </li>
                     <li>
                         <a href="{{ route('chauffeurs.index') }}"
-                            class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group {{ request()->routeIs('chauffeurs.index') ? 'bg-orange-400 text-white ' : '' }}">
-                            <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                            class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-300 dark:hover:bg-gray-700 group {{ request()->routeIs('chauffeurs.index') ? 'bg-orange-400 text-white ' : '' }}">
+                            <svg class="flex-shrink-0 w-5 h-5  transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                                 aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                                 viewBox="0 0 20 18">
                                 <path
@@ -212,13 +216,15 @@
 
 
                 @if (Session::get('userIsManager') || Session::get('delegation'))
-
                     <li>
                         <a href="{{ route('delegations.index') }}"
-                            class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group {{ request()->routeIs('delegations.index') ? 'bg-orange-400 text-white ' : '' }}">
-                            <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 18">
-                                <path d="M6.143 0H1.857A1.857 1.857 0 0 0 0 1.857v4.286C0 7.169.831 8 1.857 8h4.286A1.857 1.857 0 0 0 8 6.143V1.857A1.857 1.857 0 0 0 6.143 0Zm10 0h-4.286A1.857 1.857 0 0 0 10 1.857v4.286C10 7.169 10.831 8 11.857 8h4.286A1.857 1.857 0 0 0 18 6.143V1.857A1.857 1.857 0 0 0 16.143 0Zm-10 10H1.857A1.857 1.857 0 0 0 0 11.857v4.286C0 17.169.831 18 1.857 18h4.286A1.857 1.857 0 0 0 8 16.143v-4.286A1.857 1.857 0 0 0 6.143 10Zm10 0h-4.286A1.857 1.857 0 0 0 10 11.857v4.286c0 1.026.831 1.857 1.857 1.857h4.286A1.857 1.857 0 0 0 18 16.143v-4.286A1.857 1.857 0 0 0 16.143 10Z"/>
-                             </svg>
+                            class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-300 dark:hover:bg-gray-700 group {{ request()->routeIs('delegations.index') ? 'bg-orange-400 text-white ' : '' }}">
+                            <svg class="flex-shrink-0 w-5 h-5  transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                                aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                viewBox="0 0 18 18">
+                                <path
+                                    d="M6.143 0H1.857A1.857 1.857 0 0 0 0 1.857v4.286C0 7.169.831 8 1.857 8h4.286A1.857 1.857 0 0 0 8 6.143V1.857A1.857 1.857 0 0 0 6.143 0Zm10 0h-4.286A1.857 1.857 0 0 0 10 1.857v4.286C10 7.169 10.831 8 11.857 8h4.286A1.857 1.857 0 0 0 18 6.143V1.857A1.857 1.857 0 0 0 16.143 0Zm-10 10H1.857A1.857 1.857 0 0 0 0 11.857v4.286C0 17.169.831 18 1.857 18h4.286A1.857 1.857 0 0 0 8 16.143v-4.286A1.857 1.857 0 0 0 6.143 10Zm10 0h-4.286A1.857 1.857 0 0 0 10 11.857v4.286c0 1.026.831 1.857 1.857 1.857h4.286A1.857 1.857 0 0 0 18 16.143v-4.286A1.857 1.857 0 0 0 16.143 10Z" />
+                            </svg>
                             <span class="ms-3">Delegation </span>
                         </a>
                     </li>
@@ -231,8 +237,8 @@
                 @if (Session::get('authUser')->hasRole('admin'))
                     <li>
                         <a href="{{ route('site') }}"
-                            class="flex items-center p-2 text-gray-800 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group {{ request()->routeIs('site') ? 'bg-orange-400 text-white ' : '' }}">
-                            <svg class="w-6 h-6 text-gray-500 dark:text-white" aria-hidden="true"
+                            class="flex items-center p-2 text-gray-800 rounded-lg dark:text-white hover:bg-gray-300 dark:hover:bg-gray-700 group {{ request()->routeIs('site') ? 'bg-orange-400 text-white ' : '' }}">
+                            <svg class="w-6 h-6  dark:text-white" aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
                                 viewBox="0 0 24 24">
                                 <path fill-rule="evenodd"
@@ -246,8 +252,8 @@
 
                     <li>
                         <a href="{{ route('roles.index') }}"
-                            class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group {{ request()->routeIs('roles.index') ? 'bg-orange-400 text-white ' : '' }}">
-                            <svg class="w-6 h-6 text-gray-500 dark:text-white" aria-hidden="true"
+                            class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-300 dark:hover:bg-gray-700 group {{ request()->routeIs('roles.index') ? 'bg-orange-400 text-white ' : '' }}">
+                            <svg class="w-6 h-6  dark:text-white" aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
                                 viewBox="0 0 24 24">
                                 <path fill-rule="evenodd"
@@ -260,8 +266,8 @@
                     </li>
                     <li>
                         <a href="{{ route('user_role.index') }}"
-                            class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group {{ request()->routeIs('user_role.index') ? 'bg-orange-400 text-white ' : '' }}">
-                            <svg class="w-6 h-6 text-gray-500 dark:text-white" aria-hidden="true"
+                            class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-300 dark:hover:bg-gray-700 group {{ request()->routeIs('user_role.index') ? 'bg-orange-400 text-white ' : '' }}">
+                            <svg class="w-6 h-6  dark:text-white" aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
                                 viewBox="0 0 24 24">
                                 <path fill-rule="evenodd"
@@ -276,11 +282,4 @@
             </ul>
         </div>
     </aside>
-    <script>
-        const icon = document.querySelector('.icon');
-
-        icon.addEventListener('click', () => {
-            icon.classList.toggle('white');
-        });
-    </script>
 </div>
