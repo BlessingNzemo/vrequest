@@ -145,7 +145,7 @@
                                         </li>
                                         @if ($item->is_validated == 0)
                                             <li>
-                                                <a href="{{ route('demandes.edit', $item->id) }}"
+                                                <a href="{{ route('demandes.edit', $item->id) }}" data-modal-target="popup-modal" data-modal-toggle="popup-modal" onclick="show(event);"
                                                     class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Editer</a>
                                             </li>
                                             <li>
@@ -212,6 +212,7 @@
     <x-deleteDemande :message="__('Voulez-vous vraiment supprimer cette demande ?')" />
 
     <x-showDemande :message="__('Voulez-vous vraiment voir cette demande?')"/>
+    <x-editDemande :message="__('Voulez-vous vraiment modifier cette demande?')"/>
     <x-deleteDemande :message="__('Voulez-vous vraiment supprimer cette demande ?')" />
     <x-savecourse :demandes="$demandes" :vehicules="$vehicules" :chauffeurs="$chauffeurs" :message="__('Voulez-vous enregistrer une course ?')" />
     <script>
