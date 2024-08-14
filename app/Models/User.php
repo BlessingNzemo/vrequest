@@ -5,14 +5,15 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Manager;
 use App\Models\UserInfo;
+use App\Models\Chauffeur;
+use App\Models\Delegation;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Notifications\Notification;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use App\Models\Chauffeur;
-use Illuminate\Notifications\Notification;
 
 class User extends Authenticatable
 {
@@ -60,6 +61,11 @@ class User extends Authenticatable
     public function user_infos(): HasMany
     {
         return $this->hasMany(UserInfo::class);
+
+    } 
+    public function delegations(): HasMany
+    {
+        return $this->hasMany(Delegation::class);
 
     }
     public function chauffeur(){

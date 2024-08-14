@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use App\Models\Delegation;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Notifications\ChefCharroiEmail;
@@ -22,6 +23,16 @@ Route::middleware('authenticate')->group(function () {
    
    
 });
+
+Route::get('/test',function(){
+    $delegations = Delegation::get();
+    foreach ($delegations as $delegation){
+        if($delegation->date_fin->toDateTimeString() < date('Y-m-d H:i:s') ){
+            $delegation->status = 0;
+            $delegation->update();
+        }
+    }
+})->name('test');
 
 
 
