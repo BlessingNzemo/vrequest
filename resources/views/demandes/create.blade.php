@@ -1,13 +1,15 @@
 <x-app-layout>
 
-    <x-slot name="header">
-        <div class="flex items-center justify-between  py-5">
+    {{-- <x-slot name="header">
+        {{-- <div class="flex items-center justify-between  py-5">
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight text-center">
                 {{ __('Demander une course') }}
             </h2>
         </div>
-    </x-slot>
-    <div class="py-8 px-4 mx-auto max-w-4xl lg:py-16">
+    </x-slot> --}}
+
+
+    <div class="py-8  px-4 mx-auto max-w-4xl lg:py-16 shadow-md sm:rounded-lg">
         <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Remplissez ce formulaire </h2>
         @if ($errors->any())
 
@@ -58,13 +60,15 @@
                         :</label>
                     <div>
                         <label class="text-gray-900 dark:text-white" for="choix-liste">
-                            <input type="radio" name="choix" value="choix-liste" id="choix-liste"> Sur une liste
+                            <input type="radio" name="choix" value="choix-liste" id="choix-liste"> Sur une
+                            liste
                         </label>
                     </div>
 
                     <div>
                         <label class="text-gray-900 dark:text-white">
-                            <input type="radio" name="choix" value="choix-carte" id="choix-carte"> Sur une carte
+                            <input type="radio" name="choix" value="choix-carte" id="choix-carte"> Sur une
+                            carte
                         </label>
                     </div>
                 </div>
@@ -142,31 +146,94 @@
 
                 <div class="relative sm:col-span-2">
                     <div id="mapid"
-                        style="height: 300px; width:860px;position: absolute; left: -1000000000000000px"></div>
+                        style="height: 300px; width:100%; position: absolute; left: -1000000000000000px"></div>
                 </div>
 
                 <div class="relative sm:col-span-2">
 
-                    <div id="map" style=" height: 300px; width:860px; position: absolute;left:-100000000000px">
+                    <div id="map" style=" height: 300px; width:100%; position: absolute;left:-100000000000px">
                     </div>
                 </div>
             </div>
 
             <button
-                class="my-6 text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800">
+                class=" button my-6 text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800">
                 Demander une course
             </button>
         </form>
-        <script src="https://unpkg.com/jquery/dist/jquery.min.js"></script>
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
     </div>
+>
+
+
+
+    {{-- <style>
+        .button {
+            padding: 20px 40px;
+            font-size: 24px;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            background: none;
+        }
+
+        .button::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(red,
+                    yellow,
+                    lime,
+                    aqua,
+                    blue,
+                    magenta,
+                    red);
+            animation: spin 2s linear infinite;
+            z-index: -2;
+        }
+
+        .button::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            right: 2px;
+            bottom: 2px;
+            background: #fff;
+            border-radius: 8px;
+            z-index: -1;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style> --}}
+
+
+
+
+
     <x-dateDemande />
     <x-choixDestination />
     <x-destinationCarte />
     <x-destinationListe />
     <x-styleAutocomplete />
+    <script src="https://unpkg.com/jquery/dist/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
         // Ajoutez un écouteur d'événement pour le champ "Nombre de passagers"
         const passengerInput = document.getElementById('price');

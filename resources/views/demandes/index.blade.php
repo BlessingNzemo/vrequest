@@ -15,7 +15,7 @@
                     </svg>
                     <span class="sr-only">New item</span>
                 </a>
-            </div>      
+            </div>
             <div id="tooltip-new" role="tooltip"
                 class="absolute z-10 invisible inline-block px-3 py-1 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                 Demander une course
@@ -42,7 +42,8 @@
 
 
     <div class=" py-12 relative  overflow-x-auto ">
-        <table id="example" class="  text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 shadow-md sm:rounded-lg">
+        <table id="example"
+            class="  text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 shadow-md sm:rounded-lg">
             <thead class="text-xs text-gray-700 uppercase  bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr class="my-6 py-6 px-2">
                     <th scope="col" class="px-6 py-3">
@@ -51,9 +52,6 @@
                     <th scope="col" class="px-6 my-6 py-4">
                         Date
                     </th>
-                    {{-- <th scope="col" class="px-6 py-3">
-                        Tiket
-                    </th> --}}
                     <th scope="col" class="px-6 py-3">
                         Motifs
                     </th>
@@ -92,13 +90,13 @@
                         <td class="px-6 py-4 ">
                             {{ $item->date }}
                         </td>
-                        
+
                         <td class="px-6 py-4 ">
                             {{ $item->motif }}
                         </td>
                         <td class="px-6 py-4">
                             {{ substr($item->lieu_depart, 0, 50) }}
-                        </td> 
+                        </td>
                         <td class="px-6 py-4 ">
                             {{ substr($item->destination, 0, 50) }}
                         </td>
@@ -106,23 +104,23 @@
                         <td class="px-6 py-4">
                             {{ $item->date_deplacement }}
 
-                        </td> 
+                        </td>
                         <td class="px-6 py-4">
-                            {{ $item->nbre_passagers}}  
+                            {{ $item->nbre_passagers }}
                         </td>
 
-                       <td class="px-6 py-4">
-                        @if ( $item->status ==0)
-                            en attente
-                        @endif
-                        @if ( $item->status ==1)
-                            traitée
-                        @endif
-                        @if ( $item->status ==2)
-                            rejetée
-                        @endif
-                       
-                        </td> 
+                        <td class="px-6 py-4">
+                            @if ($item->status == 0)
+                                en attente
+                            @endif
+                            @if ($item->status == 1)
+                                traitée
+                            @endif
+                            @if ($item->status == 2)
+                                rejetée
+                            @endif
+
+                        </td>
 
 
                         <td>
@@ -157,15 +155,15 @@
                                                     class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Supprimer</a>
                                             </li>
                                         @endif
-                                        
+
                                         @if (Session::get('authUser')->hasRole('charroi'))
-                                            @if ( ($item->is_validated == 1)  && ($item->status == 0))
+                                            @if ($item->is_validated == 1 && $item->status == 0)
                                                 <li>
                                                     <a onclick="editdemande(event, {{ $item->id }});"
                                                         data-modal-target="crud-modal" data-modal-toggle="crud-modal"
                                                         class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Traiter</a>
                                                 </li>
-                                            
+
                                                 <li>
                                                     <a onclick="supprimer(event);" data-modal-target="delete-modal"
                                                         data-modal-toggle="delete-modal"
@@ -190,27 +188,15 @@
         {{ $demandes->links() }}
     </div>
     
-
-
+   
 
     <script>
         new DataTable('#example', {
             info: false,
             ordering: false,
             paging: false
-        
-        // language: {
-        //     paginate: {
-        //         next: '<span class="next-page">Suivant</span>',
-        //         previous: '<span class="prev-page">Précédent</span>'
-        //     }
-        // },
-        // initComplete: function() {
-        //     // Modifier la couleur de la pagination
-        //     $('.dataTables_paginate .pagination .page-item.active .page-link').css('background-color',
-        //         '#ff0000');
-        //     $('.dataTables_paginate .pagination .page-item .page-link').css('color', '#ff0000');
-        // }
+
+
         });
     </script>
     <script>
@@ -236,9 +222,13 @@
             form.setAttribute('value', demandeId);
             console.log(value);
 
-            
+
         }
     </script>
+
+    
+
+
 
 
 
