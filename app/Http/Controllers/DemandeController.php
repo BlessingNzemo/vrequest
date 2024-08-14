@@ -25,6 +25,7 @@ use App\Notifications\ManagerNotification ;
 use Illuminate\Support\Facades\Notification;
 use App\Http\Controllers\envoyerMailAuManager;
 use App\Notifications\ChefCharroiEmail as NotificationsChefCharroiEmail;
+use App\Notifications\MailCharroiToAgentDemandeRejecte;
 use App\Notifications\UserDelegueNotification;
 
 class DemandeController extends Controller
@@ -94,7 +95,7 @@ class DemandeController extends Controller
         $ticket = Str::random(8);
         $user_id = Session::get('authUser')->id;
 
-        $status= "0";
+        $status= '0';
         $is_validated=0;
         $user_info = UserInfo::where('user_id',$user_id)->first();
         // dd($user_info );
@@ -168,18 +169,21 @@ class DemandeController extends Controller
         }
         
         else{
-            // Données à envoyer
-            $data = (object) [
-                'id' => $demande->id,
-                'subject' => 'Nouvelle demande',
-                'name' => $manager->username,
-            ];
+            if($manager){
+                // Données à envoyer
+                $data = (object) [
+                    'id' => $demande->id,
+                    'subject' => 'Nouvelle demande',
+                    'manager_name' => $manager->username,
+                ];
 
-            try {
-                $manager->notify(new ManagerNotification($data));
-            } catch (Exception $e) {
-            // print($e);
+                try {
+                    $manager->notify(new ManagerNotification($data));
+                } catch (Exception $e) {
+                // print($e);
+                }
             }
+            
 
         }
         
@@ -268,12 +272,14 @@ class DemandeController extends Controller
         $data = (object) [
             'id' => $demande->id,
             'subject' => 'Nouvelle demande',
-            'name' => $chef_charroi->username
+            'name' => $chef_charroi->username,
+            'charroi_name' => $chef_charroi->username
+
         ];
         try {
             $chef_charroi->notify(new NotificationsChefCharroiEmail($data));
 
-            $status = 1;
+            $status = '1';
             $demande->is_validated = $status;
             $demande->update();
 
@@ -371,6 +377,38 @@ class DemandeController extends Controller
 
             return view('demandes.charroi', compact('demandes', 'chauffeurs', 'vehicules'));
         }
+    }
+
+    public function rejetDemandeParCharroi(Request $request, $id)
+    {
+        
+        $demande = Demande::find($id);
+        $user_id = $demande->user_id;
+        $agent = User::where('id', $user_id)->first();
+        $demande->raison = $request->raison;
+        $data = (object) [
+            'id' => $demande->id,
+            'subject' => 'Demande Rejetée',
+            'raison' => $request->raison,
+            'etat' => ' rejetée',
+            'name' => $agent->username
+        ];
+        try {
+            // dd(env('MAIL_FROM_ADDRESS'));
+            $agent->notify(new MailCharroiToAgentDemandeRejecte($data));
+            $status = '2';
+            $demande->status = $status;
+
+
+            $demande->update();
+
+        } catch (Exception $e) {
+            print($e);
+        }
+
+        // dd($demande);
+
+        return back()->with("rejected", "Demande rejetée avec succès");
     }
 
 
