@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ManagerNotification extends Notification
+class MailCharroiToAgentDemandeRejecte extends Notification
 {
     use Queueable;
 
@@ -37,13 +37,12 @@ class ManagerNotification extends Notification
         return (new MailMessage)
                     ->from(env('MAIL_FROM_ADDRESS'),env('APP_NAME'))
                     ->subject($this->data->subject)
-                    ->greeting('Cher '.$this->data->manager_name)
-                    ->line('Une nouvelle demande  a été envoyée')
+                    ->greeting('cher '.$this->data->name)
                     ->line('Demande n° '.$this->data->id)
+                    ->line('Votre demande a été '.$this->data->etat)
+                    ->line('Motif de rejet : '.$this->data->raison)
                     ->action('Voir plus', route('demandes.show',$this->data->id))
                     ->line('Merci d\'utiliser '.env('APP_NAME'));
-
-                
     }
 
     /**
@@ -54,7 +53,7 @@ class ManagerNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            
+            //
         ];
     }
 }

@@ -15,7 +15,8 @@ Route::get('/demande-collaborateurs',[DemandeController::class,'demandeCollabora
 Route::get('/envoyerMailAuManager/{id}',[DemandeController::class,'envoyerMailManager'])->name('envoyermailmanager');
 Route::post('/envoyermailauchefcharroi/{id}',[DemandeController::class,'envoyerMailAuChefCharroi'])->name('envoyermailauchefcharroi');
 Route::post('/mailAnnulationDemandeParLeManager/{id}',[DemandeController::class,'mailAnnulationDemandeParLeManager'])->name('annulationmailparmanager');
-// Route::get('/demande-charroi',[DemandeController::class,'demandeCharroi'])->name('demandeCharroi');
+Route::get('/demande-charroi',[DemandeController::class,'demandeCharroi'])->name('demandeCharroi');
+Route::post('/rejetDemandeParCharroi/{id}',[DemandeController::class,'rejetDemandeParCharroi'])->name('rejetDemandeParCharroi');
 
 });
 
