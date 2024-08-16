@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\User;
+use App\Models\Demande;
+use App\Models\Delegation;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Notifications\ChefCharroiEmail;
@@ -22,6 +24,13 @@ Route::middleware('authenticate')->group(function () {
    
    
 });
+
+Route::get('/test',function(){
+    $demande = Demande::findOrFail(176);
+    $demande->status = '1';
+        
+    $demande->update();
+})->name('test');
 
 
 

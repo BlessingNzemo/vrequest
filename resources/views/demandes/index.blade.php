@@ -15,7 +15,7 @@
                     </svg>
                     <span class="sr-only">New item</span>
                 </a>
-            </div>      
+            </div>
             <div id="tooltip-new" role="tooltip"
                 class="absolute z-10 invisible inline-block px-3 py-1 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                 Demander une course
@@ -42,7 +42,8 @@
 
 
     <div class=" py-12 relative  overflow-x-auto ">
-        <table id="example" class="  text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 shadow-md sm:rounded-lg">
+        <table id="example"
+            class="  text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 shadow-md sm:rounded-lg">
             <thead class="text-xs text-gray-700 uppercase  bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr class="my-6 py-6 px-2">
                     <th scope="col" class="px-6 py-3">
@@ -51,25 +52,23 @@
                     <th scope="col" class="px-6 my-6 py-4">
                         Date
                     </th>
-                    
                     <th scope="col" class="px-6 py-3">
                         Motifs
                     </th>
-                     <th scope="col" class="px-6 py-3">
+                    <th scope="col" class="px-6 py-3">
                         Lieu de depart
-                    </th> 
+                    </th>
                     <th scope="col" class="px-6 py-3">
                         Destination
                     </th>
-                     <th scope="col" class="px-6 py-3">
+                    <th scope="col" class="px-6 py-3">
                         Date et Heure de deplacement
-                    </th> 
+                    </th>
 
-                     <th scope="col" class="px-6 py-3">
+                    <th scope="col" class="px-6 py-3">
                         Nbr de passagers
                     </th>
-                    
-                     <th scope="col" class="px-6 py-3">
+                    <th scope="col" class="px-6 py-3">
                         Statut
                     </th>
 
@@ -82,7 +81,7 @@
             </thead>
             <tbody>
 
-                @foreach ($demandes as $i => $item)
+                @foreach ($demandes->sortByDesc('id') as $i => $item)
                     <tr class="bg-white border rounded-lg dark:bg-gray-800 ">
                         <td scope="row"
                             class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -91,13 +90,13 @@
                         <td class="px-6 py-4 ">
                             {{ $item->date }}
                         </td>
-                        
+
                         <td class="px-6 py-4 ">
                             {{ $item->motif }}
                         </td>
                         <td class="px-6 py-4">
                             {{ substr($item->lieu_depart, 0, 50) }}
-                        </td> 
+                        </td>
                         <td class="px-6 py-4 ">
                             {{ substr($item->destination, 0, 50) }}
                         </td>
@@ -108,21 +107,22 @@
                         </td>
                         <td class="px-6 py-4">
                             {{ $item->nbre_passagers }}
-
                         </td>
-                     
+
                        <td class="px-6 py-4">
-                        @if ( $item->status ==0)
+                        @if ( $item->status =='0')
                             en attente
                         @endif
-                        @if ( $item->status ==1)
+                        @if ( $item->status =='1')
                             traitée
                         @endif
-                        @if ( $item->status ==2)
-                        rejetée
-                    @endif
+                        @if ( $item->status =='2')
+                            rejetée
+                        @endif
                        
-                    </td> 
+                        </td> 
+
+
 
                         <td>
                             <button id="dropdownMenuIconButton" data-dropdown-toggle="dropdownDots{{ $i }}"
@@ -141,12 +141,12 @@
                                     <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
                                         aria-labelledby="dropdownMenuIconButton">
                                         <li>
-                                            <a href="{{ route('demandes.show', $item->id) }}"
-                                                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">voir</a>
+                                            <a href="{{ route('demandes.show', $item->id) }}" data-modal-target="show-modal" data-modal-toggle="show-modal"
+                                                onclick="show(event);"   class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">voir</a>
                                         </li>
                                         @if ($item->is_validated == 0)
                                             <li>
-                                                <a href="{{ route('demandes.edit', $item->id) }}"
+                                                <a href="{{ route('demandes.edit', $item->id) }}" data-modal-target="popup-modal" data-modal-toggle="popup-modal" onclick="show(event);"
                                                     class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Editer</a>
                                             </li>
                                             <li>
@@ -156,7 +156,7 @@
                                                     class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Supprimer</a>
                                             </li>
                                         @endif
-                                        
+
                                         @if (Session::get('authUser')->hasRole('charroi'))
                                             @if ( ($item->is_validated == 1)  && ($item->status == 0))
                                                 <li>
@@ -184,6 +184,7 @@
                                         
                                         @endif
 
+
                                     </ul>
 
                                 </div>
@@ -199,27 +200,15 @@
         {{ $demandes->links() }}
     </div>
     
-
-
+   
 
     <script>
         new DataTable('#example', {
             info: false,
             ordering: false,
             paging: false
-        
-        // language: {
-        //     paginate: {
-        //         next: '<span class="next-page">Suivant</span>',
-        //         previous: '<span class="prev-page">Précédent</span>'
-        //     }
-        // },
-        // initComplete: function() {
-        //     // Modifier la couleur de la pagination
-        //     $('.dataTables_paginate .pagination .page-item.active .page-link').css('background-color',
-        //         '#ff0000');
-        //     $('.dataTables_paginate .pagination .page-item .page-link').css('color', '#ff0000');
-        // }
+
+
         });
     </script>
     <script>
@@ -234,6 +223,8 @@
     </script>
     <x-deleteDemande :message="__('Voulez-vous vraiment supprimer cette demande ?')" />
 
+    <x-showDemande :message="__('Voulez-vous vraiment voir cette demande?')"/>
+    <x-editDemande :message="__('Voulez-vous vraiment modifier cette demande?')"/>
     <x-deleteDemande :message="__('Voulez-vous vraiment supprimer cette demande ?')" />
     <x-savecourse :demandes="$demandes" :vehicules="$vehicules" :chauffeurs="$chauffeurs" :message="__('Voulez-vous enregistrer une course ?')" />
     <script>
@@ -242,15 +233,17 @@
             form = document.querySelector('#crud-modal div div form div div #demande_id');
             value = form.getAttribute('value');
             form.setAttribute('value', demandeId);
-            //console.log(value);
-            /*var nombre_passagers = event.target.getAttribute('href')
-            console.log("nombre_passagers", nombre_passagers)
-            document.cookie = "name = " + nombre_passagers;
-            */
-            
-            
-            
+            console.log(value);
+
+
         }
     </script>
-</x-app-layout>
 
+    
+
+
+
+
+
+
+</x-app-layout>

@@ -11,16 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-
-
-
-        Schema::table('courses', function (Blueprint $table) {
-            //
-            $table->dateTime('date')->nullable();
-
-
+        Schema::table('delegations', function (Blueprint $table) {
+            $table->timestamp('deleted_at')->nullable();
         });
-
     }
 
     /**
@@ -28,12 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-
-
-
-        Schema::table('courses', function (Blueprint $table) {
-
-            //
+        Schema::table('delegations', function (Blueprint $table) {
+            $table->dropColumn(['deleted_at']);
         });
     }
 };

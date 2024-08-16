@@ -45,9 +45,9 @@
                     <th scope="col" class="px-6 py-3">
                         Destination
                     </th>
-                    {{-- <th scope="col" class="px-6 py-3">
+                    <th scope="col" class="px-6 py-3">
                         Date et Heure de deplacement
-                    </th> --}}
+                    </th>
 
                      <th scope="col" class="px-6 py-3">
                         Nbr de passagers
@@ -90,11 +90,11 @@
                             {{ $item->destination }}
                         </td>
 
-                        {{-- <td class="px-6 py-4">
+                        <td class="px-6 py-4">
                             {{ $item->date_deplacement }}
 
                         </td>
-                        --}}
+                       
                         <td class="px-6 py-4">
                             {{ $item->nbre_passagers }}
 
@@ -110,12 +110,16 @@
                             
                         </td>
                         <td class="px-6 py-4">
-                            @if($item->status == 1)
-                            Traitée
-                            @elseif($item->status == 2)
-                            Annulée
+                            @if($item->is_validated == 2)
+                                Fermée
                             @else
-                            En attente
+                                @if($item->status == '1')
+                                Traitée
+                                @elseif($item->status == '2')
+                                Annulée
+                                @else
+                                En attente
+                                @endif
                             @endif
                         </td> 
 
@@ -130,10 +134,10 @@
                                 <div id="dropdownDots{{$i}}"  class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
                                     <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconButton">
                                         <li>
-                                            <a href="{{ route('demandes.show', $item->id) }}"
+                                            <a href="{{ route('demandes.show', $item->id) }}" data-modal-target="show-modal" data-modal-toggle="show-modal" onclick="show(event);" 
                                                 class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">voir</a>
                                         </li>
-                                        @if (Session::get('userIsManager'))
+                                        @if (Session::get('userIsManager') || Session::get('delegation'))
                                             @if($item->is_validated == 0 )
                                                 <li>
                                                     <a href="{{route('envoyermailauchefcharroi',$item->id)}}" data-modal-target="popup-modal" data-modal-toggle="popup-modal" onclick="valider(event)" id="ButtonValider" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Valider</a> 
@@ -142,22 +146,6 @@
                                                 <li>
                                                     <a href="{{route('annulationmailparmanager',$item->id)}}" data-modal-target="suppression-modal"
                                                     data-modal-toggle="suppression-modal" onclick="supprimer(event)" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Annuler</a>
-                                                </li>
-                                            @endif
-                                        @endif
-                                        @if (Session::get('authUser')->hasRole('charroi'))
-                                            @if ( ($item->is_validated == 1)  && ($item->status == 0))
-                                                <li>
-                                                    <a onclick="editdemande(event, {{ $item->id }});"
-                                                        data-modal-target="crud-modal" data-modal-toggle="crud-modal"
-                                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Traiter</a>
-                                                </li>
-                                            
-                                                <li>
-                                                    <a onclick="supprimer(event);" data-modal-target="delete-modal"
-                                                        data-modal-toggle="delete-modal"
-                                                        href="{{ route('demandes.destroy', $item->id) }}"
-                                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Annuler</a>
                                                 </li>
                                             @endif
                                         @endif
@@ -174,7 +162,8 @@
         </table>
     </div>
     <x-deleteDemande :message="__('Voulez-vous vraiment supprimer cette demande ?')" />
-   
+    <x-showDemande :message="__('Voulez-vous vraiment voir cette demande?')"/>
+
     <script>
         function editdemande(event, demandeId) {
             event.preventDefault();

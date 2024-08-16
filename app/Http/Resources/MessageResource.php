@@ -17,15 +17,20 @@ class MessageResource extends JsonResource
         return [ 
             'id' => $this->resource->id,
             'contenu' => $this->resource->contenu,
+            'filepath' => $this->resource->filepath,
+            'isPicture' => $this->resource->isPicture,
+            'isVideo' => $this->resource->isVideo,
             'time' => $this->resource->created_at->toDateTimeString(),
             'user' => [
                 'id' => $this->resource->user->id,
                 'prenom' => $this->resource->user->first_name,
-                'name' => $this->resource->user->username,
+                'username' => $this->resource->user->username,
                 'postnom' => $this->resource->user->last_name,
                 'email' => $this->resource->user->email,
                 'telephone' => $this->resource->user->phone,
-                'emailVerifiedAt' => $this->resource->user->email_verified_at->toDateTimeString(),
+                'emailVerifiedAt' => ($this->resource->user->email_verified_at) 
+                                        ? $this->resource->user->email_verified_at->toDateTimeString()
+                                        : $this->resource->user->email_verified_at ,
                 'createdAt' => $this->resource->user->created_at->toDateTimeString(),
                 'updatedAt' => $this->resource->user->updated_at->toDateTimeString(),
                 ]

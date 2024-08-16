@@ -11,7 +11,7 @@
     <style>
         .icon {
             font-size: 32px;
-            color: black;
+            color: white;
             transition: color 0.3s ease;
         }
 
@@ -50,7 +50,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class=" bg-gradient-to-r from-green-50 to-orange-50 font-sans antialiased">
+<body class=" bg-gray-50 font-sans antialiased">
     <div class="min-h-screen  dark:bg-gray-900">
         @include('layouts.navigation')
         <div class="p-4 sm:ml-64 mt-10">
@@ -60,9 +60,9 @@
             <!-- Page Heading -->
             @if (isset($header))
                 <header class="bg-white dark:bg-gray-800 shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                         {{ $header }}
-                    </div>
+                    </div> 
                 </header>
             @endif
 

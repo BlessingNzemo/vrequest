@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
+use Exception;
 use App\Models\User;
 use App\Models\Delegation;
+use App\Notifications\UserDelegueNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -10,17 +12,21 @@ class DelegationController extends Controller
 {
     public function index()
    {
-    if(Session::get('authUser')){
+    if(Session::get('authUser') && Session::get('userIsManager')){
+     
         $manager_id = Session::get('authUser')->id; 
-        // dd($manager_id);
-
+        
         $delegations= Delegation::leftJoin('users','users.id','delegations.manager_id')  
                                     ->where('delegations.manager_id',$manager_id)
                                     ->get();
         
+        // dd($delegations);
     }
-    // dd($delegations);
+        
     return view ('delegations.index',compact('delegations'));
+        
+    
+    
    }
    public function create()
     {
@@ -30,24 +36,15 @@ class DelegationController extends Controller
 
     public function store(Request $request)
     {
-        // $validateData = $request->validate([
-        //     'user_id' => 'required:choix,users',
-        //     'motif' => 'required:delegations',
-        //     'date_debut' => 'required:delegations',
-        //     'date_fin' => 'required_if:delegations',
-            
-        //     ]);
         $manager_id = Session::get('authUser')->id;
-        $user_name=$request->user_id;
-        // dd($user_name);
         
-        // // $user = User::leftJoin('users','users.id','delegations.user_id')  
-        // //                         ->where('delegations.user_id',$user_id)
-        // //                         ->get();
-        // dd($user);
-        // $user_id = $user -> id;
-        // $user = User::where('first_name'.''.'last_name', $user_name)->get();
-        // dd($user);
+        $user_name=$request->user_id;
+
+        $request->validate([
+            'date_debut' => 'required',
+            'date_fin' => 'required',
+            'user_id' => 'required|different:manager_id'
+        ]);
         $sepNom = explode(" ",$user_name);
         
         $first_name = $sepNom[0];
@@ -57,19 +54,50 @@ class DelegationController extends Controller
         $user = User::where('first_name',$first_name) 
                     ->where('last_name',$last_name) 
                     ->first();
-        // dd($user);
-        $user_id = $user -> id;
-        // dd($user_id);
-        Delegation::create([
-            'motif' =>  $request->motif,
-            'user_id' => $user_id,
-            'manager_id' => $manager_id,
-            'date_debut' => $request->date_debut,
-            'date_fin' => $request->date_fin,
-        ]);
-
+        // dd($user);  
+        if( $user ){
+            $user_id = $user -> id;
+            
+            if($user_id != $manager_id){
+                $delegation =Delegation::create([
+                    'motif' =>  $request->motif,
+                    'user_id' => $user_id,
+                    'manager_id' => $manager_id,
+                    'date_debut' => $request->date_debut,
+                    'date_fin' => $request->date_fin,
+                ]);
+    
+                //Envoyer un mail au user qu'on veut déléguer
+    
+                $data =(object)[
+                    'id' => $delegation -> id ,
+                    'subject' => 'Nouvelle Délégation',
+                    'name' => $user -> username,
+                    'Motif' => $delegation ->motif
+                ];
+                
+                try{
+                    $user -> notify(new UserDelegueNotification($data));
+                }
+                catch(Exception $e){
+                    //print($e);
+                }
+    
+                return redirect()->route("delegations.index");
+            }
+            else{
+                return back()->with('failed', 'vous ne pouvez pas vous déléguer vous-même, 
+                veuillez choisir un autre délégué');
+            }
+            
+        }
+        else{
+            return back()->with('failed', 'le délégué ne s\'est pas encore enregistré dans l\'application');
+        }
         
-        return redirect()->route("delegations.index");
+        // dd($delegation);
+        
+        
     }
     
     public function show(Delegation $delegation)
@@ -102,23 +130,36 @@ class DelegationController extends Controller
     public function destroy(Delegation $delegation)
     {
         $delegation->delete();
-        return back()->with('success', 'délégation supprimée');
+        return back()->with('success', 'La délégation a été supprimée avec succès');
+    }
+    
+    public function restore(Delegation $delegation)
+    {
+        $delegation ->restore();
+
+        return redirect()->route('delegations.index')
+                        ->with('success', 'La délégation a été restauré avec succès.');
     }
 
-    public function selectSearchUser(Request $request){
-        
-        $users = [];
-        
-        if($request -> has('q')){
-            $search = $request -> q;
-            $users = User::select("id","username")
-                    ->where('username','LIKE',"%$search%")
-                    ->get();
+    public function delegueVue(){
+        if(Session::get('authUser')){
+     
+            $user_id = Session::get('authUser')->id; 
+            $delegations= Delegation::where('user_id',$user_id)->get();
+            foreach ($delegations as $delegation){
+                $managers_id[] =$delegation->manager_id;
+            }
+            
+            for($i=0;$i<count($managers_id);$i++){
+                $manager_id = $managers_id[$i];
+                $managers[] = User::where('id',$manager_id)->first();
+            }
+
+            return view ('delegations.delegue',compact('delegations'));
         }
-
-        return response()->json($users);
-
     }
+
+    
 }
 
 
