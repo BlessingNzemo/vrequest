@@ -110,7 +110,8 @@ class AuthenticateController extends Controller
     }
 }
   else{
-    return response()->json("username or password incorrect");
+    $response = ["success"=>false,"message"=>"username or password incorrect"];
+    return response()->json($response);
   }
        
     }

@@ -171,7 +171,17 @@
                                                         href="{{ route('demandes.destroy', $item->id) }}"
                                                         class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Annuler</a>
                                                 </li>
+                                               @foreach ($courses as $course)
+                                                   @if ($course->status == 'en_attente')
+                                                   <li>
+                                                    <a  onclick="editdemande(event, {{ $item->id }});" 
+                                                       data-modal-target="crud-modal" data-modal-toggle="crud-modal"
+                                                       class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Editer</a>
+                                               </li>
+                                                   @endif
+                                               @endforeach
                                             @endif
+                                        
                                         @endif
 
                                     </ul>

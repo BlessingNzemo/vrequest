@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Exception;
 use App\Models\Site;
 use App\Models\User;
+use App\Models\Course;
 use App\Models\Demande;
 use App\Models\UserInfo;
 use App\Models\Vehicule;
@@ -16,11 +17,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use App\Notifications\AgentNotification;
 use App\Notifications\ManagerNotification ;
 use Illuminate\Support\Facades\Notification;
-use App\Notifications\ChefCharroiEmail as NotificationsChefCharroiEmail;
 use App\Http\Controllers\envoyerMailAuManager;
-use App\Notifications\AgentNotification;
+use App\Notifications\ChefCharroiEmail as NotificationsChefCharroiEmail;
 
 class DemandeController extends Controller
 {
@@ -42,8 +43,10 @@ class DemandeController extends Controller
 
             $vehicules = Vehicule::all();
         $chauffeurs = Chauffeur::all();
+        $courses = Course::all();
         
-            return view('demandes.index', compact('demandes','chauffeurs','vehicules'));
+        
+            return view('demandes.index', compact('demandes','chauffeurs','vehicules','courses'));
         }
         $user_id = Session::get('authUser')->id;
 
