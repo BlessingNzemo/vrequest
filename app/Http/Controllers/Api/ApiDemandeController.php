@@ -16,7 +16,7 @@ class ApiDemandeController extends Controller
      */
     public function index()
     {
-        return response()->json(DemandeResource::collection($demandes = Demande::where('is_validated', 1)->where('status', 1)->orderByDesc('created_at')->get()));
+        return response()->json(DemandeResource::collection($demandes = Demande::where('is_validated', 1)->where('status', '1')->orderByDesc('created_at')->get()));
     }
 
     /**

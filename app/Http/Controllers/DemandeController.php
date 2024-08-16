@@ -344,8 +344,7 @@ class DemandeController extends Controller
                 $id[] = $collaborateur->user_id;
                 }
      
-        $demandes = DB::table('demandes')
-            ->whereIn('user_id', $id)->orderBy('id', 'desc')->paginate(10);
+        $demandes = Demande::whereIn('user_id', $id)->orderBy('id', 'desc')->paginate(10);
       
 
         return view('demandes.collaborateurs', compact('demandes'));
