@@ -95,11 +95,11 @@ class ApiDemandeController extends Controller
 
         $id = $request->id;
 
-        $demande_encours = Demande::where('user_id',$id)->where('status',0)->count();
-        $demandes_encours = Demande::where('user_id',$id)->where('status',0)->get();
-        $demande_traite = Demande::where('user_id',$id)->where('status',1)->count();
+        $demande_encours = Demande::where('user_id',$id)->where('status','0')->count();
+        $demandes_encours = Demande::where('user_id',$id)->where('status','0')->get();
+        $demande_traite = Demande::where('user_id',$id)->where('status','1')->count();
         $demande_total = Demande::where('user_id',$id)->count();
-        $demande_non_traite = Demande::where('is_validated',1)->where('status',0)->count();
+        $demande_non_traite = Demande::where('is_validated',1)->where('status','0')->count();
          
         $vehicule_nondispo = Vehicule::where('disponibilite',1)->count();
         $vehicule_disponible = Vehicule::where('disponibilite',0)->count();
@@ -142,7 +142,7 @@ class ApiDemandeController extends Controller
     
     public function getDemandeTraite(Request $request){
         $id = $request->id;
-        $demandes = Demande::where('user_id',$id)->where('status',1)->get();
+        $demandes = Demande::where('user_id',$id)->where('status','1')->get();
         return DemandeResource::collection($demandes);
     }
 
