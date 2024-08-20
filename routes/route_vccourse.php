@@ -13,5 +13,8 @@ Route::middleware('authenticate')->group(function(){
     Route::post('vehicules-disponibilite/{id}',[VehiculeController::class,'vehiculeDisponibilite'])->name('vehicules-disponibilite');
     Route::resource("courses",CourseController::class)->middleware('check:Course');
     Route::get("vehicules-search",[VehiculeController::class, 'search'])->name('vehicules.search');
+    Route::put("modifCourse/{demandes}",[CourseController::class, 'modifCourse'])->name('courses.modifCourse');
+    Route::put("modifShowVehicule/{demandes}",[CourseController::class, 'modifShowVehicule'])->name('courses.modifShowVehicule');
+
 });
 
