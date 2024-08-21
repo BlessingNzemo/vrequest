@@ -340,7 +340,6 @@ class DemandeController extends Controller
     }
 
 
-
     public function demandeCollaborateurs(){
         if(Session::get('userIsManager')){
             $email_manager = Session::get('userIsManager')->email_manager;
