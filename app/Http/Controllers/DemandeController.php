@@ -218,10 +218,13 @@ class DemandeController extends Controller
         
         $chauffeurs = Chauffeur::where('id',$courses->chauffeur_id)->first();
         $chauffeur_name = User::where('id',$chauffeurs->user_id)->first();
+        $chauffeurs = Chauffeur::with('user')->get();
+        $vehicule = Vehicule::all();
+
       
 
 
-        return view("demandes.show", compact('demandes', 'courses', 'vehicules', 'chauffeur_name'));
+        return view("demandes.show", compact('demandes', 'courses', 'vehicules', 'chauffeur_name', 'chauffeurs','vehicule'));
     }
     
     /**
