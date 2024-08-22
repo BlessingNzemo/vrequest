@@ -21,12 +21,15 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use App\Notifications\AgentNotification;
 
+
 use App\Notifications\ManagerNotification ;
 use Illuminate\Support\Facades\Notification;
 use App\Http\Controllers\envoyerMailAuManager;
 use App\Notifications\ChefCharroiEmail as NotificationsChefCharroiEmail;
+
 use App\Notifications\MailCharroiToAgentDemandeRejecte;
 use App\Notifications\UserDelegueNotification;
+
 
 class DemandeController extends Controller
 {
@@ -45,10 +48,13 @@ class DemandeController extends Controller
             // $demandes_en_attente = Demande :: where('')
 
             $vehicules = Vehicule::all();
-            $chauffeurs = Chauffeur::all();
 
-            // dd($demandes);
-            return view('demandes.index', compact('demandes', 'chauffeurs', 'vehicules'));
+        $chauffeurs = Chauffeur::all();
+        $courses = Course::all();
+        
+        
+            return view('demandes.index', compact('demandes','chauffeurs','vehicules','courses'));
+
         }
         
         
@@ -335,7 +341,6 @@ class DemandeController extends Controller
 
         return back()->with("success", "demande annulée avec succès");
     }
-
 
 
     public function demandeCollaborateurs(){
