@@ -21,13 +21,16 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use App\Notifications\AgentNotification;
 
+
 use App\Notifications\ManagerNotification ;
 use Illuminate\Support\Facades\Notification;
 use App\Http\Controllers\envoyerMailAuManager;
 use App\Jobs\CreationDemandeMailManager;
 use App\Notifications\ChefCharroiEmail as NotificationsChefCharroiEmail;
+
 use App\Notifications\MailCharroiToAgentDemandeRejecte;
 use App\Notifications\UserDelegueNotification;
+
 
 class DemandeController extends Controller
 {
@@ -45,9 +48,13 @@ class DemandeController extends Controller
             $demandes_traitees = Demande::where('status', 1)->get();
 
             $vehicules = Vehicule::all();
-            $chauffeurs = Chauffeur::all();
 
-            return view('demandes.index', compact('demandes', 'chauffeurs', 'vehicules'));
+        $chauffeurs = Chauffeur::all();
+        $courses = Course::all();
+        
+        
+            return view('demandes.index', compact('demandes','chauffeurs','vehicules','courses'));
+
         }
         
         
@@ -178,10 +185,13 @@ class DemandeController extends Controller
         
         $chauffeurs = Chauffeur::where('id',$courses->chauffeur_id)->first();
         $chauffeur_name = User::where('id',$chauffeurs->user_id)->first();
+        $chauffeurs = Chauffeur::with('user')->get();
+        $vehicule = Vehicule::all();
+
       
 
 
-        return view("demandes.show", compact('demandes', 'courses', 'vehicules', 'chauffeur_name'));
+        return view("demandes.show", compact('demandes', 'courses', 'vehicules', 'chauffeur_name', 'chauffeurs','vehicule'));
     }
     
     /**
@@ -302,7 +312,6 @@ class DemandeController extends Controller
     }
 
 
-
     public function demandeCollaborateurs(){
         if(Session::get('userIsManager')){
             $email_manager = Session::get('userIsManager')->email_manager;
@@ -312,8 +321,7 @@ class DemandeController extends Controller
                 $id[] = $collaborateur->user_id;
                 }
      
-        $demandes = DB::table('demandes')
-            ->whereIn('user_id', $id)->orderBy('id', 'desc')->paginate(10);
+        $demandes = Demande::whereIn('user_id', $id)->orderBy('id', 'desc')->paginate(10);
       
 
         return view('demandes.collaborateurs', compact('demandes'));

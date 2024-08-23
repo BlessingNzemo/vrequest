@@ -423,7 +423,7 @@
     <x-showDemande :message="__('Voulez-vous vraiment voir cette demande?')"/>
     <x-editDemande :message="__('Voulez-vous vraiment modifier cette demande?')"/>
     <x-deleteDemande :message="__('Voulez-vous vraiment supprimer cette demande ?')" />
-    <x-savecourse :demandes="$demandes" :vehicules="$vehicules" :chauffeurs="$chauffeurs" :message="__('Voulez-vous enregistrer une course ?')" />
+    {{-- <x-savecourse :demandes="$demandes" :vehicules="$vehicules" :chauffeurs="$chauffeurs" :message="__('Voulez-vous enregistrer une course ?')" /> --}}
     <script>
         function editdemande(event, demandeId) {
             event.preventDefault();

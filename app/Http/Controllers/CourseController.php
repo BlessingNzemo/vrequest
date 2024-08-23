@@ -190,4 +190,29 @@ class CourseController extends Controller
     {
         //
     }
+    public function modifCourse(Request $request, Demande $demande){
+        
+        $demande = Demande::where('id', $request->demande_id)->first();
+        $course = Course::where('demande_id', $demande->id)->first();
+        $course->update([
+            'chauffeur_id' => $request->chauffeur_id
+        ]);
+       
+            return back()->with('success', 'chauffeur modifier avec succès');
+        
+        }
+
+        public function modifShowVehicule(Request $request, Demande $demande){
+        
+            $demande = Demande::where('id', $request->demande_id)->first();
+            $course = Course::where('demande_id', $demande->id)->first();
+            $course->update([
+                'vehicule_id' => $request->vehicule_id
+             
+            ]);
+           
+                return back()->with('success', 'vehicule modifier avec succès');
+            
+            }
+
 }

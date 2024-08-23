@@ -1,53 +1,51 @@
-
-
 <x-app-layout>
-   
+
     <x-slot name="header">
         <div class="flex items-center justify-between px-0">
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight text-center">
                 {{ __('Demandes à traiter') }}
             </h2>
-            
+
 
         </div>
     </x-slot>
-    @if(session('success'))
+    @if (session('success'))
         <div class="flex p-4 mb-4 text-sm rounded-lg bg-green-500 " id="success-message">
-            {{session('success')}}
+            {{ session('success') }}
         </div>
         <script>
             // Faire disparaître le message de succès après 5 secondes
             setTimeout(function() {
                 document.getElementById('success-message').style.display = 'none';
-            }, 5000) 
+            }, 5000)
         </script>
     @endif
 
-    @if(session('failed'))
+    @if (session('failed'))
         <div class="flex p-4 mb-4 text-sm rounded-lg bg-red-500 " id="failed-message">
-            {{session('failed')}}
+            {{ session('failed') }}
         </div>
         <script>
             // Faire disparaître le message de succès après 5 secondes
             setTimeout(function() {
                 document.getElementById('failed-message').style.display = 'none';
-            }, 5000) 
+            }, 5000)
         </script>
     @endif
 
-    @if(session('rejected'))
+    @if (session('rejected'))
         <div class="flex p-4 mb-4 text-sm rounded-lg bg-yellow-300 " id="rejected-message">
-            {{session('rejected')}}
+            {{ session('rejected') }}
         </div>
         <script>
             // Faire disparaître le message de succès après 5 secondes
             setTimeout(function() {
                 document.getElementById('rejected-message').style.display = 'none';
-            }, 5000) 
+            }, 5000)
         </script>
     @endif
 
-     
+
 
 <div class="flex flex-col">
     <div class=" overflow-x-auto pb-4">
@@ -104,19 +102,20 @@
                                                 <span class="font-medium text-xs text-red-600 ">Rejetée</span>
                                             </div>
                                         @endif
-                                    
-                                    
-                                
-                                </td>
-                                <td>
-                                    <button id="dropdownMenuIconButton" data-dropdown-toggle="dropdownDots{{ $i }}"
-                                        class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-                                        type="button">
-                                        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                            fill="currentColor" viewBox="0 0 4 15">
-                                            <path
-                                                d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
-                                        </svg>
+
+
+
+                                    </td>
+                                    <td>
+                                        <button id="dropdownMenuIconButton"
+                                            data-dropdown-toggle="dropdownDots{{ $i }}"
+                                            class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                                            type="button">
+                                            <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                                fill="currentColor" viewBox="0 0 4 15">
+                                                <path
+                                                    d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
+                                            </svg>
 
 
                                         <!-- Dropdown menu -->
@@ -170,24 +169,24 @@
                                                     @endif
                                                 @endif
 
-                                            </ul>
+                                                </ul>
 
-                                        </div>
-                                    </button>
+                                            </div>
+                                        </button>
 
-                                </td>
-                                
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-                {{ $demandes->links() }}
+                                    </td>
+
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    {{ $demandes->links() }}
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-    
+
 
 
 
@@ -196,37 +195,53 @@
             info: false,
             ordering: false,
             paging: false
-        
-        // language: {
-        //     paginate: {
-        //         next: '<span class="next-page">Suivant</span>',
-        //         previous: '<span class="prev-page">Précédent</span>'
-        //     }
-        // },
-        // initComplete: function() {
-        //     // Modifier la couleur de la pagination
-        //     $('.dataTables_paginate .pagination .page-item.active .page-link').css('background-color',
-        //         '#ff0000');
-        //     $('.dataTables_paginate .pagination .page-item .page-link').css('color', '#ff0000');
-        // }
+
+            // language: {
+            //     paginate: {
+            //         next: '<span class="next-page">Suivant</span>',
+            //         previous: '<span class="prev-page">Précédent</span>'
+            //     }
+            // },
+            // initComplete: function() {
+            //     // Modifier la couleur de la pagination
+            //     $('.dataTables_paginate .pagination .page-item.active .page-link').css('background-color',
+            //         '#ff0000');
+            //     $('.dataTables_paginate .pagination .page-item .page-link').css('color', '#ff0000');
+            // }
         });
     </script>
-    
+
     <x-deleteDemande :message="__('Voulez-vous vraiment supprimer cette demande ?')" />
 
-    <x-showDemande :message="__('Voulez-vous vraiment voir cette demande?')"/>
+    <x-showDemande :message="__('Voulez-vous vraiment voir cette demande?')" />
     <x-deleteDemande :message="__('Voulez-vous vraiment supprimer cette demande ?')" />
     <x-savecourse :demandes="$demandes" :vehicules="$vehicules" :chauffeurs="$chauffeurs" :message="__('Voulez-vous enregistrer une course ?')" />
-    <x-rejetDemandeParCharroi :message="__('Voulez-vous vraiment rejeter cette demande?')"/>
+    <x-rejetDemandeParCharroi :message="__('Voulez-vous vraiment rejeter cette demande?')" />
     <script>
-        function editdemande(event, demandeId) {
+        
+        function editdemande(event, demandeId, vehicules, nombre) {
             event.preventDefault();
+           
             form = document.querySelector('#crud-modal div div form div div #demande_id');
+            var vehiculeSelect = document.querySelector("#crud-modal div div form div div #vehicule_id")
             value = form.getAttribute('value');
             form.setAttribute('value', demandeId);
             console.log(value);
+            vehiculeSelect.innerHTML = '';
+            var opt1 = document.createElement('option');
+            opt1.value = 'vehicule';
+            opt1.text = 'Sélectionnez un véhicule';
+            vehiculeSelect.add(opt1);
+            vehicules.forEach(function(option) {
+                if (option.capacite >= nombre) {
+                    var opt = document.createElement("option");
+                    opt.value = option.id;
+                    opt.text = option.plaque + "=" + option.capacite;
+                    vehiculeSelect.add(opt);
+                }
+            });
 
-            
+
         }
     </script>
 
@@ -234,7 +249,3 @@
 
 
 </x-app-layout>
-
-
-
-
