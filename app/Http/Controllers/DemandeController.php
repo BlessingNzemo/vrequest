@@ -42,12 +42,10 @@ class DemandeController extends Controller
 
             $demandes_validees = Demande::where('is_validated', 1)->get();
             $demandes_traitees = Demande::where('status', 1)->get();
-            // $demandes_en_attente = Demande :: where('')
 
             $vehicules = Vehicule::all();
             $chauffeurs = Chauffeur::all();
 
-            // dd($demandes);
             return view('demandes.index', compact('demandes', 'chauffeurs', 'vehicules'));
         }
         
@@ -98,12 +96,8 @@ class DemandeController extends Controller
         $status= '0';
         $is_validated=0;
         $user_info = UserInfo::where('user_id',$user_id)->first();
-        // dd($user_info );
         $email_manager = $user_info -> email_manager;
-        // dd($email_manager);
         $manager = User::where('email',$email_manager)->first();
-        $manager_id = $manager->id;
-        // dd($manager_id);
 
         $demandes = Demande::create([
             'ticket' => $ticket,
@@ -120,73 +114,75 @@ class DemandeController extends Controller
             'user_id' => $user_id,
             'status' => $status,
             'is_validated' => $is_validated,
-            'manager_id'=> $manager_id
         ]);
 
+        if($manager){
+            $manager_id = $manager->id;
+        
             $demandes->manager_id = $manager_id;
             $demandes->update();
-            // dd($demandes);
-    //CODE POUR ENVOYER UN MAIL AU MANAGER DE L'AGENT QUI SOUMET SA DEMANDE
-        
+            
+        //CODE POUR ENVOYER UN MAIL AU MANAGER DE L'AGENT QUI SOUMET SA DEMANDE
+            
 
-        //Récupération du manager
-        $demandes_id = $demandes->id;
-        $demande = Demande::find($demandes_id);
-        $user_id = $demande->user_id;
-        $user_info = UserInfo::where('user_id', $user_id)->first();
-        $email_manager = $user_info->email_manager;
-        $manager = User::where('email', $email_manager)->first();
+            //Récupération du manager
+            $demandes_id = $demandes->id;
+            $demande = Demande::find($demandes_id);
+            $user_id = $demande->user_id;
+            $user_info = UserInfo::where('user_id', $user_id)->first();
+            $email_manager = $user_info->email_manager;
+            $manager = User::where('email', $email_manager)->first();
+            
         
-        
-        $delegations = Delegation::where('manager_id',$manager_id)->where('status',1)->get();
-        
-        if($delegations->count()>0){
-            foreach ($delegations as $delegation ){
-                    if($delegation->status == 1){
-                        $users_id[] =$delegation->user_id;
-                        $delegues=[];
+            $delegations = Delegation::where('manager_id',$manager_id)->where('status',1)->get();
+            
+            if($delegations->count()>0){
+                foreach ($delegations as $delegation ){
+                        if($delegation->status == 1){
+                            $users_id[] =$delegation->user_id;
+                            $delegues=[];
 
+                        $data = (object) [
+                            'id' => $demande->id,
+                            'subject' => 'Nouvelle demande',
+                            'name' => $manager->username,
+                        ];
+
+                        for($i=0;$i<count($users_id);$i++){
+                            $delegue[$i]= User::findOrFail($users_id[$i]);
+
+                        try {
+                            $delegue[$i]->notify(new UserDelegueNotification($data));
+                        } catch (Exception $e) {
+                        // print($e);
+                        }
+
+                    }
+                }
+                    
+
+            }
+            }
+            
+            else{
+                if($manager){
+                    // Données à envoyer
                     $data = (object) [
                         'id' => $demande->id,
                         'subject' => 'Nouvelle demande',
-                        'name' => $manager->username,
+                        'manager_name' => $manager->username,
                     ];
 
-                    for($i=0;$i<count($users_id);$i++){
-                        $delegue[$i]= User::findOrFail($users_id[$i]);
-
                     try {
-                        $delegue[$i]->notify(new UserDelegueNotification($data));
+                        $manager->notify(new ManagerNotification($data));
                     } catch (Exception $e) {
                     // print($e);
                     }
-
                 }
-            }
                 
 
-        }
-        }
-        
-        else{
-            if($manager){
-                // Données à envoyer
-                $data = (object) [
-                    'id' => $demande->id,
-                    'subject' => 'Nouvelle demande',
-                    'manager_name' => $manager->username,
-                ];
-
-                try {
-                    $manager->notify(new ManagerNotification($data));
-                } catch (Exception $e) {
-                // print($e);
-                }
             }
-            
-
         }
-        
        
           
 
@@ -201,7 +197,6 @@ class DemandeController extends Controller
     public function show(string $id)
     {
         $demandes = Demande::with('courses')->findOrFail($id);
-        
         $courses = Course::where('demande_id',$id)->first();
         if(!$courses){
           $vehicules = 0;
@@ -330,7 +325,7 @@ class DemandeController extends Controller
 
         // dd($demande);
 
-        return back()->with("success", "demande annulée avec succès");
+        return back()->with("annuler", "demande annulée avec succès");
     }
 
 
