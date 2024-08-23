@@ -37,10 +37,10 @@ class ManagerNotification extends Notification
         return (new MailMessage)
                     ->from(env('MAIL_FROM_ADDRESS'),env('APP_NAME'))
                     ->subject($this->data->subject)
-                    ->greeting('Cher '.$this->data->manager_name)
+                    ->greeting('Cher '.$this->data->name)
                     ->line('Une nouvelle demande  a été envoyée')
                     ->line('Demande n° '.$this->data->id)
-                    ->action('Voir plus', route('demandes.show',$this->data->id))
+                    ->action('Voir plus', route('demandes.show',$this->data->Url))
                     ->line('Merci d\'utiliser '.env('APP_NAME'));
 
                 

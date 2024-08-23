@@ -41,7 +41,7 @@ class AgentNotification extends Notification
                     ->line('Demande n° '.$this->data->id)
                     ->line('Votre demande a été '.$this->data->etat)
                     ->line('Motif de rejet : '.$this->data->raison)
-                    ->action('Voir plus', route('demandes.show',$this->data->id))
+                    ->action('Voir plus', route('demandes.show',$this->data->Url))
                     ->line('Merci d\'utiliser '.env('APP_NAME'));
                     
     }
