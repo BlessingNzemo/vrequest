@@ -40,7 +40,7 @@ class AgentNotificationDemandeAcceptee extends Notification
                     ->greeting('Cher '.$this->data->agent_name)
                     ->line('Demande n° '.$this->data->id)
                     ->line('Votre demande a été '.$this->data->etat.' avec succès')
-                    ->action('Voir plus',route('demandes.show',$this->data->id))
+                    ->action('Voir plus',route('demandes.show',$this->data->Url))
                     ->line('Merci d\'utiliser '.env('APP_NAME'));
                     
     }

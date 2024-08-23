@@ -40,7 +40,7 @@ class ChauffeurNotification extends Notification
                 ->greeting('Cher '.$this->data->chauffeur)
                 ->line('Demande n° '.$this->data->id)
                 ->line('Vous êtes affecté à la course '.$this->data->course_id)
-                ->action('Voir plus',route('demandes.show',$this->data->id))
+                ->action('Voir plus',route('demandes.show',$this->data->Url))
                 ->line('Merci d\'utiliser '.env('APP_NAME'));   
     }
 
