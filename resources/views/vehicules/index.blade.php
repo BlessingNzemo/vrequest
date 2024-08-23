@@ -87,28 +87,49 @@
                             
                             @if ($item->disponibilite==1)
                                 
+                            <span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-red-400 border border-red-400">occupé</span>
+                            
+                           @else
+                           <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400">disponible</span>
                            
-                            <a onclick="changerDisponibilite(event);" data-modal-target="disponibilite"
-                            data-modal-toggle="disponibilite" href="{{ route('vehicules-disponibilite', $item->id) }}"
-                           class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-xs px-5 py-2.5 text-center me-2 mb-2">
-                           occupé</a>
-                           @endif
-                           @if ($item->disponibilite==0)
-                           
-                           <a onclick="changerIndisponibilite(event);" data-modal-target="indisponibilite"
-                           data-modal-toggle="indisponibilite" href="{{route('vehicules-disponibilite',$item->id)}}" class="text-white bg-gradient-to-r from-gray-400 via-gray-400 to-gray-500 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-gray-300 dark:focus:ring-gray-800 shadow-lg shadow-gray-500/50 dark:shadow-lg dark:shadow-gray-800/80 font-medium rounded-lg text-xs px-7 py-2.5 text-center me-4 mb-2" >
-                            disponible</a>
                            @endif
                        </td>
                         <td class="px-6 py-4">
-                            <a onclick="edit(event)" href="{{ route('vehicules.update',$item->id) }}" data-modal-target="crud-modal1" data-modal-toggle="crud-modal1"
-                                class="text-white bg-gradient-to-r from-gray-400 via-gray-400 to-gray-500 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-gray-300 dark:focus:ring-gray-800 shadow-lg shadow-gray-500/50 dark:shadow-lg dark:shadow-gray-800/80 font-medium rounded-lg text-xs px-7 py-2.5 text-center me-4 mb-2" >
-                                Editer</a>
 
-                            <a onclick="supprimer(event);" data-modal-target="delete-modal"
-                                data-modal-toggle="delete-modal" href="{{ route('vehicules.destroy', $item->id) }}"
-                                class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-xs px-5 py-2.5 text-center me-2 mb-2">
-                                Supprimer</a>
+                                                        
+                            <button id="dropdownMenuIconButton" data-dropdown-toggle="dropdownDots{{ $i + 1 }}" class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button">
+                                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 4 15">
+                                <path d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"/>
+                                </svg>
+                                </button>
+                                
+                                <!-- Dropdown menu -->
+                                <div id="dropdownDots{{ $i + 1 }}" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconButton">
+                                        @if ($item->disponibilite==1)
+                                    <li>
+                                        <a onclick="changerDisponibilite(event);" data-modal-target="disponibilite"
+                                        data-modal-toggle="disponibilite" href="{{ route('vehicules-disponibilite', $item->id) }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">disponibilité</a>
+                                    </li>
+                                    @else
+
+                                    <li>
+                                        <a onclick="changerIndisponibilite(event);" data-modal-target="indisponibilite"
+                                        data-modal-toggle="indisponibilite" href="{{route('vehicules-disponibilite',$item->id)}}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">disponibilité</a>
+                                    </li>
+                                    @endif
+                                    <li>
+                                        <a onclick="edit(event)" href="{{ route('vehicules.update',$item->id) }}" data-modal-target="crud-modal1" data-modal-toggle="crud-modal1" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Editer</a>
+                                    </li>
+                                    </ul>
+                                    <div class="py-2">
+                                    <a onclick="supprimer(event);" data-modal-target="delete-modal"
+                                    data-modal-toggle="delete-modal" href="{{ route('vehicules.destroy', $item->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Supprimer</a>
+                                    </div>
+                                </div>
+    
+
+    
                         </td>
                     </tr>
                 @endforeach

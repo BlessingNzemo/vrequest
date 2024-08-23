@@ -173,23 +173,27 @@ class DemandeController extends Controller
 
     public function show(string $Url)
     {
+        
         // dd($Url);
         $demandes = Demande::with('courses')->where('Url', $Url)->firstOrFail();
         $courses = Course::where('demande_id',$demandes->id)->first();
         if(!$courses){
-          $vehicules = 0;
-          $chauffeur_name = 0;
-          return view("demandes.show", compact('demandes', 'courses', 'vehicules', 'chauffeur_name'));
+          $vehicules = [];
+          $chauffeur_name = null;
+          $chauffeurs= [];
+          $vehicule = null;
+          return view("demandes.show", compact('demandes','vehicule', 'courses', 'vehicules', 'chauffeur_name','chauffeurs'));
         }
-        $vehicules = Vehicule::where('id',$courses->vehicule_id)->first();
+        $vehicule = Vehicule::where('id',$courses->vehicule_id)->first();
         
         $chauffeurs = Chauffeur::where('id',$courses->chauffeur_id)->first();
         $chauffeur_name = User::where('id',$chauffeurs->user_id)->first();
+
         $chauffeurs = Chauffeur::with('user')->get();
-        $vehicule = Vehicule::all();
+        $vehicules = Vehicule::all();
 
-      
-
+       
+        
 
         return view("demandes.show", compact('demandes', 'courses', 'vehicules', 'chauffeur_name', 'chauffeurs','vehicule'));
     }
@@ -347,8 +351,8 @@ class DemandeController extends Controller
             // $demandes_traitees = Demande::where('status', 1)->get();
             // $demandes_en_attente = Demande::where('status', 0)->get();
 
-
-            $vehicules = Vehicule::all();
+            
+            $vehicules = Vehicule::where('disponibilite',0)->get();
             $chauffeurs = Chauffeur::all();
 
             return view('demandes.charroi', compact('demandes', 'chauffeurs', 'vehicules'));
