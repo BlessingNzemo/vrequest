@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class AgentNotificationDemandeAcceptee extends Notification
+class MailCharroiToAgentDemandeRejecte extends Notification
 {
     use Queueable;
 
@@ -37,12 +37,12 @@ class AgentNotificationDemandeAcceptee extends Notification
         return (new MailMessage)
                     ->from(env('MAIL_FROM_ADDRESS'),env('APP_NAME'))
                     ->subject($this->data->subject)
-                    ->greeting('Cher '.$this->data->agent_name)
+                    ->greeting('cher '.$this->data->name)
                     ->line('Demande n° '.$this->data->id)
-                    ->line('Votre demande a été '.$this->data->etat.' avec succès')
-                    ->action('Voir plus',route('demandes.show',$this->data->Url))
+                    ->line('Votre demande a été '.$this->data->etat)
+                    ->line('Motif de rejet : '.$this->data->raison)
+                    ->action('Voir plus', route('demandes.show',$this->data->Url))
                     ->line('Merci d\'utiliser '.env('APP_NAME'));
-                    
     }
 
     /**

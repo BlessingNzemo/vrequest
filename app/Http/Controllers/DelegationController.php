@@ -39,7 +39,12 @@ class DelegationController extends Controller
         $manager_id = Session::get('authUser')->id;
         
         $user_name=$request->user_id;
-        
+
+        $request->validate([
+            'date_debut' => 'required',
+            'date_fin' => 'required',
+            'user_id' => 'required|different:manager_id'
+        ]);
         $sepNom = explode(" ",$user_name);
         
         $first_name = $sepNom[0];
@@ -49,44 +54,50 @@ class DelegationController extends Controller
         $user = User::where('first_name',$first_name) 
                     ->where('last_name',$last_name) 
                     ->first();
-        // dd($user);
-        $user_id = $user -> id;
-        // dd($user_id );
-        // dd();
-        $request->validate([
-            'date_debut' => 'required|after:today',
-            'date_fin' => 'required|after:date_debut',
-            'user_id' => 'required|different:manager_id'
-        ]);
-        
-        
-        $delegation =Delegation::create([
-            'motif' =>  $request->motif,
-            'user_id' => $user_id,
-            'manager_id' => $manager_id,
-            'date_debut' => $request->date_debut,
-            'date_fin' => $request->date_fin,
-        ]);
-        // dd($delegation);
-
-        //Envoyer un mail au user qu'on veut déléguer
-
-        $data =(object)[
-            'id' => $delegation -> id ,
-            'subject' => 'Nouvelle Délégation',
-            'name' => $user -> username,
-            'Motif' => $delegation ->motif
-        ];
-        
-        try{
-            $user -> notify(new UserDelegueNotification($data));
+        // dd($user);  
+        if( $user ){
+            $user_id = $user -> id;
+            
+            if($user_id != $manager_id){
+                $delegation =Delegation::create([
+                    'motif' =>  $request->motif,
+                    'user_id' => $user_id,
+                    'manager_id' => $manager_id,
+                    'date_debut' => $request->date_debut,
+                    'date_fin' => $request->date_fin,
+                ]);
+    
+                //Envoyer un mail au user qu'on veut déléguer
+    
+                $data =(object)[
+                    'id' => $delegation -> id ,
+                    'subject' => 'Nouvelle Délégation',
+                    'name' => $user -> username,
+                    'Motif' => $delegation ->motif
+                ];
+                
+                try{
+                    $user -> notify(new UserDelegueNotification($data));
+                }
+                catch(Exception $e){
+                    //print($e);
+                }
+    
+                return redirect()->route("delegations.index");
+            }
+            else{
+                return back()->with('failed', 'vous ne pouvez pas vous déléguer vous-même, 
+                veuillez choisir un autre délégué');
+            }
+            
         }
-        catch(Exception $e){
-            //print($e);
+        else{
+            return back()->with('failed', 'le délégué ne s\'est pas encore enregistré dans l\'application');
         }
+        
         // dd($delegation);
         
-        return redirect()->route("delegations.index");
+        
     }
     
     public function show(Delegation $delegation)

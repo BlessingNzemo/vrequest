@@ -40,7 +40,9 @@
     </div>
 </div>
 <script>
-    function showDemande(event) {
+
+    function show1(event) {
+
         event.preventDefault()
         const lien = event.target.getAttribute('href')
         const form = document.querySelector("#show-modal form")

@@ -21,11 +21,16 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use App\Notifications\AgentNotification;
 
+
 use App\Notifications\ManagerNotification ;
 use Illuminate\Support\Facades\Notification;
 use App\Http\Controllers\envoyerMailAuManager;
+use App\Jobs\CreationDemandeMailManager;
 use App\Notifications\ChefCharroiEmail as NotificationsChefCharroiEmail;
+
+use App\Notifications\MailCharroiToAgentDemandeRejecte;
 use App\Notifications\UserDelegueNotification;
+
 
 class DemandeController extends Controller
 {
@@ -41,13 +46,15 @@ class DemandeController extends Controller
 
             $demandes_validees = Demande::where('is_validated', 1)->get();
             $demandes_traitees = Demande::where('status', 1)->get();
-            // $demandes_en_attente = Demande :: where('')
 
             $vehicules = Vehicule::all();
-            $chauffeurs = Chauffeur::all();
 
-            // dd($demandes);
-            return view('demandes.index', compact('demandes', 'chauffeurs', 'vehicules'));
+        $chauffeurs = Chauffeur::all();
+        $courses = Course::all();
+        
+        
+            return view('demandes.index', compact('demandes','chauffeurs','vehicules','courses'));
+
         }
         
         
@@ -70,7 +77,6 @@ class DemandeController extends Controller
     public function store(Request $request)
     {
         $validateData = $request->validate([
-
             'choix' => 'required|in:choix-liste,choix-carte',
             'motif' => 'required:demandes',
             'date' => 'required:demandes',
@@ -88,104 +94,75 @@ class DemandeController extends Controller
             'longitude_destination1' => 'required_if:choix,choix-carte',
             'latitude_destination1' => 'required_if:choix,choix-carte',
             'date_deplacement' => 'required|after:today'
-
         ]);
 
         $ticket = Str::random(8);
         $user_id = Session::get('authUser')->id;
 
-        $status= "0";
+        $status= '0';
         $is_validated=0;
         $user_info = UserInfo::where('user_id',$user_id)->first();
-        // dd($user_info );
         $email_manager = $user_info -> email_manager;
-        // dd($email_manager);
         $manager = User::where('email',$email_manager)->first();
-        $manager_id = $manager->id;
-        // dd($manager_id);
+        $Url = Str::random(16);
+        // dd($Url);
 
-        $demandes = Demande::create([
-            'ticket' => $ticket,
-            'motif' => $request->motif,
-            'date' => $request->date,
-            'destination' => !empty($request->destination) ? $request->destination : $request->destination1,
-            'nbre_passagers' => $request->nbre_passagers,
-            'lieu_depart' => !empty($request->lieu_depart) ? $request->lieu_depart : $request->lieu_depart1,
-            'longitude_depart' => !empty($request->longitude_depart) ? $request->longitude_depart : $request->longitude_depart1,
-            'latitude_depart' => !empty($request->latitude_depart) ? $request->latitude_depart : $request->latitude_depart1,
-            'longitude_destination' => !empty($request->longitude_destination) ? $request->longitude_destination : $request->longitude_destination1,
-            'latitude_destination' => !empty($request->latitude_destination) ? $request->latitude_destination : $request->latitude_destination1,
-            'date_deplacement' => $request->date_deplacement,
-            'user_id' => $user_id,
-            'status' => $status,
-            'is_validated' => $is_validated,
-            'manager_id'=> $manager_id
-        ]);
-
-            $demandes->manager_id = $manager_id;
-            $demandes->update();
-            // dd($demandes);
-    //CODE POUR ENVOYER UN MAIL AU MANAGER DE L'AGENT QUI SOUMET SA DEMANDE
-        
-
-        //Récupération du manager
-        $demandes_id = $demandes->id;
-        $demande = Demande::find($demandes_id);
-        $user_id = $demande->user_id;
-        $user_info = UserInfo::where('user_id', $user_id)->first();
-        $email_manager = $user_info->email_manager;
-        $manager = User::where('email', $email_manager)->first();
-        
-        
-        $delegations = Delegation::where('manager_id',$manager_id)->where('status',1)->get();
-        
-        if($delegations->count()>0){
-            foreach ($delegations as $delegation ){
-                    if($delegation->status == 1){
-                        $users_id[] =$delegation->user_id;
-                        $delegues=[];
-
-                    $data = (object) [
-                        'id' => $demande->id,
-                        'subject' => 'Nouvelle demande',
-                        'name' => $manager->username,
-                    ];
-
-                    for($i=0;$i<count($users_id);$i++){
-                        $delegue[$i]= User::findOrFail($users_id[$i]);
-
-                    try {
-                        $delegue[$i]->notify(new UserDelegueNotification($data));
-                    } catch (Exception $e) {
-                    // print($e);
-                    }
-
-                }
-            }
-                
-
-        }
-        }
-        
-        else{
+        if($manager){
+            $demande = Demande::create([
+                'ticket' => $ticket,
+                'motif' => $request->motif,
+                'date' => $request->date,
+                'destination' => !empty($request->destination) ? $request->destination : $request->destination1,
+                'nbre_passagers' => $request->nbre_passagers,
+                'lieu_depart' => !empty($request->lieu_depart) ? $request->lieu_depart : $request->lieu_depart1,
+                'longitude_depart' => !empty($request->longitude_depart) ? $request->longitude_depart : $request->longitude_depart1,
+                'latitude_depart' => !empty($request->latitude_depart) ? $request->latitude_depart : $request->latitude_depart1,
+                'longitude_destination' => !empty($request->longitude_destination) ? $request->longitude_destination : $request->longitude_destination1,
+                'latitude_destination' => !empty($request->latitude_destination) ? $request->latitude_destination : $request->latitude_destination1,
+                'date_deplacement' => $request->date_deplacement,
+                'user_id' => $user_id,
+                'status' => $status,
+                'is_validated' => $is_validated,
+                'Url'=> $Url,
+                'manager_id' => $manager->id
+            ]);
+            
+            //CODE POUR ENVOYER UN MAIL AU MANAGER DE L'AGENT QUI SOUMET SA DEMANDE
+            
             // Données à envoyer
             $data = (object) [
                 'id' => $demande->id,
+                'Url' =>$demande->Url,
                 'subject' => 'Nouvelle demande',
                 'name' => $manager->username,
+                'sender' => $manager,
+                'to' => 'manager'
             ];
 
-            try {
-                $manager->notify(new ManagerNotification($data));
-            } catch (Exception $e) {
-            // print($e);
+            CreationDemandeMailManager::dispatch($data);
+
+            $delegations = Delegation::where('manager_id',$manager->id)->where('status',1)->get();
+           
+            foreach ($delegations as $delegation ){
+                $user = $delegation->user()->firstOrFail();
+                // dd($user);
+                // dd($demande->Url);
+                $data = (object) [
+                    'id' => $demande->id,
+                    'Url' =>$demande->Url,
+                    'subject' => 'Nouvelle demande',
+                    'name' => $user->username,
+                    'sender' => $user,
+                    'to' => 'delegue',
+
+                ];
+
+                CreationDemandeMailManager::dispatch($data)->delay(now()->addMinutes(1));
+
+
             }
-
         }
-        
        
-          
-
         return redirect()->route('demandes.index');
     }
 
@@ -194,11 +171,11 @@ class DemandeController extends Controller
      * Display the specified resource.
      */
 
-    public function show(string $id)
+    public function show(string $Url)
     {
-        $demandes = Demande::with('courses')->findOrFail($id);
-        
-        $courses = Course::where('demande_id',$id)->first();
+        // dd($Url);
+        $demandes = Demande::with('courses')->where('Url', $Url)->firstOrFail();
+        $courses = Course::where('demande_id',$demandes->id)->first();
         if(!$courses){
           $vehicules = 0;
           $chauffeur_name = 0;
@@ -208,10 +185,13 @@ class DemandeController extends Controller
         
         $chauffeurs = Chauffeur::where('id',$courses->chauffeur_id)->first();
         $chauffeur_name = User::where('id',$chauffeurs->user_id)->first();
+        $chauffeurs = Chauffeur::with('user')->get();
+        $vehicule = Vehicule::all();
+
       
 
 
-        return view("demandes.show", compact('demandes', 'courses', 'vehicules', 'chauffeur_name'));
+        return view("demandes.show", compact('demandes', 'courses', 'vehicules', 'chauffeur_name', 'chauffeurs','vehicule'));
     }
     
     /**
@@ -267,13 +247,16 @@ class DemandeController extends Controller
 
         $data = (object) [
             'id' => $demande->id,
+            'Url' => $demande->Url,
             'subject' => 'Nouvelle demande',
-            'name' => $chef_charroi->username
+            'name' => $chef_charroi->username,
+            'charroi_name' => $chef_charroi->username
+
         ];
         try {
             $chef_charroi->notify(new NotificationsChefCharroiEmail($data));
 
-            $status = 1;
+            $status = '1';
             $demande->is_validated = $status;
             $demande->update();
 
@@ -302,6 +285,7 @@ class DemandeController extends Controller
 
         $data = (object) [
             'id' => $demande->id,
+            'Url' => $demande->Url,
             'subject' => 'Demande Annulée',
             'raison' => $request->raison,
             'etat' => ' rejetée',
@@ -324,9 +308,8 @@ class DemandeController extends Controller
 
         // dd($demande);
 
-        return back()->with("success", "demande annulée avec succès");
+        return back()->with("annuler", "demande annulée avec succès");
     }
-
 
 
     public function demandeCollaborateurs(){
@@ -338,8 +321,7 @@ class DemandeController extends Controller
                 $id[] = $collaborateur->user_id;
                 }
      
-        $demandes = DB::table('demandes')
-            ->whereIn('user_id', $id)->orderBy('id', 'desc')->paginate(10);
+        $demandes = Demande::whereIn('user_id', $id)->orderBy('id', 'desc')->paginate(10);
       
 
         return view('demandes.collaborateurs', compact('demandes'));
@@ -371,6 +353,39 @@ class DemandeController extends Controller
 
             return view('demandes.charroi', compact('demandes', 'chauffeurs', 'vehicules'));
         }
+    }
+
+    public function rejetDemandeParCharroi(Request $request, $id)
+    {
+        
+        $demande = Demande::find($id);
+        $user_id = $demande->user_id;
+        $agent = User::where('id', $user_id)->first();
+        $demande->raison = $request->raison;
+        $data = (object) [
+            'id' => $demande->id,
+            'Url' => $demande->Url,
+            'subject' => 'Demande Rejetée',
+            'raison' => $request->raison,
+            'etat' => ' rejetée',
+            'name' => $agent->username
+        ];
+        try {
+            // dd(env('MAIL_FROM_ADDRESS'));
+            $agent->notify(new MailCharroiToAgentDemandeRejecte($data));
+            $status = '2';
+            $demande->status = $status;
+
+
+            $demande->update();
+
+        } catch (Exception $e) {
+            print($e);
+        }
+
+        // dd($demande);
+
+        return back()->with("rejected", "Demande rejetée avec succès");
     }
 
 

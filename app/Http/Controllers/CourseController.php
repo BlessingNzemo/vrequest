@@ -43,8 +43,8 @@ class CourseController extends Controller
      */
     public function store(Request $request)
     {
-
         $demande = Demande::findOrFail($request->demande_id);
+        // dd($demande);
         $vehicule = Vehicule::findOrFail($request->vehicule_id);
         $courses = Course::where('vehicule_id',$request->vehicule_id)->get();
         $chauffeurs = Course::where('chauffeur_id',$request->chauffeur_id)->get();
@@ -62,8 +62,8 @@ class CourseController extends Controller
             if($date_course == $date){
                
                 if(in_array($time,$time_course)){
-                  
-                    return back()->with('success', 'course non traité car le véhicule sera occupé à cette heure');
+                    //dd(1);
+                    return back()->with('failed', 'course non traité car le véhicule sera occupé à cette heure');
                 }
             }
         }
@@ -77,23 +77,22 @@ class CourseController extends Controller
                
                 if(in_array($time,$time_chauffeur)){
                   
-                    return back()->with('success', 'course non traité le chauffeur sera occupé à cette heure');
+                    return back()->with('failed', 'course non traité le chauffeur sera occupé à cette heure');
                 }
             }
         }
 
         if($vehicule->capacite<$nombre_passagers){
-            return back()->with('success', 'course non traité car le nombre des passagers depasse la capacité du véhicule');
+            return back()->with('failed', 'course non traité car le nombre des passagers depasse la capacité du véhicule');
         }
-    
         
-
-      
+        
         $vehicule->disponibilite  = 1;
         $vehicule->update();
-        $demande->status = 1;
+        $demande->status = '1';
         
         $demande->update();
+       
 
         $vehicule = Vehicule::findOrFail($request->vehicule_id);
 
@@ -102,7 +101,7 @@ class CourseController extends Controller
             $vehicule->disponibilite = 0; // Mettre le véhicule en indisponible
             $vehicule->save();
         }
-
+        
     
         
         $course = Course::create([
@@ -112,6 +111,9 @@ class CourseController extends Controller
             'commentaire'=>$request->commentaire,
             "date"=>$date
         ]);
+
+        
+
 
        
         $user_id=$demande->user_id;
@@ -136,7 +138,8 @@ class CourseController extends Controller
             'manager_name' => $manager->username,
             'agent_name' => $agent -> username,
             'chauffeur' => $chauffeur -> username,
-            'etat' => ' traitée'
+            'etat' => ' traitée',
+            'course_id' => $course->id
         ];
         
         try{
@@ -145,10 +148,10 @@ class CourseController extends Controller
             $chauffeur -> notify(new ChauffeurNotification($data)); 
         }
         catch(Exception $e){
-            //print($e);
+            // print($e);
         }
           
-    
+        // dd($demande);
 
             return back()->with('success', 'Course enregistrée avec succès.');
         } 
@@ -187,4 +190,29 @@ class CourseController extends Controller
     {
         //
     }
+    public function modifCourse(Request $request, Demande $demande){
+        
+        $demande = Demande::where('id', $request->demande_id)->first();
+        $course = Course::where('demande_id', $demande->id)->first();
+        $course->update([
+            'chauffeur_id' => $request->chauffeur_id
+        ]);
+       
+            return back()->with('success', 'chauffeur modifier avec succès');
+        
+        }
+
+        public function modifShowVehicule(Request $request, Demande $demande){
+        
+            $demande = Demande::where('id', $request->demande_id)->first();
+            $course = Course::where('demande_id', $demande->id)->first();
+            $course->update([
+                'vehicule_id' => $request->vehicule_id
+             
+            ]);
+           
+                return back()->with('success', 'vehicule modifier avec succès');
+            
+            }
+
 }

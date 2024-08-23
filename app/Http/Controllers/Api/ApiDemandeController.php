@@ -16,7 +16,7 @@ class ApiDemandeController extends Controller
      */
     public function index()
     {
-        return response()->json(DemandeResource::collection($demandes = Demande::where('is_validated', 1)->where('status', 1)->orderByDesc('created_at')->get()));
+        return response()->json(DemandeResource::collection($demandes = Demande::where('is_validated', 1)->where('status', '1')->orderByDesc('created_at')->get()));
     }
 
     /**
@@ -69,6 +69,10 @@ class ApiDemandeController extends Controller
     public function show(string $id)
     {
 
+        return response()->json(Demande::find($id));
+
+
+
     }
 
     /**
@@ -90,38 +94,56 @@ class ApiDemandeController extends Controller
     {
 
         $id = $request->id;
-        $demande_encours = Demande::where('user_id', $id)->where('status', 0)->count();
-        $demandes_encours = Demande::where('user_id', $id)->where('status', 0)->get();
-        $demande_traite = Demande::where('user_id', $id)->where('status', 1)->count();
-        $demande_total = Demande::where('user_id', $id)->count();
-        $demande_nonvalide = Demande::where('status', 0)->count();
 
-        $vehicule_nondispo = Vehicule::where('disponibilite', 1)->count();
-        $vehicule_disponible = Vehicule::where('disponibilite', 0)->count();
+        $demande_encours = Demande::where('user_id',$id)->where('status','0')->count();
+        $demandes_encours = Demande::where('user_id',$id)->where('status','0')->get();
+        $demande_traite = Demande::where('user_id',$id)->where('status','1')->count();
+        $demande_total = Demande::where('user_id',$id)->count();
+        $demande_non_traite = Demande::where('is_validated',1)->where('status','0')->count();
+         
+        $vehicule_nondispo = Vehicule::where('disponibilite',1)->count();
+        $vehicule_disponible = Vehicule::where('disponibilite',0)->count();
         $vehicule_total = Vehicule::all()->count();
 
+        $traites = Demande::where('status',0)->count();
+       
         $demande_tab = [
             "demande_encours" => $demande_encours,
-            "demande_traite" => $demande_traite,
-            "demande_total" => $demande_total,
-            "demande_nonvalide" => $demande_nonvalide,
+            "demande_traite" =>$demande_traite,
+            "demande_total" =>$demande_total,
+            "demande_non_traite"=>$demande_non_traite,
+
             "Vehicule_nondispo" => $vehicule_nondispo,
             "Vehicule_disponible" => $vehicule_disponible,
             "Vehicule_total" => $vehicule_total,
             "demandes_encours" => $demandes_encours,
+            'charroi_traite'=> $traites
         ];
 
         return response()->json($demande_tab);
     }
-    public function lastDemande(Request $request)
-    {
-        return response()->json(Demande::where('user_id', $request->id)->latest()->take(3)->get());
+
+    public function lastDemande(Request $request){
+        return response()->json(Demande::where('user_id',$request->id)->latest()->take(2)->get());
+
+  
     }
 
     public function getdemande(Request $request)
     {
 
         return response()->json(Demande::where('user_id', $request->id)->get());
+    }
+    public function getAllDemande(Request $request){
+        $id = $request->id;
+        $demandes = Demande::where('user_id',$id)->get();
+        return DemandeResource::collection($demandes);
+    }
+    
+    public function getDemandeTraite(Request $request){
+        $id = $request->id;
+        $demandes = Demande::where('user_id',$id)->where('status','1')->get();
+        return DemandeResource::collection($demandes);
     }
 
 

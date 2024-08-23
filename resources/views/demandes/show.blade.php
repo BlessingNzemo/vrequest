@@ -8,6 +8,18 @@
             </h2>
         </div>
     </x-slot> --}}
+    @if (session('success'))
+    <div class="flex p-4 mb-4 text-sm rounded-lg bg-green-300" id="success-message">
+        {{ session('success') }}
+    </div>
+
+    <script>
+        // Faire disparaître le message de succès après 5 secondes
+        setTimeout(function() {
+            document.getElementById('success-message').style.display = 'none';
+        }, 5000);
+    </script>
+@endif
     <section class="bg-gray-100">
         <div class="max-w-full mx-auto py-16 px-2 sm:px-6 lg:py-20 lg:px-8">
             <nav class="border-b py-2.5 dark:bg-gray-900">
@@ -310,6 +322,12 @@
                                                 {{ $vehicules->marque }}
                                             @else
                                             @endif
+                                            <button
+                                            class="text-gray-900 bg-orange border px-2 py-1 border-green-300 focus:outline-none hover:bg-green-100 focus:ring-4 focus:ring-green-100 font-medium rounded-full text-sm px-0.3 py-0.3 me-0 mb-1 dark:bg-green-500 dark:text-white dark:border-green-400 dark:hover:bg-green-400 dark:hover:border-green-400 dark:focus:ring-green-400"
+                                            data-modal-target="crud-modal3" data-modal-toggle="crud-modal3">
+                                                modifier
+                                        </button>
+
 
                                         </p>
 
@@ -339,6 +357,13 @@
                                                 {{ $chauffeur_name->username }}
                                             @else
                                             @endif
+                                            <button
+                                            class="text-gray-900 bg-orange border px-2 py-1 border-orange-300 focus:outline-none hover:bg-orange-100 focus:ring-4 focus:ring-orange-100 font-medium rounded-full text-sm px-0.3 py-0.3 me-0 mb-1 dark:bg-orange-500 dark:text-white dark:border-orange-400 dark:hover:bg-orange-400 dark:hover:border-orange-400 dark:focus:ring-orange-400"
+                                            data-modal-target="crud-modal2" data-modal-toggle="crud-modal2">
+                                                modifier
+                                        </button>
+
+
 
                                         </p>
                                     </div>
@@ -351,6 +376,9 @@
             </div>
         </div>
     </section>
+    <x-modifChauffeur :demandes="$demandes" :chauffeurs="$chauffeurs" :message="__('Voulez-vous modifier ce chauffeur?')" />
+    <x-modifShowVehicule :demandes="$demandes" :vehicule="$vehicule" :message="__('Voulez-vous modifier ce vehicule?')" />
+
     <script>
         var greenIcon = new L.Icon({
             iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',

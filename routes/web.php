@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use App\Models\Demande;
 use App\Models\Delegation;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
@@ -25,13 +26,10 @@ Route::middleware('authenticate')->group(function () {
 });
 
 Route::get('/test',function(){
-    $delegations = Delegation::get();
-    foreach ($delegations as $delegation){
-        if($delegation->date_fin->toDateTimeString() < date('Y-m-d H:i:s') ){
-            $delegation->status = 0;
-            $delegation->update();
-        }
-    }
+    $demande = Demande::findOrFail(176);
+    $demande->status = '1';
+        
+    $demande->update();
 })->name('test');
 
 
