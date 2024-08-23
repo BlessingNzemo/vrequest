@@ -140,8 +140,7 @@
                                     <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
                                         aria-labelledby="dropdownMenuIconButton">
                                         <li>
-                                            <a href="{{ route('demandes.show', $item->id) }}" data-modal-target="show-modal" data-modal-toggle="show-modal"
-                                                onclick="show(event);"   class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">voir</a>
+                                            <a href="{{ route('demandes.show', $item->id) }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">voir</a>
                                         </li>
                                         @if ($item->is_validated == 0)
                                             <li>

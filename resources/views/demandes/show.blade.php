@@ -29,7 +29,7 @@
                         </div>
                     </div>
 
-                    <div class="flex items-center lg:order-2">
+                    {{-- <div class="flex items-center lg:order-2">
                         <div class="hidden mt-2 mr-4 sm:inline-block">
                             <span></span>
                         </div>
@@ -40,7 +40,7 @@
                             ?>
                             <p>{{ $dates }}</p>
                         </a>
-                    </div>
+                    </div> --}}
                 </div>
             </nav>
             <section class="text-gray-700 body-font">

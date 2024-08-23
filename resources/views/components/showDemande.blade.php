@@ -31,16 +31,16 @@
                         Oui
                     </button>
                     <a href="{{ route('demandes.index') }}" type="button">
-                        <span data-modal-hide="popup-modal"  class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-red-500 hover:text-white focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Non</span>
+                        <span data-modal-hide="popup-modal"
+                            class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-red-500 hover:text-white focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Non</span>
                     </a>
-
                 </form>
             </div>
         </div>
     </div>
 </div>
 <script>
-    function show(event) {
+    function showDemande(event) {
         event.preventDefault()
         const lien = event.target.getAttribute('href')
         const form = document.querySelector("#show-modal form")
