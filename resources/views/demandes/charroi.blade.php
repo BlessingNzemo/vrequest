@@ -140,7 +140,7 @@
                                                 @if (Session::get('authUser')->hasRole('charroi'))
                                                     @if (($item->is_validated == 1)  && ($item->status == '0'))
                                                         <li>
-                                                            <a onclick="editdemande(event, {{ $item->id }});"
+                                                            <a onclick="editdemande(event, {{ $item->id }}, {{$item->nbre_passagers}});"
                                                                 data-modal-target="crud-modal" data-modal-toggle="crud-modal"
                                                                 class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" title="Traiter cette demande">
                                                                 
@@ -211,6 +211,7 @@
         });
     </script>
 
+    <input type="hidden" id="cars" value="{{$vehicules}}">
     <x-deleteDemande :message="__('Voulez-vous vraiment supprimer cette demande ?')" />
 
     <x-showDemande :message="__('Voulez-vous vraiment voir cette demande?')" />
@@ -219,7 +220,7 @@
     <x-rejetDemandeParCharroi :message="__('Voulez-vous vraiment rejeter cette demande?')" />
     <script>
         
-        function editdemande(event, demandeId, vehicules, nombre) {
+        function editdemande(event, demandeId, nombre) {
             event.preventDefault();
            
             form = document.querySelector('#crud-modal div div form div div #demande_id');
@@ -227,12 +228,15 @@
             value = form.getAttribute('value');
             form.setAttribute('value', demandeId);
             console.log(value);
+            const vehicules = JSON.parse(document.querySelector("#cars").value) ;
+            console.log(vehicules);
+            
             vehiculeSelect.innerHTML = '';
             var opt1 = document.createElement('option');
             opt1.value = 'vehicule';
             opt1.text = 'Sélectionnez un véhicule';
             vehiculeSelect.add(opt1);
-            vehicules.forEach(function(option) {
+            vehicules.map((option)=> {
                 if (option.capacite >= nombre) {
                     var opt = document.createElement("option");
                     opt.value = option.id;
@@ -241,7 +245,7 @@
                 }
             });
 
-
+            
         }
     </script>
 

@@ -1,4 +1,4 @@
-@props(['vehicules', 'chauffeurs', 'demandes'])
+@props(['vehicule', 'chauffeurs', 'demandes'])
 <x-app-layout>
 
     {{-- <x-slot name="header">
@@ -318,8 +318,8 @@
                                             Vehicule
                                         </p>
                                         <p class="text-sm text-neutral-500">
-                                            @if ($vehicules)
-                                                {{ $vehicules->marque }}
+                                            @if ($vehicule)
+                                                {{ $vehicule->marque }}
                                             @else
                                             @endif
                                             <button
@@ -377,7 +377,7 @@
         </div>
     </section>
     <x-modifChauffeur :demandes="$demandes" :chauffeurs="$chauffeurs" :message="__('Voulez-vous modifier ce chauffeur?')" />
-    <x-modifShowVehicule :demandes="$demandes" :vehicule="$vehicule" :message="__('Voulez-vous modifier ce vehicule?')" />
+    <x-modifShowVehicule :demandes="$demandes" :vehicules="$vehicules" :message="__('Voulez-vous modifier ce vehicule?')" />
 
     <script>
         var greenIcon = new L.Icon({
