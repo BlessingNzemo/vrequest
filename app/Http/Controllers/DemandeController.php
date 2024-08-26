@@ -295,9 +295,14 @@ class DemandeController extends Controller
         ValidationManagerDemandeMail::dispatch($data)->delay(now()->addMinutes(1));
 
         $is_validated = 2;
-        $demande->is_validated = $is_validated;
+        $demande -> is_validated = $is_validated;
 
-        $demande->update();
+        $demande -> update();
+        
+        $status = 2 ;
+        $demande -> status = $status;
+
+        $demande -> update();
       
 
         return back()->with("annuler", "demande annulée avec succès");
