@@ -227,7 +227,7 @@
    
     <x-slot name="header">
         <div class="flex items-center justify-between px-0">
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight text-center ">
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight text-center">
                 {{ __('Demandes') }}
             </h2>
             <div class="flex items-center justify-between my-4">
