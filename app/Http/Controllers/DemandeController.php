@@ -43,10 +43,6 @@ class DemandeController extends Controller
 
             $demandes = Demande::Where('user_id', $user_id)->orderBy('id', 'desc')->paginate(10);
 
-            $demandes_validees = Demande::where('is_validated', 1)->get();
-            $demandes_traitees = Demande::where('status', 1)->get();
-            // $demandes_en_attente = Demande :: where('')
-
             $vehicules = Vehicule::all();
 
         $chauffeurs = Chauffeur::all();

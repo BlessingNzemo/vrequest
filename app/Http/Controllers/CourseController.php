@@ -82,9 +82,7 @@ class CourseController extends Controller
             }
         }
 
-        if($vehicule->capacite<$nombre_passagers){
-            return back()->with('failed', 'course non traité car le nombre des passagers depasse la capacité du véhicule');
-        }
+       
         
         
         $vehicule->disponibilite  = 1;
