@@ -107,25 +107,27 @@
                                 <div id="dropdownDots{{ $i + 1 }}" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
                                     <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconButton">
                                         @if ($item->disponibilite==1)
-                                    <li>
-                                        <a onclick="changerDisponibilite(event);" data-modal-target="disponibilite"
-                                        data-modal-toggle="disponibilite" href="{{ route('vehicules-disponibilite', $item->id) }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">disponibilité</a>
-                                    </li>
-                                    @else
+                                            <li>
+                                                <a onclick="changerDisponibilite(event);" data-modal-target="disponibilite"
+                                                data-modal-toggle="disponibilite" href="{{ route('vehicules-disponibilite', $item->id) }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">disponibilité</a>
+                                            </li>
+                                        @else
 
-                                    <li>
-                                        <a onclick="changerIndisponibilite(event);" data-modal-target="indisponibilite"
-                                        data-modal-toggle="indisponibilite" href="{{route('vehicules-disponibilite',$item->id)}}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">disponibilité</a>
-                                    </li>
-                                    @endif
-                                    <li>
-                                        <a onclick="edit(event)" href="{{ route('vehicules.update',$item->id) }}" data-modal-target="crud-modal1" data-modal-toggle="crud-modal1" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Editer</a>
-                                    </li>
+                                            <li>
+                                                <a onclick="changerIndisponibilite(event);" data-modal-target="indisponibilite"
+                                                data-modal-toggle="indisponibilite" href="{{route('vehicules-disponibilite',$item->id)}}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">disponibilité</a>
+                                            </li>
+                                        @endif
+                                        <li>
+                                            <a onclick="edit(event)" href="{{ route('vehicules.update',$item->id) }}" data-modal-target="crud-modal1" data-modal-toggle="crud-modal1" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Editer</a>
+                                        </li>
+                                        <li>
+                                            <a onclick="supprimer(event);" data-modal-target="delete-modal"
+                                            data-modal-toggle="delete-modal" href="{{ route('vehicules.destroy', $item->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Supprimer</a>
+                                        
+                                        </li>
                                     </ul>
-                                    <div class="py-2">
-                                    <a onclick="supprimer(event);" data-modal-target="delete-modal"
-                                    data-modal-toggle="delete-modal" href="{{ route('vehicules.destroy', $item->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Supprimer</a>
-                                    </div>
+                                    
                                 </div>
     
 
