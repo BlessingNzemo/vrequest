@@ -1,4 +1,4 @@
-@props(['vehicules', 'chauffeurs', 'demandes'])
+@props(['vehicule', 'chauffeurs', 'demandes'])
 <x-app-layout>
 
     {{-- <x-slot name="header">
@@ -41,7 +41,7 @@
                         </div>
                     </div>
 
-                    <div class="flex items-center lg:order-2">
+                    {{-- <div class="flex items-center lg:order-2">
                         <div class="hidden mt-2 mr-4 sm:inline-block">
                             <span></span>
                         </div>
@@ -52,7 +52,7 @@
                             ?>
                             <p>{{ $dates }}</p>
                         </a>
-                    </div>
+                    </div> --}}
                 </div>
             </nav>
             <section class="text-gray-700 body-font">
@@ -318,15 +318,17 @@
                                             Vehicule
                                         </p>
                                         <p class="text-sm text-neutral-500">
-                                            @if ($vehicules)
-                                                {{ $vehicules->marque }}
+                                            @if ($vehicule)
+                                                {{ $vehicule->plaque}} = {{ $vehicule->capacite }}
                                             @else
                                             @endif
-                                            <button
-                                            class="text-gray-900 bg-orange border px-2 py-1 border-green-300 focus:outline-none hover:bg-green-100 focus:ring-4 focus:ring-green-100 font-medium rounded-full text-sm px-0.3 py-0.3 me-0 mb-1 dark:bg-green-500 dark:text-white dark:border-green-400 dark:hover:bg-green-400 dark:hover:border-green-400 dark:focus:ring-green-400"
-                                            data-modal-target="crud-modal3" data-modal-toggle="crud-modal3">
-                                                modifier
-                                        </button>
+                                            @if (Session::get('authUser')->hasRole('charroi') && $demandes->status=='1')
+                                                <button
+                                                    class="text-green-700 bg-green border px-2 py-1 border-green-200 focus:outline-none hover:bg-green-400 focus:ring-4 focus:ring-green-100 font-medium rounded-full text-sm px-0.3 py-0.3 me-0 mb-1 dark:bg-green-200 bg-green-200 dark:text-green-700 dark:border-green-200 dark:hover:bg-green-400 dark:hover:border-green-400 dark:focus:ring-green-400 ml-8"
+                                                    data-modal-target="crud-modal3" data-modal-toggle="crud-modal3">
+                                                        modifier
+                                                </button>   
+                                            @endif
 
 
                                         </p>
@@ -357,11 +359,14 @@
                                                 {{ $chauffeur_name->username }}
                                             @else
                                             @endif
-                                            <button
-                                            class="text-gray-900 bg-orange border px-2 py-1 border-orange-300 focus:outline-none hover:bg-orange-100 focus:ring-4 focus:ring-orange-100 font-medium rounded-full text-sm px-0.3 py-0.3 me-0 mb-1 dark:bg-orange-500 dark:text-white dark:border-orange-400 dark:hover:bg-orange-400 dark:hover:border-orange-400 dark:focus:ring-orange-400"
-                                            data-modal-target="crud-modal2" data-modal-toggle="crud-modal2">
-                                                modifier
-                                        </button>
+                                            @if (Session::get('authUser')->hasRole('charroi') && $demandes->status=='1')
+
+                                                <button
+                                                    class="text-pink-700 bg-pink border px-2 py-1 border-pink-100 focus:outline-none hover:bg-pink-300 focus:ring-4 focus:ring-pink-100 font-medium rounded-full text-sm px-0.3 py-0.3 me-0 mb-1 bg-pink-100 dark:bg-pink-100 dark:text-pink-700 dark:border-pink-100 dark:hover:bg-pink-300 dark:hover:border-pink-300 dark:focus:ring-pink-400 ml-8"
+                                                    data-modal-target="crud-modal2" data-modal-toggle="crud-modal2">
+                                                        modifier    
+                                                </button>
+                                            @endif
 
 
 
@@ -377,7 +382,7 @@
         </div>
     </section>
     <x-modifChauffeur :demandes="$demandes" :chauffeurs="$chauffeurs" :message="__('Voulez-vous modifier ce chauffeur?')" />
-    <x-modifShowVehicule :demandes="$demandes" :vehicule="$vehicule" :message="__('Voulez-vous modifier ce vehicule?')" />
+    <x-modifShowVehicule :demandes="$demandes" :vehicules="$vehicules" :message="__('Voulez-vous modifier ce vehicule?')" />
 
     <script>
         var greenIcon = new L.Icon({

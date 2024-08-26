@@ -39,7 +39,7 @@
     </div>
 </div>
 <script>
-    function show(event) {
+    function edit(event) {
         event.preventDefault()
         const lien = event.target.getAttribute('href')
         const form = document.querySelector("#popup-modal form")

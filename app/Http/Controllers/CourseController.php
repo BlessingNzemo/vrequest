@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\TraitementDemandeMail;
 use Exception;
 use App\Models\User;
 use App\Models\Course;
@@ -117,7 +118,7 @@ class CourseController extends Controller
         $user_id=$demande->user_id;
         $agent= User::findOrFail($user_id);
 
-        //dd($agent);
+       
         $user_info=UserInfo::where('user_id',$user_id)->first();
         $email_manager=$user_info->email_manager;
         $manager=User::where('email',$email_manager)->first();
@@ -125,31 +126,27 @@ class CourseController extends Controller
 
         $chauffeur_id = $course -> chauffeur_id;
         $chauffeur_info = Chauffeur::where('id', $chauffeur_id)->first();
-        // dd( $chauffeur_info);
+        
         $chauffeur_user_id = $chauffeur_info -> user_id;
         
         $chauffeur = User :: where('id',$chauffeur_user_id)->first();
-        // dd($chauffeur);
+
         $data =(object)[
             'id' => $demande->id ,
             'subject' => 'Nouvelle demande',
             'manager_name' => $manager->username,
+            'manager' => $manager,
             'agent_name' => $agent -> username,
-            'chauffeur' => $chauffeur -> username,
-            'etat' => ' traitée',
-            'course_id' => $course->id
+            'agent' => $agent,
+            'chauffeur_name' => $chauffeur -> username,
+            'chauffeur' => $chauffeur,
+            'etat' => 'traitée',
+            'course_id' => $course->id,
+
         ];
         
-        try{
-            $agent -> notify(new AgentNotificationDemandeAcceptee($data));
-            $manager -> notify(new ManagerNotification($data));  
-            $chauffeur -> notify(new ChauffeurNotification($data)); 
-        }
-        catch(Exception $e){
-            // print($e);
-        }
+        TraitementDemandeMail::dispatch($data)->delay(now()->addMinutes(1));
           
-        // dd($demande);
 
             return back()->with('success', 'Course enregistrée avec succès.');
         } 

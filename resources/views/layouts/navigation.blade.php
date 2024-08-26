@@ -80,43 +80,6 @@
                     </a>
                 </li>
                 <li>
-                    <div class="flex md:order-2">
-                        <button type="button" data-collapse-toggle="navbar-search" aria-controls="navbar-search"
-                            aria-expanded="false"
-                            class="md:hidden text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 me-1">
-                            <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                viewBox="0 0 20 20">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                    stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-                            </svg>
-                            <span class="sr-only">Search</span>
-                        </button>
-                        <div class="relative hidden md:block">
-                            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-                                </svg>
-                                <span class="sr-only">Search icon</span>
-                            </div>
-                            <input type="text" id="search-navbar"
-                                class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-orange-500 focus:border-orange-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-orange-500 dark:focus:border-orange-500"
-                                placeholder="Search...">
-                        </div>
-                        <button data-collapse-toggle="navbar-search" type="button"
-                            class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-                            aria-controls="navbar-search" aria-expanded="false">
-                            <span class="sr-only">Open main menu</span>
-                            <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                viewBox="0 0 17 14">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                    stroke-width="2" d="M1 1h15M1 7h15M1 13h15" />
-                            </svg>
-                        </button>
-                    </div>
-                </li>
-                <li>
                     <a href="{{ route('dashboard') }}"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-300 dark:hover:bg-gray-700 group {{ request()->routeIs('dashboard') ? 'bg-orange-400 text-white' : '' }}">
                         <svg class="w-5 h-5  transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
@@ -136,19 +99,18 @@
                         aria-controls="dropdown-example" data-collapse-toggle="dropdown-example">
                         <svg class="w-6 h-6  dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                             fill="none" viewBox="0 0 16 20">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                stroke-width="2"
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M1 17V2a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a2 2 0 0 0-2 2Zm0 0a2 2 0 0 0 2 2h12M5 15V1m8 18v-4" />
                         </svg>
                         <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Demandes</span>
                         <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                             viewBox="0 0 10 6">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                stroke-width="2" d="m1 1 4 4 4-4" />
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="m1 1 4 4 4-4" />
                         </svg>
                     </button>
                     <ul id="dropdown-example"
-                        class="{{ request()->routeIs('demandes.index') || request()->routeIs('demandes.create') || request()->routeIs('demande-collaborateurs') ? '' : 'hidden' }} py-2 space-y-2">
+                        class="{{ request()->routeIs('demandes.index') || request()->routeIs('demandes.create') || request()->routeIs('demande-collaborateurs') || request()->routeIs('demandeCharroi')? '' : 'hidden' }} py-2 space-y-2">
                         <li>
                             <a href="{{ route('demandes.index') }}"
                                 class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group {{ request()->routeIs('demandes.index') ? 'bg-orange-400 text-white' : '' }} hover:bg-gray-300 dark:text-white dark:hover:bg-gray-700">
@@ -157,7 +119,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M9 12h6m-6 4h6m2 6H7a2 2 0 01-2-2V6a2 2 0 012-2h5l5 5v13a2 2 0 01-2 2z" />
                                 </svg>
-                                Demande
+                                Mes Demandes
                             </a>
                         </li>
                         <li>
@@ -168,7 +130,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M12 4v16m8-8H4" />
                                 </svg>
-                                Création de la demande
+                                Créer une demande
                             </a>
                         </li>
                         @if (Session::get('userIsManager') || Session::get('delegation'))
@@ -180,12 +142,84 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M17 20h5v-2a4 4 0 00-3-3.87M12 14a4 4 0 100-8 4 4 0 000 8zm0 2a6 6 0 00-5.33 3H2v2h10m7-4h.01" />
                                     </svg>
-                                    Demande Collaborateurs
+                                    Demandes des collaborateurs
+                                </a>
+                            </li>
+                        @endif
+                        @if (Session::get('authUser')->hasRole('charroi'))    
+                            <li>
+                                <a href="{{route('demandeCharroi')}}" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group {{ request()->routeIs('demandeCharroi') ? 'bg-orange-400 text-white' : '' }} hover:bg-gray-300 dark:text-white dark:hover:bg-gray-700">
+                                <svg class="w-6 h-6 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4H1m3 4H1m3 4H1m3 4H1m6.071.286a3.429 3.429 0 1 1 6.858 0M4 1h12a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1Zm9 6.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z"/>
+                                </svg>
+                                    <span class="ms-3">Demandes à traiter</span>
                                 </a>
                             </li>
                         @endif
                     </ul>
                 </li>
+
+                
+                    @if (Session::get('userIsManager') || Session::get('delegation'))
+                        <li>
+                            <button type="button"
+                                class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-300 dark:text-white dark:hover:bg-gray-700"
+                                aria-controls="dropdown-delegation" data-collapse-toggle="dropdown-delegation">
+                                <svg class="w-6 h-6  dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                    fill="none" viewBox="0 0 16 20">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M1 17V2a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a2 2 0 0 0-2 2Zm0 0a2 2 0 0 0 2 2h12M5 15V1m8 18v-4" />
+                                </svg>
+                                <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Délégations</span>
+                                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 10 6">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" d="m1 1 4 4 4-4" />
+                                </svg>
+                            </button>
+                            <ul id="dropdown-delegation"
+                                class="{{ request()->routeIs('delegations.index') || request()->routeIs('delegations.create') || request()->routeIs('delegue-vue') ? '' : 'hidden' }} py-2 space-y-2">
+                                @if (Session::get('userIsManager'))
+                                    <li>
+                                        <a href="{{ route('delegations.index') }}"
+                                            class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group {{ request()->routeIs('delegations.index') ? 'bg-orange-400 text-white' : '' }} hover:bg-gray-300 dark:text-white dark:hover:bg-gray-700">
+                                            <svg class="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 12h6m-6 4h6m2 6H7a2 2 0 01-2-2V6a2 2 0 012-2h5l5 5v13a2 2 0 01-2 2z" />
+                                            </svg>
+                                            Mes Délégations
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('delegations.create') }}"
+                                            class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group {{ request()->routeIs('delegations.create') ? 'bg-orange-400 text-white' : '' }} hover:bg-gray-300 dark:text-white dark:hover:bg-gray-700">
+                                            <svg class="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M12 4v16m8-8H4" />
+                                            </svg>
+                                            Créer une délégation
+                                        </a>
+                                    </li>
+                                @endif
+                                @if(Session::get('delegation'))    
+                                    <li>
+                                        <a href="{{route('delegue-vue')}}" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group {{ request()->routeIs('delegue-vue') ? 'bg-orange-400 text-white' : '' }} hover:bg-gray-300 dark:text-white dark:hover:bg-gray-700">
+                                        <svg class="w-6 h-6 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4H1m3 4H1m3 4H1m3 4H1m6.071.286a3.429 3.429 0 1 1 6.858 0M4 1h12a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1Zm9 6.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z"/>
+                                        </svg>
+                                            <span class="ms-3">Voir ses affectations </span>
+                                        </a>
+                                    </li>
+                                @endif
+                            </ul>
+                        </li>
+                    @endif
+                
+                
+
                 @if (Session::get('authUser')->hasRole('charroi'))
                     <li>
                         <a href="{{ route('vehicules.index') }}"
@@ -212,17 +246,10 @@
                             <span class="flex-1 ms-3 whitespace-nowrap">chauffeurs</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="{{route('demandeCharroi')}}" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                          <svg class="w-6 h-6 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
-                              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4H1m3 4H1m3 4H1m3 4H1m6.071.286a3.429 3.429 0 1 1 6.858 0M4 1h12a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1Zm9 6.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z"/>
-                          </svg>
-                            <span class="ms-3">Demandes à traiter</span>
-                        </a>
-                    </li>
+                    
                 @endif
 
-                @if (Session::get('userIsManager') || Session::get('delegation'))
+                {{-- @if (Session::get('userIsManager') || Session::get('delegation'))
                     <li>
                         <a href="{{ route('delegations.index') }}"
                             class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-300 dark:hover:bg-gray-700 group {{ request()->routeIs('delegations.index') ? 'bg-orange-400 text-white ' : '' }}">
@@ -235,7 +262,7 @@
                             <span class="ms-3">Delegation </span>
                         </a>
                     </li>
-                @endif
+                @endif --}}
                 @if (Session::get('authUser')->hasRole('admin'))
                     <li>
                         <a href="{{ route('site') }}"
@@ -252,7 +279,7 @@
 
                     </li>
                 @endif
-                @if (Session::get('delegation'))
+                {{-- @if (Session::get('delegation'))
                     <li>
                         <a href="{{ route('delegue-vue') }}"
                             class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
@@ -266,7 +293,7 @@
 
                         </a>
                     </li>
-                @endif
+                @endif --}}
 
                 @if (Session::get('authUser')->hasRole('admin'))
                     </li>
