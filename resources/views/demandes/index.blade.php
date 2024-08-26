@@ -70,31 +70,29 @@
                                 <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> {{ $item->date_deplacement}}</td>
                                 <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> {{ $item->nbre_passagers  }}</td>
                                 <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                                    
-                                        @if ($item->status=='1')
-                                            <div class="py-1.5 px-2.5 bg-emerald-50 rounded-full flex justify-center w-20 items-center gap-1">
-                                                <svg width="5" height="6" viewBox="0 0 5 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <circle cx="2.5" cy="3" r="2.5" fill="#059669"></circle>
-                                                </svg>
-                                                <span class="font-medium text-xs text-emerald-600 ">Traitée</span>
-                                            </div>
-                                        @endif
-                                        @if ($item->status=='0')
-                                            <div class="py-1.5 px-2.5 bg-orange-50 rounded-full flex w-20 justify-center items-center gap-1">
-                                                <svg width="5" height="6" viewBox="0 0 5 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <circle cx="2.5" cy="3" r="2.5" fill="#DC2626"></circle>
-                                                </svg>
-                                                <span class="font-medium text-xs text-orange-500 ">En attente</span>
-                                            </div>    
-                                        @endif
-                                    
-                                        @if (($item->status=='2')) 
+                                        @if (($item->status=='2')||($item->is_validated=='2')) 
                                             <div class="py-1.5 px-2.5 bg-red-50 rounded-full flex w-20 justify-center items-center gap-1">
                                                 <svg width="5" height="6" viewBox="0 0 5 6" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <circle cx="2.5" cy="3" r="2.5" fill="#DC2626"></circle>
                                                 </svg>
                                                 <span class="font-medium text-xs text-red-600 ">Rejetée</span>
-                                            </div>   
+                                            </div>
+                                        @else  
+                                            @if($item->status=='1')
+                                                <div class="py-1.5 px-2.5 bg-emerald-50 rounded-full flex justify-center w-20 items-center gap-1">
+                                                    <svg width="5" height="6" viewBox="0 0 5 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <circle cx="2.5" cy="3" r="2.5" fill="#059669"></circle>
+                                                    </svg>
+                                                    <span class="font-medium text-xs text-emerald-600 ">Traitée</span>
+                                                </div>
+                                            @elseif($item->status=='0')
+                                                <div class="py-1.5 px-2.5 bg-orange-50 rounded-full flex w-20 justify-center items-center gap-1">
+                                                    <svg width="5" height="6" viewBox="0 0 5 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <circle cx="2.5" cy="3" r="2.5" fill="#DC2626"></circle>
+                                                    </svg>
+                                                    <span class="font-medium text-xs text-orange-500 ">En attente</span>
+                                                </div> 
+                                            @endif    
                                         @endif
                                     
                                     
