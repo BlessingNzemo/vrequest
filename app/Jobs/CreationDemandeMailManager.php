@@ -33,13 +33,13 @@ class CreationDemandeMailManager implements ShouldQueue
             try {
                 $this->data->sender->notify(new ManagerNotification($this->data));
             } catch (Exception $e) {
-                print($e);
+                // print($e);
             }
         }elseif($this->data->to == 'delegue'){
             try {
                 $this->data->sender->notify(new UserDelegueNotification($this->data));
             } catch (Exception $e) {
-                print($e);
+                // print($e);
             }
         }
     }
