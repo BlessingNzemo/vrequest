@@ -1,13 +1,6 @@
 <x-app-layout>
-    <x-slot name="header">
-        <div class="flex items-center justify-between  py-5">
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight text-center">
-                {{ __('Faire une délégation') }}
-            </h2>
-        </div>
-    </x-slot>
-    <div class="py-8 px-4 mx-auto max-w-4xl lg:py-16">
-        <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Remplissez ce formulaire pour faire une délégation</h2>
+    <div class="py-8  px-4 mx-auto max-w-4xl lg:py-16 shadow-md sm:rounded-lg">
+        <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Remplissez ce formulaire pour faire une délégation </h2>
         @if ($errors->any())
 
             <div class="alert alert-danger">
@@ -33,10 +26,11 @@
                     <label for="user_id"
                         class=" block mb-2 text-sm font-medium text-gray-900 dark:text-white" @required(true) > Votre remplaçant</label>
                     <input type="text" name="user_id" id="user_id"
-                        class="block mb-2 typeahead form-control"
+                        class="block mb-2 typeahead form-control "
                         placeholder="Choisissez votre remplaçant" required="required">
 
                     {{-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> --}}
+                    <x-styleAutocomplete />
                     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
                     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min.js" ></script>
                     <script type="text/javascript">
@@ -82,3 +76,7 @@
     
 
 </x-app-layout>
+
+
+
+
