@@ -94,7 +94,7 @@ class RoleController extends Controller
         $roleId=$role->id;
   
         
-        return view('role.detail',compact('modelname','permissions','per','tab','roleId','per_vehicule','per_demande','per_site','per_chauffeur','per_course','per_delegation'));
+        return view('role.detail',compact('role','modelname','permissions','per','tab','roleId','per_vehicule','per_demande','per_site','per_chauffeur','per_course','per_delegation'));
     }
 
     /**
