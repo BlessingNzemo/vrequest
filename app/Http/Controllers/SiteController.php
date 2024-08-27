@@ -28,8 +28,8 @@ class SiteController extends Controller
      */
     public function store(Request $request)
     {
-      
-        $validateData = $request->validate([
+       
+        $request->validate([
             'nom' => 'required:sites',
             'longitude' => 'required:sites',
             'latitude' => 'required:sites',
@@ -37,7 +37,7 @@ class SiteController extends Controller
 
         ]);
 
-        $sites = Site::create([
+     Site::create([
             'nom' => $request->nom,
             'longitude' => $request->longitude,
             'latitude' => $request->latitude

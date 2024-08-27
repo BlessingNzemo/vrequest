@@ -3,47 +3,10 @@
     <x-slot name="header">
         <div class="flex items-center justify-between py-5">
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight text-center">
-                {{ __('Sites') }}
+                {{ __('Création des sites') }}
             </h2>
         </div>
     </x-slot>
-    {{--
-    <div class="py-8 px-4 mx-auto max-w-4xl lg:py-16">
-        <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Remplissez ce formulaire </h2>
-        
-        <form action="{{ route('sites') }}" method="post">
-            @csrf
-            <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
-                <div class="sm:col-span-2">
-                    <label for="name"
-                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nom</label>
-                    <input type="text" name="nom" id="nom" 
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        placeholder="" required="">
-                </div>
-                <div class="w-full">
-                    <label for="name"
-                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">longitude</label>
-                    <input type="number" step="0.000001" name="longitude" id="longitude"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        placeholder="" required="">
-                </div>
-                <div class="w-full">
-                    <label for="name"
-                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">latitude</label>
-                    <input type="number" step="0.000001" name="latitude" id="latitude"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        placeholder="" required="">
-                </div>
-
-            </div>
-
-            <button
-                class="my-6 text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800">
-                Enregistrer
-            </button>
-        </form>
-    </div> --}}
     @if (session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
@@ -65,15 +28,20 @@
                 margin: 20px;
             }
 
+            .container {
+                display: flex;
+                justify-content: space-between;
+            }
+
             #map {
                 height: 400px;
-                width: 100%;
+                width: 50%;
                 margin-bottom: 20px;
             }
 
             form {
-                max-width: 500px;
-                margin: 0 auto;
+                max-width: 45%;
+                margin: 0;
             }
 
             input[type="text"],
@@ -92,24 +60,25 @@
 
     <body>
 
+        <div class="container">
+            <div id="map"></div>
+            <form action="{{ route('sites') }}" method="POST">
+                @csrf
+                <label for="name">Nom du lieu :</label>
+                <input type="text" id="nom" name="nom"
+                    placeholder="Cliquez sur la carte ou recherchez un lieu" required>
 
-        <div id="map"></div>
-        <form id="locationForm" action="{{ route('sites') }}" method="POST">
-            @csrf
-            <label for="name">Nom du lieu :</label>
-            <input type="text" id="nom" name="nom" placeholder="Cliquez sur la carte ou recherchez un lieu"
-                required>
+                <label for="latitude">Latitude :</label>
+                <input type="text" id="latitude" name="latitude"
+                    placeholder="Cliquez sur la carte pour obtenir la latitude" readonly required>
 
-            <label for="latitude">Latitude :</label>
-            <input type="text" id="latitude" name="latitude"
-                placeholder="Cliquez sur la carte pour obtenir la latitude" readonly required>
+                <label for="longitude">Longitude :</label>
+                <input type="text" id="longitude" name="longitude"
+                    placeholder="Cliquez sur la carte pour obtenir la longitude" readonly required>
 
-            <label for="longitude">Longitude :</label>
-            <input type="text" id="longitude" name="longitude"
-                placeholder="Cliquez sur la carte pour obtenir la longitude" readonly required>
-
-            <input type="submit" value="Enregistrer le lieu">
-        </form>
+                <button type="submit" class="text-white bg-orange-400 hover:bg-orange-00 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-orange-600 dark:hover:bg-orange-700 focus:outline-none dark:focus:ring-orange-800">Enregistrer</button>
+            </form>
+        </div>
 
         <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
         <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
@@ -210,6 +179,8 @@
     </body>
 
     </html>
+
+    
 
 
 
