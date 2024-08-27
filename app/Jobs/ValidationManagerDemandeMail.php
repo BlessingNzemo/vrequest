@@ -2,17 +2,17 @@
 
 namespace App\Jobs;
 
+use App\Notifications\AgentNotification;
+use App\Notifications\AgentNotificationDemandeAcceptee;
 use Exception;
-use App\Models\Demande;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
+use App\Notifications\ChefCharroiEmail;
 use Illuminate\Queue\InteractsWithQueue;
-use App\Notifications\ManagerNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use App\Notifications\UserDelegueNotification;
 
-class CreationDemandeMailManager implements ShouldQueue
+class ValidationManagerDemandeMail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -29,18 +29,19 @@ class CreationDemandeMailManager implements ShouldQueue
      */
     public function handle(): void
     {
-        if($this->data->to == 'manager'){
+        if($this->data->to == 'chef_charroi'){
             try {
-                $this->data->sender->notify(new ManagerNotification($this->data));
+                $this->data->sender->notify(new ChefCharroiEmail($this->data));
             } catch (Exception $e) {
                 // print($e);
             }
-        }elseif($this->data->to == 'delegue'){
+        }elseif($this->data->to == 'agent'){
             try {
-                $this->data->sender->notify(new UserDelegueNotification($this->data));
+                $this->data->sender->notify(new AgentNotification($this->data));
             } catch (Exception $e) {
                 // print($e);
             }
         }
+        
     }
 }

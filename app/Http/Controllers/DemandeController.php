@@ -26,6 +26,8 @@ use App\Notifications\ManagerNotification ;
 use Illuminate\Support\Facades\Notification;
 use App\Http\Controllers\envoyerMailAuManager;
 use App\Jobs\CreationDemandeMailManager;
+use App\Jobs\TraitementDemandeMail;
+use App\Jobs\ValidationManagerDemandeMail;
 use App\Notifications\ChefCharroiEmail as NotificationsChefCharroiEmail;
 
 use App\Notifications\MailCharroiToAgentDemandeRejecte;
@@ -108,6 +110,8 @@ class DemandeController extends Controller
         // dd($Url);
 
         if($manager){
+            $manager_id = $manager->id;
+            // dd($manager_id);
             $demande = Demande::create([
                 'ticket' => $ticket,
                 'motif' => $request->motif,
@@ -124,9 +128,11 @@ class DemandeController extends Controller
                 'status' => $status,
                 'is_validated' => $is_validated,
                 'Url'=> $Url,
-                'manager_id' => $manager->id
+                'manager_id' => $manager_id
             ]);
-            
+            $demande->manager_id = $manager_id;
+            $demande->update();
+            // dd($demande);
             //CODE POUR ENVOYER UN MAIL AU MANAGER DE L'AGENT QUI SOUMET SA DEMANDE
             
             // Données à envoyer
@@ -139,7 +145,7 @@ class DemandeController extends Controller
                 'to' => 'manager'
             ];
 
-            CreationDemandeMailManager::dispatch($data);
+            CreationDemandeMailManager::dispatch($data)->delay(now()->addMinutes(1));
 
             $delegations = Delegation::where('manager_id',$manager->id)->where('status',1)->get();
            
@@ -192,8 +198,8 @@ class DemandeController extends Controller
         $chauffeurs = Chauffeur::with('user')->get();
         $vehicules = Vehicule::all();
 
-       
-        
+      
+        // dd($chauffeurs);
 
         return view("demandes.show", compact('demandes', 'courses', 'vehicules', 'chauffeur_name', 'chauffeurs','vehicule'));
     }
@@ -254,28 +260,17 @@ class DemandeController extends Controller
             'Url' => $demande->Url,
             'subject' => 'Nouvelle demande',
             'name' => $chef_charroi->username,
-            'charroi_name' => $chef_charroi->username
-
+            'charroi_name' => $chef_charroi->username,
+            'to' => 'chef_charroi'
         ];
-        try {
-            $chef_charroi->notify(new NotificationsChefCharroiEmail($data));
 
-            $status = '1';
-            $demande->is_validated = $status;
-            $demande->update();
+        ValidationManagerDemandeMail::dispatch($data)->delay(now()->addMinutes(1));
 
-        } catch (Exception $e) {
-
-            // print($e);
-        }
         $is_validated = 1;
         $demande->is_validated = $is_validated;
 
-
         $demande->update();
 
-        // dd($demande->is_validated);
-        // return redirect()->route('demandes.index');
         return back()->with("success", "demande validée avec succès");
     }
 
@@ -293,24 +288,22 @@ class DemandeController extends Controller
             'subject' => 'Demande Annulée',
             'raison' => $request->raison,
             'etat' => ' rejetée',
-            'name' => $agent->username
+            'name' => $agent->username,
+            'to' => 'agent'
         ];
 
-        try {
-            $agent->notify(new AgentNotification($data));
-            $is_validated = 2;
-            $demande->is_validated = $is_validated;
+        ValidationManagerDemandeMail::dispatch($data)->delay(now()->addMinutes(1));
 
+        $is_validated = 2;
+        $demande -> is_validated = $is_validated;
 
-            $demande->update();
+        $demande -> update();
+        
+        $status = 2 ;
+        $demande -> status = $status;
 
-            // dd($demande);
-        } catch (Exception $e) {
-
-            // print($e);
-        }
-
-        // dd($demande);
+        $demande -> update();
+      
 
         return back()->with("annuler", "demande annulée avec succès");
     }
@@ -371,23 +364,18 @@ class DemandeController extends Controller
             'Url' => $demande->Url,
             'subject' => 'Demande Rejetée',
             'raison' => $request->raison,
-            'etat' => ' rejetée',
-            'name' => $agent->username
-        ];
-        try {
-            // dd(env('MAIL_FROM_ADDRESS'));
-            $agent->notify(new MailCharroiToAgentDemandeRejecte($data));
-            $status = '2';
-            $demande->status = $status;
+            'etat' => 'rejetée',
+            'name' => $agent->username,
+            'sender' => $agent
+        ];  
+        
+        TraitementDemandeMail::dispatch($data)->delay(now()->addMinutes(1));
+
+        $status = '2';
+        $demande->status = $status;
 
 
-            $demande->update();
-
-        } catch (Exception $e) {
-            print($e);
-        }
-
-        // dd($demande);
+        $demande->update();
 
         return back()->with("rejected", "Demande rejetée avec succès");
     }
