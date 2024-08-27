@@ -49,7 +49,7 @@
                                                 <div>
                                                     <div class="mt-3 text-3xl font-bold leading-8">{{$demandes_traitees}}</div>
 
-                                                    <div class="mt-1 text-base text-gray-600">Demandes Traitée</div>
+                                                    <div class="mt-1 text-base text-gray-600">Demandes Traitées</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -79,7 +79,7 @@
                                                 <div>
                                                     <div class="mt-3 text-3xl font-bold leading-8">{{$demandes_rejetees}}</div>
 
-                                                    <div class="mt-1 text-base text-gray-600">Demandes rejetée</div>
+                                                    <div class="mt-1 text-base text-gray-600">Demandes rejetées</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -112,7 +112,7 @@
                                                 <div>
                                                     <div class="mt-3 text-3xl font-bold leading-8">{{  $demandes_en_attente}}</div>
 
-                                                    <div class="mt-1 text-base text-gray-600">Demandes en attente</div>
+                                                    <div class="mt-1 text-base text-gray-600">Demandes en attentes</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -146,7 +146,7 @@
                                                 <div>
                                                     <div class="mt-3 text-3xl font-bold leading-8">{{$courses_en_attente}}</div>
 
-                                                    <div class="mt-1 text-base text-gray-600">Courses en attente</div>
+                                                    <div class="mt-1 text-base text-gray-600">Courses en attentes</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -155,8 +155,18 @@
                             </div>
                             <div class="col-span-12 mt-5">
                                 <div class="grid gap-2 grid-cols-1 lg:grid-cols-2">
-                                    <div class="bg-white shadow-lg p-4" id="chartline">Courbe demande</div>
-                                    <div class="bg-white shadow-lg" id="chartpie"><input type="hidden" id="total" value="{{$demandes_total}}"> <h3 class="text-base text-gray-900 dark:text-white items-center justify-center px-5 py-3">Stat demande</h3></div>
+                                    <div class="bg-white shadow-lg p-4" id="chartline">
+                                        @foreach ($mois_demande as $item)
+                                        <input type="hidden" id="mois" value="{{$item}}">
+                                        @endforeach
+                                        @foreach ($demande_traite_mois as $item1)
+                                        <input type="hidden" id="traite" value="{{$item1}}">
+                                        @endforeach
+                                        @foreach ($demande_rejete_mois as $item2)
+                                        <input type="hidden" id="rejete" value="{{$item2}}">
+                                        @endforeach
+                                        Courbe demande</div>
+                                    <div class="bg-white shadow-lg" id="chartpie"><input type="hidden" id="total" value="{{$demandes_total}}"> <h3 class=" px-5 py-3">Stat demande</h3></div>
                                 </div>
                             </div>
                             <div class="col-span-12 mt-5">
@@ -252,23 +262,43 @@
  
     <script>
         var chart = document.querySelector('#chartline')
+        var mois = document.querySelectorAll('#mois');
+        var mois_demande = [] ;
+        var demande1 = document.querySelectorAll('#traite');
+        var demande2 = document.querySelectorAll('#rejete');
+        var demande_taite = [] ;
+        var demande_rejete = [] ;
+        
+        mois.forEach(function(item){
+               mois_demande.push(item.value);
+              
+        });
+        demande1.forEach(function(item1){
+            demande_taite.push(item1.value);
+        });
+        demande2.forEach(function(item2){
+            demande_rejete.push(item2.value);
+        });
+        
+   
         var options = {
             series: [{
-                name: 'Demandes Traitées',
-                type: 'area',
-                data: [44, 55, 31, 47, 31, 43, 26, 41, 31, 47, 33]
-            }, {
                 name: 'Demandes Rejetées',
+                type: 'area',
+                data: demande_rejete
+            }, {
+                name: 'Demandes Traitées',
                 type: 'line',
-                data: [55, 69, 45, 61, 43, 54, 37, 52, 44, 61, 43]
+                data: demande_taite
             }],
             chart: {
                 height: 350,
-                type: 'line',
+                type: 'area',
                 zoom: {
                     enabled: false
                 }
             },
+            colors: ['#F55F3D', '#34DA20'],
             stroke: {
                 curve: 'smooth'
             },
@@ -276,9 +306,7 @@
                 type: 'solid',
                 opacity: [0.35, 1],
             },
-            labels: ['Dec 01', 'Dec 02', 'Dec 03', 'Dec 04', 'Dec 05', 'Dec 06', 'Dec 07', 'Dec 08', 'Dec 09 ',
-                'Dec 10', 'Dec 11'
-            ],
+            labels: mois_demande,
             markers: {
                 size: 0
             },
