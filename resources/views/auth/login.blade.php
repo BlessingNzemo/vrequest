@@ -182,9 +182,9 @@
         </ul>
     </div>
     <div class="py-48 ">
-        <div class="login flex bg-white  shadow-lg overflow-hidden mx-auto max-w-sm lg:max-w-4xl">
-            <div class="hidden lg:block lg:w-1/2 bg-cover"
-                style="background-image:url('https://images.unsplash.com/photo-1546514714-df0ccc50d7bf?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=667&q=80')">
+        <div class="login flex bg-white  shadow-lg overflow-hidden mx-auto max-w-sm lg:max-w-4xl rounded-md">
+            <div class="hidden lg:block lg:w-1/2 bg-cover">
+                <img src="{{ asset('img/login7.png') }}" class="mt-5" alt="FlowBite Logo" >
             </div>
             <div class="w-full p-8 lg:w-1/2">
                 <div class="mb-8 flex flex-col items-center">
