@@ -15,7 +15,7 @@
                 </div>
             </header>
             <main class="">
-                 <div class="grid mb-4 pb-10 px-8 mx-4 rounded-3xl bg-gray-100 border-4{{-- border-orange-400"--}}> 
+                 <div class="grid mb-4 pb-10 px-8 mx-4 rounded-3xl bg-gray-100 border-4{{-- border-orange-400--}}"> 
 
                     <div class="grid grid-cols-12 gap-6">
                         <div class="grid grid-cols-12 col-span-12 gap-6 xxl:col-span-9">
@@ -312,13 +312,13 @@
             },
             yaxis: [{
                     title: {
-                        text: 'Series A',
+                        text: 'Rejetées',
                     },
                 },
                 {
                     opposite: true,
                     title: {
-                        text: 'Series B',
+                        text: 'Traitées',
                     },
                 },
             ],
