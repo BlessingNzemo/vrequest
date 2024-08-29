@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ChangementChauffeur;
 use App\Jobs\TraitementDemandeMail;
 use Exception;
 use App\Models\User;
@@ -64,7 +65,7 @@ class CourseController extends Controller
                
                 if(in_array($time,$time_course)){
                     //dd(1);
-                    return back()->with('failed', 'course non traité car le véhicule sera occupé à cette heure');
+                    return back()->with('failed', 'course non traitée car le véhicule sera occupé à cette heure');
                 }
             }
         }
@@ -78,7 +79,7 @@ class CourseController extends Controller
                
                 if(in_array($time,$time_chauffeur)){
                   
-                    return back()->with('failed', 'course non traité le chauffeur sera occupé à cette heure');
+                    return back()->with('failed', 'course non traitée le chauffeur sera occupé à cette heure');
                 }
             }
         }
@@ -142,6 +143,7 @@ class CourseController extends Controller
             'chauffeur' => $chauffeur,
             'etat' => 'traitée',
             'course_id' => $course->id,
+            'Url' => $demande ->Url
 
         ];
         
@@ -189,11 +191,38 @@ class CourseController extends Controller
         
         $demande = Demande::where('id', $request->demande_id)->first();
         $course = Course::where('demande_id', $demande->id)->first();
+
+       
         $course->update([
             'chauffeur_id' => $request->chauffeur_id
         ]);
+
+        //Récupération du demandeur de la course
+        $user_id = $demande -> user_id;
+        $agent = User::where('id', $user_id)->firstOrFail();
        
-            return back()->with('success', 'chauffeur modifier avec succès');
+        $chauffeur_course_id = $course->chauffeur_id;
+        $chauffeur_chauffeur= Chauffeur::where('id', $chauffeur_course_id)->firstOrFail();
+       
+        $chauffeur_id = $chauffeur_chauffeur->user_id;
+
+        $chauffeur = User::where('id', $chauffeur_id)->firstOrFail();
+        
+        $data =(object)[
+            'id' => $demande->id ,
+            'subject' => 'Changement du Chauffeur',
+            'agent_name' => $agent -> username,
+            'agent' => $agent,
+            'chauffeur_name' => $chauffeur -> username,
+            'chauffeur' => $chauffeur,
+            'etat' => 'changé de chauffeur',
+            'course_id' => $course->id,
+            'Url' => $demande ->Url
+        ];
+
+        ChangementChauffeur::dispatch($data)->delay(now()->addMinutes(1));
+
+            return back()->with('success', 'chauffeur modifié avec succès');
         
         }
 
@@ -206,7 +235,7 @@ class CourseController extends Controller
              
             ]);
            
-                return back()->with('success', 'vehicule modifier avec succès');
+                return back()->with('success', 'vehicule modifié avec succès');
             
             }
 
