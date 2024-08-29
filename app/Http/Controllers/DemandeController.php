@@ -256,7 +256,7 @@ class DemandeController extends Controller
         $chefs_charroi = User::role('charroi')->get();
         // dd($chefs_charroi);
         $demande = Demande::find($id);
-        $username = [];
+        
         foreach($chefs_charroi as $chef_charroi){
 
             $data = (object) [
