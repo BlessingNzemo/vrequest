@@ -253,19 +253,24 @@ class DemandeController extends Controller
     {
 
 
-        $chef_charroi = User::role('charroi')->first();
+        $chefs_charroi = User::role('charroi')->get();
+        // dd($chefs_charroi);
         $demande = Demande::find($id);
+        $username = [];
+        foreach($chefs_charroi as $chef_charroi){
 
-        $data = (object) [
-            'id' => $demande->id,
-            'Url' => $demande->Url,
-            'subject' => 'Nouvelle demande',
-            'name' => $chef_charroi->username,
-            'charroi_name' => $chef_charroi->username,
-            'to' => 'chef_charroi'
-        ];
+            $data = (object) [
+                'id' => $demande->id,
+                'Url' => $demande->Url,
+                'subject' => 'Nouvelle demande',
+                'name' => $chef_charroi->username,
+                'charroi_name' => $chef_charroi->username,
+                'to' => 'chef_charroi'
+            ];
 
-        ValidationManagerDemandeMail::dispatch($data)->delay(now()->addMinutes(1));
+            ValidationManagerDemandeMail::dispatch($data);
+
+        }
 
         $is_validated = 1;
         $demande->is_validated = $is_validated;
