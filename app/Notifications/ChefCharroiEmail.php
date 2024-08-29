@@ -37,7 +37,7 @@ class ChefCharroiEmail extends Notification
                 ->from(env('MAIL_FROM_ADDRESS'),env('APP_NAME'))
                 ->subject($this->data->subject)
                 ->greeting('Cher '.$this->data->name)
-                ->line('Une nouvelle demande a été envoyée')
+                ->line('Une nouvelle demande à traiter a été envoyée')
                 ->line('Demande n° '.$this->data->id)
                 ->action('Voir plus', route('demandes.show',$this->data->Url))
                 ->line('Merci d\'utiliser '.env('APP_NAME'));
