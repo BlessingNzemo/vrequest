@@ -12,7 +12,9 @@ class Demande extends Model
 {
     use HasFactory,SoftDeletes;
     protected $fillable = ['ticket','motif', 'destination', 'nbre_passagers','lieu_depart','date_deplacement','date','status','site_id','longitude_destination','latitude_destination','longitude_depart','latitude_depart','user_id','Url'];
-
+    protected $casts = [
+        'date_deplacement' => 'datetime',
+    ];
 
     public function site(){
         return $this->belongsTo(Site::class,'site_id', 'id');
