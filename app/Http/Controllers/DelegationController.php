@@ -13,18 +13,12 @@ class DelegationController extends Controller
     public function index()
    {
     if(Session::get('authUser') && Session::get('userIsManager')){
-     
-        $manager_id = Session::get('authUser')->id; 
+        $manager_id = Session::get('authUser')->id;
         
-        $delegations= Delegation::leftJoin('users','users.id','delegations.manager_id')  
-                                    ->where('delegations.manager_id',$manager_id)
-                                    ->get();
+        $delegations = Delegation::where('manager_id',$manager_id)->get();
         
-        // dd($delegations);
-    }
-        
-    return view ('delegations.index',compact('delegations'));
-        
+        return view ('delegations.index',compact('delegations'));
+    }    
     
     
    }
@@ -60,7 +54,27 @@ class DelegationController extends Controller
                 if( $user ){
                     $user_id = $user -> id;
                     
+                    
+                //  Condition pour ne pas se déléguer soit même    
                     if($user_id != $manager_id){
+                        // Condition pour ne plus déléguer la même personne 2 fois dans la même période
+                        
+                        $delegations = Delegation::where('user_id',$user_id)
+                                                ->where('manager_id', $manager_id)
+                                                ->get();
+                        foreach($delegations as $delegation){
+                            $delegations_date_fin[] = $delegation->date_fin;
+                        }
+                        if(count($delegations_date_fin)>0){
+                            foreach($delegations_date_fin as $delegation_date_fin){
+                                if($delegation_date_fin > $request->date_debut){
+                                    return back()->with('failed', 'vous avez déjà délégué cet utilisateur dans cette même période');
+                                }
+                            }
+                    
+                        }
+                        
+
                         $delegation =Delegation::create([
                             'motif' =>  $request->motif,
                             'user_id' => $user_id,
@@ -149,7 +163,6 @@ class DelegationController extends Controller
 
     public function delegueVue(){
         if(Session::get('authUser')){
-     
             $user_id = Session::get('authUser')->id; 
             $delegations= Delegation::where('user_id',$user_id)->get();
             foreach ($delegations as $delegation){

@@ -11,6 +11,17 @@
                 </ul>
             </div>
         @endif
+        @if (session('failed'))
+            <div class="flex p-4 mb-4 text-sm rounded-lg bg-yellow-300 " id="failed-message">
+                {{ session('failed') }}
+            </div>
+            <script>
+                // Faire disparaître le message de succès après 5 secondes
+                setTimeout(function() {
+                    document.getElementById('failed-message').style.display = 'none';
+                }, 5000)
+            </script>
+        @endif
 
         <form action="{{ route('delegations.store') }}" method="post">
             @csrf
