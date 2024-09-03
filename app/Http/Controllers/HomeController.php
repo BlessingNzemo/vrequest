@@ -14,6 +14,7 @@ class HomeController extends Controller
         $id = Session::get('authUser')->id;
         $demandes = Demande::where('user_id',$id)->get();
         if(count($demandes)==0){
+            $mois = date("F");
             $demandes_en_attente = 0;
             $demandes_rejetees = 0;
             $demandes_traitees = 0;
@@ -21,7 +22,10 @@ class HomeController extends Controller
             $demandes_recentes = [];
             $courses_total = 0;
             $courses_en_attente = 0;
-            return view('dashboard', compact('demandes_traitees','demandes_en_attente','courses_en_attente','demandes_rejetees','demandes','demandes_recentes','demandes_total','courses_total'));
+            $demande_traite_mois = [0];
+            $demande_rejete_mois = [0];
+            $mois_demande = [$mois];
+            return view('dashboard', compact('demandes_traitees','demandes_en_attente','courses_en_attente','demandes_rejetees','demandes','demandes_recentes','demandes_total','courses_total','mois_demande','demande_traite_mois','demande_rejete_mois'));
         }
         foreach($demandes as $demande){
             $demande_id[] = $demande->id;
