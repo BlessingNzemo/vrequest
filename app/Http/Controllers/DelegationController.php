@@ -64,14 +64,15 @@ class DelegationController extends Controller
                                                 ->get();
                         foreach($delegations as $delegation){
                             $delegations_date_fin[] = $delegation->date_fin;
-                        }
-                        if(count($delegations_date_fin)>0){
-                            foreach($delegations_date_fin as $delegation_date_fin){
-                                if($delegation_date_fin > $request->date_debut){
-                                    return back()->with('failed', 'vous avez déjà délégué cet utilisateur dans cette même période');
+                        
+                            if(count($delegations_date_fin)>0){
+                                foreach($delegations_date_fin as $delegation_date_fin){
+                                    if($delegation_date_fin > $request->date_debut){
+                                        return back()->with('failed', 'vous avez déjà délégué cet utilisateur dans cette même période');
+                                    }
                                 }
+                        
                             }
-                    
                         }
                         
 
