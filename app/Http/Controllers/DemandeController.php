@@ -129,7 +129,7 @@ class DemandeController extends Controller
             ]);
             $demande->manager_id = $manager_id;
             $demande->update();
-            dd($demande);
+            // dd($demande);
             //CODE POUR ENVOYER UN MAIL AU MANAGER DE L'AGENT QUI SOUMET SA DEMANDE
 
             // Données à envoyer
@@ -248,7 +248,7 @@ class DemandeController extends Controller
         $chefs_charroi = User::role('charroi')->get();
         // dd($chefs_charroi);
         $demande = Demande::find($id);
-
+        $is_validated_by = Session::get('authUser')->id;
         foreach ($chefs_charroi as $chef_charroi) {
 
             $data = (object) [
@@ -265,8 +265,10 @@ class DemandeController extends Controller
 
         $is_validated = 1;
         $demande->is_validated = $is_validated;
+        $demande->is_validated_by = $is_validated_by ;
 
         $demande->update();
+        // dd($demande);
 
         return back()->with("success", "demande validée avec succès");
     }
@@ -276,7 +278,7 @@ class DemandeController extends Controller
         $demande = Demande::find($id);
         $user_id = $demande->user_id;
         $agent = User::where('id', $user_id)->first();
-
+        $is_validated_by = Session::get('authUser')->id;
         $demande->raison = $request->raison;
 
         $data = (object) [
@@ -294,12 +296,12 @@ class DemandeController extends Controller
         $is_validated = 2;
         $demande->is_validated = $is_validated;
 
-        $demande->update();
-
         $status = 2;
         $demande->status = $status;
+        $demande->is_validated_by = $is_validated_by ;
 
         $demande->update();
+        dd($demande);
 
 
         return back()->with("annuler", "demande annulée avec succès");
@@ -331,9 +333,9 @@ class DemandeController extends Controller
             foreach ($managers_id as $manager_id) {
                 $user_id = Session::get('authUser')->id;
                 $delegations = Delegation::where('user_id', $user_id)
-                    ->where('manager_id', $manager_id)
-                    ->get();
-
+                                ->where('manager_id', $manager_id)
+                                ->get();
+                // dd($managers_id);
                 foreach ($delegations as $delegation) {
 
                         $date_debut = $delegation->date_debut;
@@ -343,11 +345,12 @@ class DemandeController extends Controller
                         $date_fin_deleg = Carbon::parse($date_fin);
                        
                         $demandes= Demande::where('manager_id', $manager_id)
-                                                        ->whereBetween('created_at', [$date_debut_deleg, $date_fin_deleg])
-                                                        ->orderBy('id', 'desc')
-                                                        ->paginate(10);
+                                            ->whereBetween('created_at', [$date_debut_deleg, $date_fin_deleg])
+                                            ->orderBy('id', 'desc')
+                                            ->paginate(10);
                         
                         }
+                 
                  }
 
             return view('demandes.delegue', compact('demandes'));
@@ -373,6 +376,7 @@ class DemandeController extends Controller
         $demande = Demande::find($id);
         $user_id = $demande->user_id;
         $agent = User::where('id', $user_id)->first();
+        $traited_by = Session::get('authUser')->id;
         $demande->raison = $request->raison;
         $data = (object) [
             'id' => $demande->id,
@@ -388,10 +392,30 @@ class DemandeController extends Controller
 
         $status = '2';
         $demande->status = $status;
-
+        $demande->traited_by = $traited_by;
 
         $demande->update();
 
         return back()->with("rejected", "Demande rejetée avec succès");
+    }
+    public function indexprincipal()
+    {
+        if (Session::get('authUser')) {
+            $user_id = Session::get('authUser')->id;
+
+            $demandes = Demande::Where('user_id', $user_id)->orderBy('id', 'desc')->paginate(10);
+            $demandes_en_attente =Demande::where('user_id',$user_id)->where('status','0')->get()->count();
+
+            $demandes_validees = Demande::where('is_validated', 1)->get();
+            $demandes_traitees = Demande::where('status', 1)->get()->count();
+            $demandes_rejetees = Demande::where('user_id',$user_id )->where('status','2')->get()->count();
+            $vehicules = Vehicule::all();
+
+            $chauffeurs = Chauffeur::all();
+            $courses = Course::all();
+
+
+            return view('demandes.principal', compact('demandes', 'chauffeurs', 'vehicules', 'courses','demandes_en_attente','demandes_traitees','demandes_rejetees'));
+        }
     }
 }
