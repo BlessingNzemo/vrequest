@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\ChangementChauffeur;
-use App\Jobs\TraitementDemandeMail;
 use Exception;
 use App\Models\User;
 use App\Models\Course;
@@ -12,6 +10,9 @@ use App\Models\UserInfo;
 use App\Models\Vehicule;
 use App\Models\Chauffeur;
 use Illuminate\Http\Request;
+use App\Jobs\ChangementChauffeur;
+use App\Jobs\TraitementDemandeMail;
+use Illuminate\Support\Facades\Session;
 use App\Notifications\AgentNotification;
 use App\Notifications\ManagerNotification;
 use App\Notifications\ChauffeurNotification;
@@ -111,9 +112,11 @@ class CourseController extends Controller
             'commentaire'=>$request->commentaire,
             "date"=>$date
         ]);
-
+       
+        $traited_by = Session::get('authUser')->id;
+        $demande->traited_by  = $traited_by ;
         
-
+        $demande->update();
 
        
         $user_id=$demande->user_id;
@@ -149,7 +152,7 @@ class CourseController extends Controller
         
         TraitementDemandeMail::dispatch($data)->delay(now()->addMinutes(1));
           
-
+        dd($demande);
             return back()->with('success', 'Course enregistrée avec succès.');
         } 
 
