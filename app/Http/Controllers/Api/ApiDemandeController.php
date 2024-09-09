@@ -69,7 +69,7 @@ class ApiDemandeController extends Controller
     public function show(string $id)
     {
 
-        return response()->json(Demande::find($id));
+        return response()->json(Demande::with('user')->findOrFail($id));
 
 
 
