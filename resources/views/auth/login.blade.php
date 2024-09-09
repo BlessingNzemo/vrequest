@@ -184,7 +184,7 @@
     <div class="py-48 ">
         <div class="login flex bg-white  shadow-lg overflow-hidden mx-auto max-w-sm lg:max-w-4xl rounded-md">
             <div class="hidden lg:block lg:w-1/2 bg-cover">
-                <img src="{{ asset('img/login7.png') }}" class="mt-5" alt="FlowBite Logo" >
+                <img src="{{ asset('img/log3.png') }}" class="mt-5" alt="FlowBite Logo" >
             </div>
             <div class="w-full p-8 lg:w-1/2">
                 <div class="mb-8 flex flex-col items-center">
@@ -193,7 +193,7 @@
                     <h1 class="mb-2 text-gray-700 text-2xl">Vrequest</h1>
 
                 </div>
-                <div class="mt-4 flex items-center justify-between">
+                <div class=" flex items-center justify-between">
                     <span class="border-b w-1/5 lg:w-1/4"></span>
                     <a href="#" class="block text-gray-700  font-bold mb-2 text-2xl">Login</a>
                     <span class="border-b w-1/5 lg:w-1/4"></span>
@@ -249,7 +249,7 @@
                     </div>
                     <div class="mt-8">
                         <button type="submit"
-                            class="bg-gray-700 text-white font-bold py-2 px-4 w-full rounded hover:bg-gray-600">Login</button>
+                            class="bg-gray-900 text-white font-bold py-2 px-4 w-full rounded hover:bg-gray-600">Login</button>
                     </div>
                 </form>
 
