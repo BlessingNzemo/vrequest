@@ -7,6 +7,7 @@ use App\Models\Site;
 use App\Models\User;
 use App\Models\Course;
 use App\Models\Demande;
+use App\Models\Passager;
 use App\Models\UserInfo;
 use App\Models\Vehicule;
 use App\Models\Chauffeur;
@@ -15,23 +16,24 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Mail\ChefCharroiEmail;
 use Illuminate\Support\Facades\DB;
+use App\Jobs\TraitementDemandeMail;
+
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
+
+
 use Illuminate\Support\Facades\Mail;
-
 use Illuminate\Support\Facades\Session;
+use App\Jobs\CreationDemandeMailManager;
 use App\Notifications\AgentNotification;
-
-
+use App\Jobs\ValidationManagerDemandeMail;
 use App\Notifications\ManagerNotification ;
 use Illuminate\Support\Facades\Notification;
-use App\Http\Controllers\envoyerMailAuManager;
-use App\Jobs\CreationDemandeMailManager;
-use App\Jobs\TraitementDemandeMail;
-use App\Jobs\ValidationManagerDemandeMail;
-use App\Notifications\ChefCharroiEmail as NotificationsChefCharroiEmail;
 
-use App\Notifications\MailCharroiToAgentDemandeRejecte;
+use App\Http\Controllers\envoyerMailAuManager;
 use App\Notifications\UserDelegueNotification;
+use App\Notifications\MailCharroiToAgentDemandeRejecte;
+use App\Notifications\ChefCharroiEmail as NotificationsChefCharroiEmail;
 
 
 class DemandeController extends Controller
@@ -131,12 +133,58 @@ class DemandeController extends Controller
                 'Url'=> $Url,
                 'manager_id' => $manager_id
             ]);
+           
             $demande->manager_id = $manager_id;
             $demande->update();
             // dd($demande);
             //CODE POUR ENVOYER UN MAIL AU MANAGER DE L'AGENT QUI SOUMET SA DEMANDE
             
             // Données à envoyer
+            $nombre = (int) $request->input('nombre-passagers');
+            
+            for ($i = 0; $i < $nombre; $i++) {
+       
+                if ($request->has("passager{$i}")) {
+
+                    $response = Http::get('http://10.143.41.70:8000/promo2/odcapi/?method=getUsers');
+
+                    if ($response->successful()) {
+                        if(strpos($request->input("passager{$i}"), ' ') !==false) {
+
+                        $passager = explode(' ',$request->input("passager{$i}"));
+                               $firstname = $passager[0];
+                               $lastname = $passager[1]; 
+                            
+                            $users = $response->json();
+                            $passager_lastname = collect($users['users'])->firstWhere('last_name', $lastname); 
+                    if($passager_lastname){
+                        Passager::create([
+                            'user_id' => $passager_lastname['id'],
+                            'demande_id'=>$demande->id,
+                           
+                        ]);
+                    } 
+                    else{
+                        Passager::create([
+                            'user_id' =>null,
+                            'demande_id'=>$demande->id,
+                 
+                        ]);
+                    }
+                }
+                else{
+                    Passager::create([
+                        'user_id' =>null,
+                        'demande_id'=>$demande->id,
+                        
+                    ]);
+                }
+                  
+                }
+                
+            }
+        }
+    
             $data = (object) [
                 'id' => $demande->id,
                 'Url' =>$demande->Url,
