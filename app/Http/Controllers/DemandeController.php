@@ -230,12 +230,45 @@ class DemandeController extends Controller
         // dd($Url);
         $demandes = Demande::with('courses')->where('Url', $Url)->firstOrFail();
         $courses = Course::where('demande_id', $demandes->id)->first();
+        $demande = Demande::where('Url', $Url)->first();
+        $demande_id = $demande->id;
+        $passagers = Passager::where('demande_id', $demande_id)->get()->pluck('user_id');
+        foreach ($passagers as $item){
+            $passager_id [] = $item;
+        }
+        if(count($passagers)==0){
+            $vehicules = [];
+            $chauffeur_name = null;
+            $chauffeurs = [];
+            $vehicule = null;
+            $passager_name = [];
+            return view("demandes.show", compact('demandes', 'vehicule', 'courses', 'vehicules', 'chauffeur_name', 'chauffeurs','passager_name'));
+        }
+        $response = Http::get('http://10.143.41.70:8000/promo2/odcapi/?method=getUsers');
+
+        if ($response->successful()) {
+                $users = $response->json();
+                $passager = collect($users['users'])->whereIn('id', $passager_id);
+                foreach ($passager as $item1){
+                    $passager_name [] = $item1['first_name'].' '.$item1['last_name'];
+                }
+                foreach ($passager_id as $id) {
+                   if($id==null){
+                    $passager_name [] = "Inconnu";
+                   }
+                }
+                
+                
+        }
+       
+    
         if (!$courses) {
             $vehicules = [];
             $chauffeur_name = null;
             $chauffeurs = [];
             $vehicule = null;
-            return view("demandes.show", compact('demandes', 'vehicule', 'courses', 'vehicules', 'chauffeur_name', 'chauffeurs'));
+            
+            return view("demandes.show", compact('demandes', 'vehicule', 'courses', 'vehicules', 'chauffeur_name', 'chauffeurs','passager_name'));
         }
         $vehicule = Vehicule::where('id', $courses->vehicule_id)->first();
 
@@ -247,8 +280,9 @@ class DemandeController extends Controller
 
 
         // dd($chauffeurs);
+    
 
-        return view("demandes.show", compact('demandes', 'courses', 'vehicules', 'chauffeur_name', 'chauffeurs', 'vehicule'));
+        return view("demandes.show", compact('demandes', 'courses', 'vehicules', 'chauffeur_name', 'chauffeurs', 'vehicule','passager_name'));
     }
 
     /**
