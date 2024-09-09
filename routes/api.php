@@ -34,6 +34,6 @@ require __DIR__.'/apiUser.php';
 require __DIR__.'/apiMessage.php';
 require __DIR__.'/apiMessageGroupe.php';
 require __DIR__.'/apiDemande.php';
-
+require __DIR__.'/apiCourse.php';
 
 
