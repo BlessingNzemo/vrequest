@@ -13,18 +13,12 @@ class DelegationController extends Controller
     public function index()
    {
     if(Session::get('authUser') && Session::get('userIsManager')){
-     
-        $manager_id = Session::get('authUser')->id; 
+        $manager_id = Session::get('authUser')->id;
         
-        $delegations= Delegation::leftJoin('users','users.id','delegations.manager_id')  
-                                    ->where('delegations.manager_id',$manager_id)
-                                    ->get();
+        $delegations = Delegation::where('manager_id',$manager_id)->get();
         
-        // dd($delegations);
-    }
-        
-    return view ('delegations.index',compact('delegations'));
-        
+        return view ('delegations.index',compact('delegations'));
+    }    
     
     
    }
@@ -46,50 +40,77 @@ class DelegationController extends Controller
             'user_id' => 'required|different:manager_id'
         ]);
         $sepNom = explode(" ",$user_name);
-        
-        $first_name = $sepNom[0];
-        $last_name = $sepNom[1];
-        
 
-        $user = User::where('first_name',$first_name) 
-                    ->where('last_name',$last_name) 
-                    ->first();
-        // dd($user);  
-        if( $user ){
-            $user_id = $user -> id;
+        if(count($sepNom)>1){
+            $first_name = $sepNom[0];
             
-            if($user_id != $manager_id){
-                $delegation =Delegation::create([
-                    'motif' =>  $request->motif,
-                    'user_id' => $user_id,
-                    'manager_id' => $manager_id,
-                    'date_debut' => $request->date_debut,
-                    'date_fin' => $request->date_fin,
-                ]);
-    
-                //Envoyer un mail au user qu'on veut déléguer
-    
-                $data =(object)[
-                    'id' => $delegation -> id ,
-                    'subject' => 'Nouvelle Délégation',
-                    'name' => $user -> username,
-                    'Motif' => $delegation ->motif
-                ];
-                
-                try{
-                    $user -> notify(new UserDelegueNotification($data));
+            $last_name = $sepNom[1];
+            // exit();
+            $user = User::where('first_name',$first_name) 
+                        ->where('last_name','LIKE',$last_name.'%') 
+                        ->firstOrFail();
+            
+            // dd($user);  
+                if( $user ){
+                    $user_id = $user -> id;
+                    
+                    
+                //  Condition pour ne pas se déléguer soit même    
+                    if($user_id != $manager_id){
+                        // Condition pour ne plus déléguer la même personne 2 fois dans la même période
+                        
+                        $delegations = Delegation::where('user_id',$user_id)
+                                                ->where('manager_id', $manager_id)
+                                                ->get();
+                        foreach($delegations as $delegation){
+                            $delegations_date_fin[] = $delegation->date_fin;
+                        
+                            if(count($delegations_date_fin)>0){
+                                foreach($delegations_date_fin as $delegation_date_fin){
+                                    if($delegation_date_fin > $request->date_debut){
+                                        return back()->with('failed', 'vous avez déjà délégué cet utilisateur dans cette même période');
+                                    }
+                                }
+                        
+                            }
+                        }
+                        
+
+                        $delegation =Delegation::create([
+                            'motif' =>  $request->motif,
+                            'user_id' => $user_id,
+                            'manager_id' => $manager_id,
+                            'date_debut' => $request->date_debut,
+                            'date_fin' => $request->date_fin,
+                        ]);
+            
+                        //Envoyer un mail au user qu'on veut déléguer
+            
+                        $data =(object)[
+                            'id' => $delegation -> id ,
+                            'subject' => 'Nouvelle Délégation',
+                            'name' => $user -> username,
+                            'Motif' => $delegation ->motif
+                        ];
+                        
+                        try{
+                            $user -> notify(new UserDelegueNotification($data));
+                        }
+                        catch(Exception $e){
+                            //print($e);
+                        }
+            
+                        return redirect()->route("delegations.index");
+                    }
+                    else{
+                        return back()->with('failed', 'vous ne pouvez pas vous déléguer vous-même, 
+                        veuillez choisir un autre délégué');
+                    }
+                    
                 }
-                catch(Exception $e){
-                    //print($e);
-                }
-    
-                return redirect()->route("delegations.index");
-            }
             else{
-                return back()->with('failed', 'vous ne pouvez pas vous déléguer vous-même, 
-                veuillez choisir un autre délégué');
+                return back()->with('failed', 'le délégué ne s\'est pas encore enregistré dans l\'application');
             }
-            
         }
         else{
             return back()->with('failed', 'le délégué ne s\'est pas encore enregistré dans l\'application');
@@ -143,7 +164,6 @@ class DelegationController extends Controller
 
     public function delegueVue(){
         if(Session::get('authUser')){
-     
             $user_id = Session::get('authUser')->id; 
             $delegations= Delegation::where('user_id',$user_id)->get();
             foreach ($delegations as $delegation){
