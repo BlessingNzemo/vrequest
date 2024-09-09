@@ -5,17 +5,18 @@ const app = express();
 const server = http.createServer(app);
 const io = require("socket.io")(server);
 
-var identifiant;
-let notifications=[];
-let donnee;
-let verificationNbr=0;
-let data={};
-let cle=0;
-let cleTab=[];
-let messages=[];
-let clients=[];
+// var identifiant;
+// let notifications=[];
+// let donnee;
+// let verificationNbr=0;
+// let data={};
+// let cle=0;
+// let cleTab=[];
+// let messages=[];
+// let clients=[];
+var rooms = [];
 
-app.use(express.json());
+// app.use(express.json());
 
 io.on('connection', (socket) => {
     console.log(socket.id+' user connected');
@@ -31,11 +32,10 @@ io.on('connection', (socket) => {
         }
         if(!socket.rooms.has("room-"+id)){
             socket.join("room-"+id);
-            io.sockets.in("room-"+id).emit('isConnected', user_id); 
-            identifiant=id;
+            // io.sockets.in("room-"+id).emit('isConnected', user_id); 
             // console.log(cleTab);
             // console.log(notifications.id);
-            let key=3;
+            // let key=3;
             // while(cleTab.length>0){
             //     let key=cleTab.pop();
             //     donnee=notifications.id.cle;
@@ -45,64 +45,73 @@ io.on('connection', (socket) => {
             //       }, 500);
             //     key--;
             // }
-            console.log(`Id ${id} vient de rejoindre le Room`)
+            console.log(`Id ${socket.id} vient de rejoindre le Room ${id}`);
         }
 
     });
-    app.use(express.json());
-    app.use(express.urlencoded({ extended: false }));
-    /* 'form_params' => [
-        'user_id' => "demande->user_id",
-        'debut' => $demande->debut,
-        'fin' =>$demande->fin,
-        'status'=>$demande->status,
-    ]*/
-    app.post('/reception', (req, res) => {
-        let id = req.body.user_id;
-        cle=req.body.id;
-        let debut=req.body.debut;
-        let fin=req.body.fin;
-        let status=req.body.status;
-        let motif =req.body.motif
-        data.id=id;
-        data.debut=debut;
-        data.fin=fin;
-        data.status=status;
-        data.status=motif;
-        let jsonData=JSON.stringify(data);
-        /*
-        if(verificationNbr==501 ){
-            console.log("^^^^^^"+verificationNbr);
-            notifications.id['$cle']=data;
-            console.log(notifications.id);
-        }*/
-        io.sockets.in("room-"+req.body.user_id).emit('receive', jsonData);
-        cleTab.push("cle");
-        notifications.id.cle=data;
-        console.log('####'+cleTab)
-        res.send('Données reçues avec succès !');
-    });
-    socket.on("confirmation", (code)=>{
-        let jsonCode=JSON.parse(code);
-        verificationNbr=jsonCode.id;
-            cleTab.pop();
-    });
-    socket.on('createMessage', (data)=>{
-       // list.push(ID);
+    // app.use(express.json());
+    // app.use(express.urlencoded({ extended: false }));
+    // /* 'form_params' => [
+    //     'user_id' => "demande->user_id",
+    //     'debut' => $demande->debut,
+    //     'fin' =>$demande->fin,
+    //     'status'=>$demande->status,
+    // ]*/
+    // app.post('/reception', (req, res) => {
+    //     let id = req.body.user_id;
+    //     cle=req.body.id;
+    //     let debut=req.body.debut;
+    //     let fin=req.body.fin;
+    //     let status=req.body.status;
+    //     let motif =req.body.motif
+    //     data.id=id;
+    //     data.debut=debut;
+    //     data.fin=fin;
+    //     data.status=status;
+    //     data.status=motif;
+    //     let jsonData=JSON.stringify(data);
+    //     /*
+    //     if(verificationNbr==501 ){
+    //         console.log("^^^^^^"+verificationNbr);
+    //         notifications.id['$cle']=data;
+    //         console.log(notifications.id);
+    //     }*/
+    //     io.sockets.in("room-"+req.body.user_id).emit('receive', jsonData);
+    //     cleTab.push("cle");
+    //     notifications.id.cle=data;
+    //     console.log('####'+cleTab)
+    //     res.send('Données reçues avec succès !');
+    // });
+    // socket.on("confirmation", (code)=>{
+    //     let jsonCode=JSON.parse(code);
+    //     verificationNbr=jsonCode.id;
+    //         cleTab.pop();
+    // });
+
+    socket.on('createMessage', async (data)=>{
+        // list.push(ID);
         //socket.emit('users',list);
         console.log('createMessage', data);
         // io.sockets.in("room-"+data.message_groupe_id).emit('receive', data.contenu);
         // socket.emit('receive', data.contenu);
         // messages["room-"+data.demande] = data;
-        io.sockets.in("room-"+data.demande.id).emit('sendMessage', data); 
+        io.to("room-"+data.demande.id).emit('sendMessage', data); 
     });
 
-    socket.on('getPosition', (data)=>{
-        
-         console.log('getPosition', data);
-         
-         io.sockets.in("room-"+data.demande.id).emit('sendPosition', data); 
-     });
+    socket.on('sendLocation', (data)=>{
+        console.log('Location', data);
+        io.sockets.in("room-"+data.demande.id).emit('getLocation', data); 
+    });
+
+    socket.on('startCourse', (data)=>{
+        console.log('startCourse', data);
+        io.sockets.in("room-"+data.demande.id).emit('socketStartCourse', data); 
+    });
+
+    socket.on('closeCourse', (data)=>{
+        console.log('closeCourse', data);
+        io.sockets.in("room-"+data.demande.id).emit('socketCloseCourse', data); 
+    });
 
     // socket.on('disconnect', (user_id)=>{
     //     console.log('User '+socket.id+' disconnected');
