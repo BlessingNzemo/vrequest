@@ -17,42 +17,93 @@
     // Stocker les marqueurs de départ et de destination
     var departMarker = null;
     var destinationMarker = null;
+    
+
+    
 
     // Ajouter un événement de clic sur la carte
     mapid.on('click', function(e) {
+       
         // Supprimer les marqueurs précédents, s'ils existent
+        /*
         if (departMarker) {
             mapid.removeLayer(departMarker);
         }
+            
+         
         if (destinationMarker) {
             mapid.removeLayer(destinationMarker);
         }
+
+    */
+       
 
         // Effectuer la recherche via l'API Nominatim de OpenStreetMap
         axios.get('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + e.latlng.lat + '&lon=' + e.latlng.lng + '&zoom=18&addressdetails=1')
             .then(function(res) {
                 var data = res.data;
                 var placeName = data.display_name;
-
+                var depart = document.getElementById('depart');
+                var destination = document.getElementById('destination');
+   
+           
                 // Ajouter un marqueur sur la carte
-                if (document.activeElement.id === 'depart') {
+
+               depart.addEventListener('focus', function(){
+                depart.value = "";
+                mapid.removeLayer(departMarker);
+            
+                
+
+               });
+               destination.addEventListener('focus', function(){
+                destination.value = "";
+                mapid.removeLayer(destinationMarker);
+               
+                
+               });
+          
+              
+                   
+                if(depart.value === ''){
+                  
+                    if (departMarker) {
+                    mapid.removeLayer(departMarker);
+                 
+                   }
                     departMarker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(mapid);
                     departMarker.bindPopup('<b>' + placeName + '</b>').openPopup();
                     $('#latitude_depart1').val(e.latlng.lat);
                     $('#longitude_depart1').val(e.latlng.lng);
                     $('#depart').val(placeName);
-                } else {
+                  
+              
+
+               }
+
+                  
+                else  {
+                    if (destinationMarker) {
+                    mapid.removeLayer(destinationMarker);
+                 
+                   }
+                 
+                    
                     destinationMarker = L.marker([e.latlng.lat, e.latlng.lng],{icon: greenIcon}).addTo(mapid);
                     destinationMarker.bindPopup('<b>' + placeName + '</b>').openPopup();
                     $('#latitude_destination1').val(e.latlng.lat);
                     $('#longitude_destination1').val(e.latlng.lng);
                     $('#destination').val(placeName);
                 }
+            
+         
+              
             })
             .catch(function(error) {
                 console.error('Erreur lors de la recherche:', error);
             });
     });
+
     $(function() {
         $("#depart, #destination").autocomplete({
             source: function(request, response) {
