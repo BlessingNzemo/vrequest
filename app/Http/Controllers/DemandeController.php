@@ -141,12 +141,15 @@ class DemandeController extends Controller
             //CODE POUR ENVOYER UN MAIL AU MANAGER DE L'AGENT QUI SOUMET SA DEMANDE
 
             // Données à envoyer
+         
             $nombre = (int) $request->input('nombre-passagers');
+           
+           
             
             for ($i = 0; $i < $nombre; $i++) {
-       
+              
                 if ($request->has("passager{$i}")) {
-
+                   
                     $response = Http::get('http://10.143.41.70:8000/promo2/odcapi/?method=getUsers');
 
                     if ($response->successful()) {
@@ -155,9 +158,11 @@ class DemandeController extends Controller
                         $passager = explode(' ',$request->input("passager{$i}"));
                                $firstname = $passager[0];
                                $lastname = $passager[1]; 
+                               
                             
                             $users = $response->json();
                             $passager_lastname = collect($users['users'])->firstWhere('last_name', $lastname); 
+                            
                     if($passager_lastname){
                         Passager::create([
                             'user_id' => $passager_lastname['id'],
@@ -185,6 +190,7 @@ class DemandeController extends Controller
                 
             }
         }
+       
     
             $data = (object) [
                 'id' => $demande->id,
