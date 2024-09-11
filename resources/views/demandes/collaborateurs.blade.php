@@ -33,11 +33,12 @@
         </script>
     @endif
 
+    <div class="flex flex-col">
+        <div class=" overflow-x-auto pb-4">
+            <div class="min-w-full inline-block align-middle">
      
+@if()
 
-<div class="flex flex-col">
-    <div class=" overflow-x-auto pb-4">
-        <div class="min-w-full inline-block align-middle">
             <div class="overflow-hidden  border rounded-lg border-gray-300">
                 <table id="" class="table-auto min-w-full rounded-xl">
                     <thead>
@@ -205,12 +206,39 @@
                                     </button>  
                                     
                                 </td> 
-                    </tr>
-                    @endforeach
-            </tbody>
-        </table>
-        {{-- {{ $demandes->links() }} --}}
-    </div>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                {{-- {{ $demandes->links() }} --}}
+                </div>
+
+    @else
+        <div>
+            @foreach ($demandes->sortBy('status') as $i => $item)
+                <a href="{{ route('demandes.show', $item->Url) }}">
+                    <div style="display:inline-block" class="flex flex-col justify-center items-center bg-gray-100">
+                        <div class="bg-white rounded-lg shadow-lg overflow-hidden max-w-lg w-full">
+                            <div class="p-6">
+                                <h2 class="text-2xl font-bold text-gray-800 mb-2">{{ __($item->ticket) }}</h2>
+                                <p class="text-gray-700 leading-tight mb-4">
+                                    {{ __(substr($item->motif,0,30)) }}
+                                </p>
+                                <div style="margin-right: 5%" class="flex justify-between items-center">
+                                    <div class="flex items-center">
+                                        <img src="https://png.pngtree.com/png-vector/20210921/ourlarge/pngtree-flat-people-profile-icon-png-png-image_3947764.png" alt="Avatar" class="w-8 h-8 rounded-full mr-2 object-cover">
+                                        <span style="font-size: 70%" class="text-gray-800 font-semibold">{{ __($item->user()->first()->last_name." ".$item->user()->first()->first_name ) }}</span>
+                                    </div>
+                                    <span style="font-size: 70%" class="text-gray-600">{{ __($item->created_at->toDateTimeString()) }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            @endforeach
+        </div>
+    @endif
+
     <x-deleteDemande :message="__('Voulez-vous vraiment supprimer cette demande ?')" />
     <x-showDemande :message="__('Voulez-vous vraiment voir cette demande?')"/>
 
