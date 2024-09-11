@@ -3,16 +3,16 @@
 namespace App\Jobs;
 
 use Exception;
-use App\Models\Demande;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
+use App\Notifications\AgentNotification;
+use App\Notifications\ChangementChauffeurAgentNotification;
+use App\Notifications\ChangementChauffeurNotifications;
 use Illuminate\Queue\InteractsWithQueue;
-use App\Notifications\ManagerNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use App\Notifications\UserDelegueNotification;
 
-class CreationDemandeMailManager implements ShouldQueue
+class ChangementChauffeur implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -29,15 +29,21 @@ class CreationDemandeMailManager implements ShouldQueue
      */
     public function handle(): void
     {
-        if($this->data->to == 'manager'){
+        if($this->data->chauffeur != $this->data->agent){
             try {
-                $this->data->sender->notify(new ManagerNotification($this->data));
+                
+                $this->data->chauffeur->notify(new ChangementChauffeurNotifications($this->data));
+                $this->data->agent->notify(new ChangementChauffeurAgentNotification($this->data));
+                // dd("message envoyé");
             } catch (Exception $e) {
                 // print($e);
             }
-        }elseif($this->data->to == 'delegue'){
+        
+            
+        }
+        else{
             try {
-                $this->data->sender->notify(new UserDelegueNotification($this->data));
+                $this->data->agent->notify(new ChangementChauffeurAgentNotification($this->data));
             } catch (Exception $e) {
                 // print($e);
             }

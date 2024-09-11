@@ -4,7 +4,7 @@
     <x-slot name="header">
         <div class="flex items-center justify-between px-0">
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight text-center">
-                {{ __('Demandes Collaborateurs') }}
+                {{ __('Demandes déléguées') }}
             </h2>
             
 
@@ -169,7 +169,7 @@
                                                             
                                                     </a>
                                                 </li>
-                                                @if (Session::get('userIsManager') || Session::get('delegation'))
+                                                @if (Session::get('delegation'))
                                                     @if($item->is_validated == 0 )
                                                         <li>
                                                             <a href="{{route('envoyermailauchefcharroi',$item->id)}}" data-modal-target="validation-modal" data-modal-toggle="validation-modal" onclick="valider(event)" id="ButtonValider" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">

@@ -7,6 +7,7 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
 use Spatie\Permission\Models\Permission;
 use App\Http\Controllers\PermissionController;
@@ -15,13 +16,8 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 
 
-Route::get('/testview', function(){
-  return view('test');    
-})->middleware('check:User');
+Route::get('/test', [TestController::class,'create'])->name('test');
 
-Route::get('/a',function(){
-    
-});
 
 Route::middleware(['authenticate', 'role:admin'])->group(function(){
     Route::get('/saveroles', [RoleController::class,'saveroles']);

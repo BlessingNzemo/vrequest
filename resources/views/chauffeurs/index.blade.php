@@ -35,7 +35,7 @@
                             <th scope="col" class="px-6 py-3">Date</th>
                             <th scope="col" class="px-6 py-3">nom</th>
                             <th scope="col" class="px-6 py-3">status</th>
-                            
+                            <th scope="col" class="px-6 py-3">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -50,18 +50,35 @@
 
                                 <td class="px-6 py-4">{{ $chauffeur->user->username }}</td>
                                 <td class="px-6 py-4">
-                                    @if ($chauffeur->status==0)
+                                    @if ($chauffeur->status==1)
+                                         <div class="py-1.5 px-2.5 bg-emerald-50 rounded-full flex justify-center w-20 items-center gap-1">
+                                             <svg width="5" height="6" viewBox="0 0 5 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                 <circle cx="2.5" cy="3" r="2.5" fill="#059669"></circle>
+                                             </svg>
+                                             <span class="font-medium text-xs text-emerald-600 ">Activé</span>
+                                         </div>
+                                     @endif
+                                     @if ($chauffeur->status==0)
+                                         <div class="py-1.5 px-2.5 bg-red-50 rounded-full flex w-20 justify-center items-center gap-1">
+                                             <svg width="5" height="6" viewBox="0 0 5 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                 <circle cx="2.5" cy="3" r="2.5" fill="#DC2626"></circle>
+                                             </svg>
+                                             <span class="font-medium text-xs text-red-600 ">Désactivé</span>
+                                         </div>    
+                                     @endif
+                                </td>
+                                <td class="px-6 py-4">
+                                    @if ($chauffeur->status==1)
                                         
                                    
-                                    <a onclick="desactiver(event);" data-modal-target="desactiver"
-                                    data-modal-toggle="desactiver" href="{{ route('chauffeurs-status', $chauffeur->id) }}"
-                                   class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-xs px-5 py-2.5 text-center me-2 mb-2">Desactiver</a>
-                                  
-                                   @endif
-                                   @if ($chauffeur->status==1)
-                                   <a onclick="activer(event);" data-modal-target="activer"
-                                   data-modal-toggle="activer" href="{{route('chauffeurs-status',$chauffeur->id)}}" class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-600 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800">Activer</a>
-                                   @endif
+                                        <a onclick="desactiver(event);" data-modal-target="desactiver"
+                                        data-modal-toggle="desactiver" href="{{ route('chauffeurs-status', $chauffeur->id) }}"
+                                    class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-xs px-5 py-2.5 text-center me-2 mb-2">Desactiver</a>
+                                    @endif
+                                    @if ($chauffeur->status==0)
+                                        <a onclick="activer(event);" data-modal-target="activer"
+                                        data-modal-toggle="activer" href="{{route('chauffeurs-status',$chauffeur->id)}}" class="text-white bg-green-400 hover:bg-green-600 focus:ring-4 focus:ring-green-500 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-600 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800">Activer</a>
+                                    @endif
                                </td>
                                
                             </tr>
