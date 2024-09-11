@@ -7,7 +7,7 @@ use App\Models\Vehicule;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\DemandeResource;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 
 class ApiDemandeController extends Controller
 {
@@ -38,7 +38,25 @@ class ApiDemandeController extends Controller
             "latitude_destination" => "required"
 
         ]);
-        $demande = Demande::create($request->all());
+        $url = Str::random(16);
+        $demande = [
+            "motif"=> $request->motif,
+            "ticket"=> $request->ticket,
+            "date_deplacement"=>$request->date_deplacement,
+            "date"=> $request->date,
+            "nbre_passagers"=> $request->nbre_passagers,
+            "user_id"=> $request->user_id,
+            "manager_id"=> $request->manager_id,
+            "lieu_depart"=> $request->lieu_depart,
+            "destination"=>$request->destination,
+            "latitude_depart"=> $request->latitude_depart,
+            "longitude_depart"=> $request->longitude_depart,
+            "latitude_destination"=> $request->latitude_destination,
+            "longitude_destination"=> $request->longitude_destination,
+            "Url"=> $url
+        ];
+        $demande = Demande::create($demande);
+
 
         return response()->json([
             'demande' => $demande
@@ -50,17 +68,17 @@ class ApiDemandeController extends Controller
     {
         $id = $request->id;
         $demande = Demande::find($id);
-         
+
         if ($demande->is_validated == 0) {
             $demande->delete();
-            
+
 
         return response()->json(['message' => 'Demande annulée avec succès.']);
-            
+
         }
         return response()->json(['message' =>"impossible d'annuler la demande car elle est déjà tritée"]);
-       
-       
+
+
     }
 
     /**
@@ -68,8 +86,8 @@ class ApiDemandeController extends Controller
      */
     public function show(string $id)
     {
-
-        return response()->json(Demande::find($id));
+        $demande = Demande::with("user")->findOrFail($id);
+        return response()->json($demande);
 
 
 
@@ -100,13 +118,13 @@ class ApiDemandeController extends Controller
         $demande_traite = Demande::where('user_id',$id)->where('status','1')->count();
         $demande_total = Demande::where('user_id',$id)->count();
         $demande_non_traite = Demande::where('is_validated',1)->where('status','0')->count();
-         
+
         $vehicule_nondispo = Vehicule::where('disponibilite',1)->count();
         $vehicule_disponible = Vehicule::where('disponibilite',0)->count();
         $vehicule_total = Vehicule::all()->count();
 
         $traites = Demande::where('status',0)->count();
-       
+
         $demande_tab = [
             "demande_encours" => $demande_encours,
             "demande_traite" =>$demande_traite,
@@ -126,7 +144,7 @@ class ApiDemandeController extends Controller
     public function lastDemande(Request $request){
         return response()->json(Demande::where('user_id',$request->id)->latest()->take(2)->get());
 
-  
+
     }
 
     public function getdemande(Request $request)
@@ -139,7 +157,7 @@ class ApiDemandeController extends Controller
         $demandes = Demande::where('user_id',$id)->get();
         return DemandeResource::collection($demandes);
     }
-    
+
     public function getDemandeTraite(Request $request){
         $id = $request->id;
         $demandes = Demande::where('user_id',$id)->where('status','1')->get();
