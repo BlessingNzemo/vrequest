@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\DemandeResource;
 use App\Models\Passager;
+use App\Models\Site;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
@@ -199,5 +200,11 @@ class ApiDemandeController extends Controller
         }
 
         return response()->json(['error' => 'No users found'], 404);
+    }
+
+    public function getSites(){
+        $sites = Site::all();
+
+        return response()->json($sites);
     }
 }
