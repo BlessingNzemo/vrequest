@@ -44,7 +44,7 @@ class DemandeController extends Controller
         if (Session::get('authUser')) {
             $user_id = Session::get('authUser')->id;
 
-            $demandes = Demande::Where('user_id', $user_id)->orderBy('id', 'desc')->paginate(10);
+            $demandes = Demande::Where('user_id', $user_id)->orderBy('id', 'desc')->paginate(5);
 
 
             $demandes_validees = Demande::where('is_validated', 1)->get();
@@ -319,7 +319,7 @@ class DemandeController extends Controller
                 $id[] = $collaborateur->user_id;
             }
 
-            $demandes = Demande::whereIn('user_id', $id)->orderBy('id', 'desc')->paginate(10);
+            $demandes = Demande::whereIn('user_id', $id)->orderBy('id', 'desc')->paginate(5);
 
             return view('demandes.collaborateurs', compact('demandes'));
         }
@@ -347,7 +347,7 @@ class DemandeController extends Controller
                         $demandes= Demande::where('manager_id', $manager_id)
                                             ->whereBetween('created_at', [$date_debut_deleg, $date_fin_deleg])
                                             ->orderBy('id', 'desc')
-                                            ->paginate(10);
+                                            ->paginate(5);
                         
                         }
                  
@@ -362,7 +362,7 @@ class DemandeController extends Controller
         if (Session::get('authUser')->hasRole('charroi')) {
 
 
-            $demandes = Demande::where('is_validated', 1)->orderBy('id', 'desc')->paginate(10);
+            $demandes = Demande::where('is_validated', 1)->orderBy('id', 'desc')->paginate(5);
             $vehicules = Vehicule::where('disponibilite', 0)->get();
             $chauffeurs = Chauffeur::all();
 
@@ -398,24 +398,5 @@ class DemandeController extends Controller
 
         return back()->with("rejected", "Demande rejetée avec succès");
     }
-    public function indexprincipal()
-    {
-        if (Session::get('authUser')) {
-            $user_id = Session::get('authUser')->id;
-
-            $demandes = Demande::Where('user_id', $user_id)->orderBy('id', 'desc')->paginate(10);
-            $demandes_en_attente =Demande::where('user_id',$user_id)->where('status','0')->get()->count();
-
-            $demandes_validees = Demande::where('is_validated', 1)->get();
-            $demandes_traitees = Demande::where('status', 1)->get()->count();
-            $demandes_rejetees = Demande::where('user_id',$user_id )->where('status','2')->get()->count();
-            $vehicules = Vehicule::all();
-
-            $chauffeurs = Chauffeur::all();
-            $courses = Course::all();
-
-
-            return view('demandes.principal', compact('demandes', 'chauffeurs', 'vehicules', 'courses','demandes_en_attente','demandes_traitees','demandes_rejetees'));
-        }
-    }
+    
 }

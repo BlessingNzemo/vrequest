@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Jobs\EnvoiMailDelegue;
 use Exception;
 use App\Models\User;
 use App\Models\Delegation;
@@ -15,7 +17,7 @@ class DelegationController extends Controller
     if(Session::get('authUser') && Session::get('userIsManager')){
         $manager_id = Session::get('authUser')->id;
         
-        $delegations = Delegation::where('manager_id',$manager_id)->get();
+        $delegations = Delegation::where('manager_id',$manager_id)->orderBy('id', 'desc')->paginate(5);
         
         return view ('delegations.index',compact('delegations'));
     }    
@@ -35,81 +37,102 @@ class DelegationController extends Controller
         $user_name=$request->user_id;
 
         $request->validate([
-            'date_debut' => 'required',
-            'date_fin' => 'required',
+            'date_debut' => 'required|after:today',
+            'date_fin' => 'required|after:date_debut',
             'user_id' => 'required|different:manager_id'
         ]);
         $sepNom = explode(" ",$user_name);
 
         if(count($sepNom)>1){
-            $first_name = $sepNom[0];
+            if(count($sepNom)==2){
+                $first_name = $sepNom[0];
             
-            $last_name = $sepNom[1];
-            // exit();
-            $user = User::where('first_name',$first_name) 
-                        ->where('last_name','LIKE',$last_name.'%') 
-                        ->firstOrFail();
-            
-            // dd($user);  
-                if( $user ){
-                    $user_id = $user -> id;
-                    
-                    
-                //  Condition pour ne pas se déléguer soit même    
-                    if($user_id != $manager_id){
-                        // Condition pour ne plus déléguer la même personne 2 fois dans la même période
-                        
-                        $delegations = Delegation::where('user_id',$user_id)
-                                                ->where('manager_id', $manager_id)
-                                                ->get();
-                        foreach($delegations as $delegation){
-                            $delegations_date_fin[] = $delegation->date_fin;
-                        
-                            if(count($delegations_date_fin)>0){
-                                foreach($delegations_date_fin as $delegation_date_fin){
-                                    if($delegation_date_fin > $request->date_debut){
-                                        return back()->with('failed', 'vous avez déjà délégué cet utilisateur dans cette même période');
-                                    }
-                                }
-                        
-                            }
-                        }
-                        
+                $last_name = $sepNom[1];
 
-                        $delegation =Delegation::create([
-                            'motif' =>  $request->motif,
-                            'user_id' => $user_id,
-                            'manager_id' => $manager_id,
-                            'date_debut' => $request->date_debut,
-                            'date_fin' => $request->date_fin,
-                        ]);
+                // dd( $first_name , $last_name); 
+                $user = User::where('first_name',$first_name) 
+                            ->where('last_name','LIKE',$last_name.'%') 
+                            ->first();
+                }
+            else if(count($sepNom)>=3){
+                $first_name = $sepNom[0];
             
-                        //Envoyer un mail au user qu'on veut déléguer
-            
-                        $data =(object)[
-                            'id' => $delegation -> id ,
-                            'subject' => 'Nouvelle Délégation',
-                            'name' => $user -> username,
-                            'Motif' => $delegation ->motif
-                        ];
-                        
-                        try{
-                            $user -> notify(new UserDelegueNotification($data));
-                        }
-                        catch(Exception $e){
-                            //print($e);
-                        }
-            
-                        return redirect()->route("delegations.index");
-                    }
-                    else{
-                        return back()->with('failed', 'vous ne pouvez pas vous déléguer vous-même, 
-                        veuillez choisir un autre délégué');
-                    }
-                    
+                $last_name = $sepNom[1];
+
+                $small_name = $sepNom[2];
+                // dd($first_name , $last_name,$small_name);
+                $user = User::where('first_name',$first_name) 
+                            ->where('last_name','LIKE',$last_name.'%') 
+                            ->where('last_name','LIKE','%'.$small_name.'%')
+                            ->first();
                 }
             else{
-                return back()->with('failed', 'le délégué ne s\'est pas encore enregistré dans l\'application');
+
+            }
+            
+                        // exit();
+            // dd($user);  
+            if( !empty($user) ){
+                $user_id = $user -> id;
+                
+                //  Condition pour ne pas se déléguer soit même    
+                if($user_id != $manager_id){
+                    // Condition pour ne plus déléguer la même personne 2 fois dans la même période
+           
+                    $delegations = Delegation::where('user_id',$user_id)
+                                        ->where('manager_id', $manager_id)
+                                        ->get();
+                    foreach($delegations as $delegation){
+                        $delegations_date_fin[] = $delegation->date_fin;
+                    
+                        if(count($delegations_date_fin)>0){
+                            foreach($delegations_date_fin as $delegation_date_fin){
+                                if($delegation_date_fin > $request->date_debut){
+                                    return back()->with('failed', 'vous avez déjà délégué cet utilisateur dans cette même période');
+                                }
+                            }
+                    
+                        }
+                    }
+                    
+                    $delegation =Delegation::create([
+                        'motif' =>  $request->motif,
+                        'user_id' => $user_id,
+                        'manager_id' => $manager_id,
+                        'date_debut' => $request->date_debut,
+                        'date_fin' => $request->date_fin,
+                    ]);
+        
+                    //Envoyer un mail au user qu'on veut déléguer
+        
+                    $data =(object)[
+                        'id' => $delegation -> id ,
+                        'subject' => 'Nouvelle Délégation',
+                        'name' => $user -> username,
+                        'Motif' => $delegation ->motif,
+                        'sender' => $user
+                    ];
+
+                    EnvoiMailDelegue::dispatch($data)->delay(now());
+                                        
+                    // try{
+                    //     $user -> notify(new UserDelegueNotification($data));
+                    // }
+                    // catch(Exception $e){
+                    //     // dd($e);
+                    // }
+        
+                    return  redirect()->route("delegations.index",compact('delegations'))
+                                      ->with('success', 'votre délégation a été créée avec succès');
+                }
+                else{
+                    return back()->with('failed', 'vous ne pouvez pas vous déléguer vous-même, 
+                    veuillez choisir un autre délégué');
+                }
+                
+            }
+            else{
+                return back()->with('failed', 'ce délégué ne s\'est pas encore enregistré dans l\'application');
             }
         }
         else{
