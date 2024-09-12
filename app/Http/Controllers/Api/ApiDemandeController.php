@@ -7,6 +7,7 @@ use App\Models\Vehicule;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\DemandeResource;
+use App\Models\Passager;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
@@ -29,14 +30,15 @@ class ApiDemandeController extends Controller
         $request->validate([
             "date" => "required|date_format:Y-m-d",
             "motif" => "required|max:60|min:3",
-            "date_deplacement" => "required|date_format:Y-m-d H:i",
+            "date_deplacement" => "required|date_format:Y-m-d H:i|after:today",
             "lieu_depart" => "required|string",
             "destination" => "required|string",
             "nbre_passagers" => "required|integer",
             "longitude_depart" => "required",
             "latitude_depart" => "required",
             "longitude_destination" => "required",
-            "latitude_destination" => "required"
+            "latitude_destination" => "required",
+            "passagers" => "required",
 
         ]);
         $url = Str::random(16);
@@ -57,10 +59,20 @@ class ApiDemandeController extends Controller
             "Url" => $url
         ];
         $demande = Demande::create($demande);
+        $passagers = $request->passagers;
 
+        if (is_array($passagers)) {
+            foreach ($passagers as $passager) {
+                Passager::create([
+                    'user_id' => $passager['id'] ?? 0,
+                    'demande_id'=>$demande->id,
+
+                ]);
+            }
+        }
 
         return response()->json([
-            'demande' => $demande
+            'demande' => $passagers
         ], 200);
     }
     public function cancel(Request $request)
