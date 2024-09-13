@@ -11,3 +11,4 @@ Route::post('get-demande-traite',[ApiDemandeController::class,'getDemandeTraite'
 
 Route::post('cancelDemande', [ApiDemandeController::class, 'cancel']);
 Route::post('get-user-by-name',[ApiDemandeController::class,'getUserByName']);
+Route::get('get-sites',[ApiDemandeController::class,'getSites']);
