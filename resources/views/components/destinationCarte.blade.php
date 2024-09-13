@@ -105,54 +105,77 @@
     });
 
     $(function() {
-        $("#depart, #destination").autocomplete({
-            source: function(request, response) {
-                // Effectuer la recherche via l'API Nominatim de OpenStreetMap
-                axios.get('https://nominatim.openstreetmap.org/search?format=json&q=' + request
-                        .term)
-                    .then(function(res) {
-                        var data = res.data;
-                        var results = data.map(function(item) {
-                            return {
-                                label: item.display_name,
-                                value: item.display_name,
-                                lat: parseFloat(item.lat),
-                                lon: parseFloat(item.lon)
-                            };
-                        });
-                        response(results);
-                    })
-                    .catch(function(error) {
-                        console.error('Erreur lors de la recherche:', error);
-                        response([]);
+    $("#depart, #destination").autocomplete({
+        source: function(request, response) {
+            depart.addEventListener('focus', function(){
+                depart.value = "";
+                mapid.removeLayer(departMarker);
+            
+                
+
+               });
+               destination.addEventListener('focus', function(){
+                destination.value = "";
+                mapid.removeLayer(destinationMarker);
+               
+                
+               });
+          
+            axios.get('https://nominatim.openstreetmap.org/search?format=json&q=' + request.term)
+                .then(function(res) {
+                    var data = res.data;
+                    var results = data.map(function(item) {
+                        return {
+                            label: item.display_name,
+                            value: item.display_name,
+                            lat: parseFloat(item.lat),
+                            lon: parseFloat(item.lon)
+                        };
                     });
-            },
-            select: function(event, ui) {
-                // Récupérer la latitude et la longitude du lieu sélectionné
-                var latitude = ui.item.lat;
-                var longitude = ui.item.lon;
+                    response(results);
+                })
+                .catch(function(error) {
+                    console.error('Erreur lors de la recherche:', error);
+                    response([]);
+                });
+        },
+        select: function(event, ui) {
+            var latitude = ui.item.lat;
+            var longitude = ui.item.lon;
+            mapid.setView([latitude, longitude], 13);
 
-                // Centrer la carte sur le lieu sélectionné
-                mapid.setView([latitude, longitude], 13);
+            // Définir une icône personnalisée pour le deuxième marqueur
+            var markerIcon;
+            if (event.target.id === 'depart') {
+                markerIcon = L.icon({
+                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',  // Chemin vers l'icône du départ
+                    iconSize: [25, 41],  // Taille de l'icône
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    shadowSize: [41, 41]
+                });
+                $('#latitude_depart1').val(latitude);
+                $('#longitude_depart1').val(longitude);
+            } else {
+                markerIcon = L.icon({
+                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',  // Chemin vers l'icône de destination (couleur différente)
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    shadowSize: [41, 41]
+                });
+                $('#latitude_destination1').val(latitude);
+                $('#longitude_destination1').val(longitude);
+            }
 
-                // Ajouter un marqueur sur la carte
-                var marker = L.marker([latitude, longitude], 13).addTo(mapid);
-                // Afficher le nom du lieu dans le popup du marqueur
-                if (event.target.id === 'depart') {
-                    marker.bindPopup('<b>Départ:</b><br>' + ui.item.value).openPopup();
-                    $('#latitude_depart1').val(latitude);
-                    $('#longitude_depart1').val(longitude);
-                } else {
-                    marker.bindPopup('<b>Destination:</b><br>' + ui.item.value).openPopup();
-                    $('#latitude_destination1').val(latitude);
-                    $('#longitude_destination1').val(longitude);
-                }
-            },
-            minLength: 2 // Nombre de caractères minimum pour déclencher l'autocomplétion
-        }).autocomplete("instance")._renderItem = function(ul, item) {
-            return $("<li>")
-                .append("<div>" + item.label + "</div>")
-                .appendTo(ul);
-        };
-    });
+            var marker = L.marker([latitude, longitude], { icon: markerIcon }).addTo(mapid);
+            marker.bindPopup('<b>' + (event.target.id === 'depart' ? 'Départ' : 'Destination') + ':</b><br>' + ui.item.value).openPopup();
+        },
+        minLength: 2
+    }).autocomplete("instance")._renderItem = function(ul, item) {
+        return $("<li>")
+            .append("<div>" + item.label + "</div>")
+            .appendTo(ul);
+    };
+});
 </script>
