@@ -127,7 +127,7 @@ class AuthenticatedSessionController extends Controller
             $request->session()->regenerate();
         $responsefinal= $response->json();
 
-            if(User::where('id',$responsefinal['user']['id'])->first()){
+            if(User::where('email',$responsefinal['user']['email'])->first()){
                 
                 Session::put('user',$request->username);
                 $user = User::find($responsefinal['user']['id']);
@@ -176,7 +176,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request)
     {
-
+        Session::forget('delegation');
         Session::forget('user');
         Session::forget('authUser');
         Session::forget('userIsManager');
