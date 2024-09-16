@@ -40,9 +40,12 @@
 </div>
 <script>
     function edit(event) {
+        
         event.preventDefault()
-        const lien = event.target.getAttribute('href')
+        const a = document.querySelector("#action-edit")
+        const lien = a.getAttribute('href')
         const form = document.querySelector("#popup-modal form")
+        // alert(lien)
         form.setAttribute('action', lien)
     }
 </script>
