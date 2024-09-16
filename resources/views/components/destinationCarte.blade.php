@@ -70,6 +70,7 @@
                     if (departMarker) {
                     mapid.removeLayer(departMarker);
                  
+                 
                    }
                     departMarker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(mapid);
                     departMarker.bindPopup('<b>' + placeName + '</b>').openPopup();
@@ -85,7 +86,7 @@
                 else  {
                     if (destinationMarker) {
                     mapid.removeLayer(destinationMarker);
-                 
+                  
                    }
                  
                     
@@ -105,22 +106,28 @@
     });
 
     $(function() {
+
+
     $("#depart, #destination").autocomplete({
         source: function(request, response) {
-            depart.addEventListener('focus', function(){
-                depart.value = "";
-                mapid.removeLayer(departMarker);
-            
-                
+            // Effacer les champs et les marqueurs au focus
+            $('#depart').focus(function() {
+                $(this).val("");
+                if (departMarker) {
+                    mapid.removeLayer(departMarker);
+                    departMarker = null; // Réinitialiser le marqueur
+                }
+            });
 
-               });
-               destination.addEventListener('focus', function(){
-                destination.value = "";
-                mapid.removeLayer(destinationMarker);
-               
-                
-               });
-          
+            $('#destination').focus(function() {
+                $(this).val("");
+                if (destinationMarker) {
+                    mapid.removeLayer(destinationMarker);
+                    destinationMarker = null; // Réinitialiser le marqueur
+                }
+            });
+
+            // Requête AJAX
             axios.get('https://nominatim.openstreetmap.org/search?format=json&q=' + request.term)
                 .then(function(res) {
                     var data = res.data;
@@ -144,21 +151,27 @@
             var longitude = ui.item.lon;
             mapid.setView([latitude, longitude], 13);
 
-            // Définir une icône personnalisée pour le deuxième marqueur
+            // Définir une icône personnalisée
             var markerIcon;
             if (event.target.id === 'depart') {
                 markerIcon = L.icon({
-                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',  // Chemin vers l'icône du départ
-                    iconSize: [25, 41],  // Taille de l'icône
+                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+                    iconSize: [25, 41],
                     iconAnchor: [12, 41],
                     popupAnchor: [1, -34],
                     shadowSize: [41, 41]
                 });
                 $('#latitude_depart1').val(latitude);
                 $('#longitude_depart1').val(longitude);
+
+                // Supprimer le marqueur précédent s'il existe
+                if (departMarker) {
+                    mapid.removeLayer(departMarker);
+                }
+                departMarker = L.marker([latitude, longitude], { icon: markerIcon }).addTo(mapid);
             } else {
                 markerIcon = L.icon({
-                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',  // Chemin vers l'icône de destination (couleur différente)
+                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
                     iconSize: [25, 41],
                     iconAnchor: [12, 41],
                     popupAnchor: [1, -34],
@@ -166,10 +179,18 @@
                 });
                 $('#latitude_destination1').val(latitude);
                 $('#longitude_destination1').val(longitude);
+
+                // Supprimer le marqueur précédent s'il existe
+                if (destinationMarker) {
+                    mapid.removeLayer(destinationMarker);
+                }
+                destinationMarker = L.marker([latitude, longitude], { icon: markerIcon }).addTo(mapid);
             }
 
-            var marker = L.marker([latitude, longitude], { icon: markerIcon }).addTo(mapid);
-            marker.bindPopup('<b>' + (event.target.id === 'depart' ? 'Départ' : 'Destination') + ':</b><br>' + ui.item.value).openPopup();
+            // Ajouter le popup
+            (event.target.id === 'depart' ? departMarker : destinationMarker)
+                .bindPopup('<b>' + (event.target.id === 'depart' ? 'Départ' : 'Destination') + ':</b><br>' + ui.item.value)
+                .openPopup();
         },
         minLength: 2
     }).autocomplete("instance")._renderItem = function(ul, item) {
