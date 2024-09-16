@@ -101,8 +101,9 @@ class DemandeController extends Controller
             'latitude_destination1' => 'required_if:choix,choix-carte',
             'date_deplacement' => 'required|after:today'
         ]);
+        $dems = Demande::get()->count();
 
-        $ticket = Str::random(8);
+        $ticket = 'DEM-'.rand(1,$dems).date('Y');
         $user_id = Session::get('authUser')->id;
 
         $status = '0';
@@ -423,6 +424,7 @@ class DemandeController extends Controller
 
             $managers_id = Session::get('delegation');
             $delg = [];
+            $demandes = [];
             foreach ($managers_id as $manager_id) {
                 $user_id = Session::get('authUser')->id;
                 $delegations = Delegation::where('user_id', $user_id)
@@ -439,8 +441,9 @@ class DemandeController extends Controller
                        
                         $demandes= Demande::where('manager_id', $manager_id)
                                             ->whereBetween('created_at', [$date_debut_deleg, $date_fin_deleg])
-                                            ->orderBy('id', 'desc')
-                                            ->paginate(10);
+                                            ->paginate(10)
+                                            ->sortBy('status')
+                                            ;
                         
                         }
                  
