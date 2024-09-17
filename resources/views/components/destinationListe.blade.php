@@ -9,7 +9,7 @@
         shadowSize: [41, 41]
     });
 
-    var map = L.map('map').setView([15.3031, -4.3322], 8);
+    var map = L.map('map').setView([-4.322693, 15.271774], 13);
     var markerDepart = L.marker([0, 0], {
         icon: greenIcon
     }, ).addTo(map);

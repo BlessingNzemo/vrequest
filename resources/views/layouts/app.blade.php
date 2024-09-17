@@ -49,7 +49,60 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
+<style>
+    .sm\:creater-size{
+        font-size: 70%
+    }
+    .sm\:flex-button{
+        display:inline-flex;
+    }
+    @media (max-width: 1000px) {
+        .sm\:creater-size{
+            font-size: 50%
+        }
+        .sm\:flex-button{
+            display:unset;
+        }
+        .sm-w-8{
+            width: 1rem;
+        }
+        .sm-h-8{
+            height: 1rem;
+        }
+    }
+    @media (max-width: 400px) {
+        .sm-grid-cols-1 {
+            grid-template-columns: repeat(1,minmax(0,1fr))!important
+        }
+    }
+    @media (min-width: 500px) and (max-width: 1100px) {
+        .sm-grid-cols-2 {
+            grid-template-columns: repeat(2,minmax(0,1fr))!important
+        }
+    }
+    @media (min-width: 1100px) and (max-width: 1300px) {
+        .sm-grid-cols-3 {
+            grid-template-columns: repeat(3,minmax(0,1fr))!important
+        }
+    }
+    @media (min-width: 1300px) and (max-width: 1600px) {
+        .sm-grid-cols-4 {
+            grid-template-columns: repeat(4,minmax(0,1fr))!important
+        }
+    }
+    @media (min-width: 1600px) {
+        .sm-grid-cols-5 {
+            grid-template-columns: repeat(5,minmax(0,1fr))!important
+        }
+    }
+    .dark\:bg-dark{
+        background-color: rgb(17 24 39);
+    }
 
+    .dark\:text-dark{
+        color:white;
+    }
+ </style>
 <body class=" bg-gray-50 font-sans antialiased">
     <div class="min-h-screen  dark:bg-gray-900">
         @include('layouts.navigation')
