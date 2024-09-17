@@ -133,7 +133,7 @@
                                 Créer une demande
                             </a>
                         </li>
-                        @if (Session::get('userIsManager') || Session::get('delegation'))
+                        @if (Session::get('userIsManager'))
                             <li>
                                 <a href="{{ route('demande-collaborateurs') }}"
                                     class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group {{ request()->routeIs('demande-collaborateurs') ? 'bg-orange-400 text-white' : '' }} hover:bg-gray-300 dark:text-white dark:hover:bg-gray-700">
