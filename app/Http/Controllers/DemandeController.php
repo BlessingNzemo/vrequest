@@ -7,6 +7,7 @@ use App\Models\Site;
 use App\Models\User;
 use App\Models\Course;
 use App\Models\Demande;
+use App\Models\Passager;
 use App\Models\UserInfo;
 use App\Models\Vehicule;
 use App\Models\Chauffeur;
@@ -15,24 +16,30 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Mail\ChefCharroiEmail;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
+use App\Jobs\TraitementDemandeMail;
 
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
+
+
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use App\Jobs\CreationDemandeMailManager;
 use App\Notifications\AgentNotification;
 
-
-use App\Notifications\ManagerNotification;
-use Illuminate\Support\Facades\Notification;
-use App\Http\Controllers\envoyerMailAuManager;
-use App\Jobs\CreationDemandeMailManager;
-use App\Jobs\TraitementDemandeMail;
 use App\Jobs\ValidationManagerDemandeMail;
-use App\Notifications\ChefCharroiEmail as NotificationsChefCharroiEmail;
+use App\Notifications\ManagerNotification ;
+
+use Illuminate\Support\Facades\Notification;
+
+use App\Http\Controllers\envoyerMailAuManager;
+use App\Notifications\UserDelegueNotification;
 
 use App\Notifications\MailCharroiToAgentDemandeRejecte;
-use App\Notifications\UserDelegueNotification;
+use App\Notifications\ChefCharroiEmail as NotificationsChefCharroiEmail;
+
 use Carbon\Carbon;
+
 
 class DemandeController extends Controller
 {
@@ -141,12 +148,64 @@ class DemandeController extends Controller
                 'Url' => $Url,
                 'manager_id' => $manager_id
             ]);
+           
             $demande->manager_id = $manager_id;
             $demande->update();
             // dd($demande);
             //CODE POUR ENVOYER UN MAIL AU MANAGER DE L'AGENT QUI SOUMET SA DEMANDE
 
             // Données à envoyer
+         
+            $nombre = (int) $request->input('nombre-passagers');
+           
+           
+            
+            for ($i = 0; $i < $nombre; $i++) {
+              
+                if ($request->has("passager{$i}")) {
+                   
+                    $response = Http::get('http://10.143.41.70:8000/promo2/odcapi/?method=getUsers');
+
+                    if ($response->successful()) {
+                        if(strpos($request->input("passager{$i}"), ' ') !==false) {
+
+                        $passager = explode(' ',$request->input("passager{$i}"));
+                               $firstname = $passager[0];
+                               $lastname = $passager[1]; 
+                               
+                            
+                            $users = $response->json();
+                            $passager_lastname = collect($users['users'])->firstWhere('last_name', $lastname); 
+                            
+                    if($passager_lastname){
+                        Passager::create([
+                            'user_id' => $passager_lastname['id'],
+                            'demande_id'=>$demande->id,
+                           
+                        ]);
+                    } 
+                    else{
+                        Passager::create([
+                            'user_id' =>null,
+                            'demande_id'=>$demande->id,
+                 
+                        ]);
+                    }
+                }
+                else{
+                    Passager::create([
+                        'user_id' =>null,
+                        'demande_id'=>$demande->id,
+                        
+                    ]);
+                }
+                  
+                }
+                
+            }
+        }
+       
+    
             $data = (object) [
                 'id' => $demande->id,
                 'Url' => $demande->Url,
@@ -191,12 +250,45 @@ class DemandeController extends Controller
         // dd($Url);
         $demandes = Demande::with('courses')->where('Url', $Url)->firstOrFail();
         $courses = Course::where('demande_id', $demandes->id)->first();
+        $demande = Demande::where('Url', $Url)->first();
+        $demande_id = $demande->id;
+        $passagers = Passager::where('demande_id', $demande_id)->get()->pluck('user_id');
+        foreach ($passagers as $item){
+            $passager_id [] = $item;
+        }
+        if(count($passagers)==0){
+            $vehicules = [];
+            $chauffeur_name = null;
+            $chauffeurs = [];
+            $vehicule = null;
+            $passager_name = [];
+            return view("demandes.show", compact('demandes', 'vehicule', 'courses', 'vehicules', 'chauffeur_name', 'chauffeurs','passager_name'));
+        }
+        $response = Http::get('http://10.143.41.70:8000/promo2/odcapi/?method=getUsers');
+
+        if ($response->successful()) {
+                $users = $response->json();
+                $passager = collect($users['users'])->whereIn('id', $passager_id);
+                foreach ($passager as $item1){
+                    $passager_name [] = $item1['first_name'].' '.$item1['last_name'];
+                }
+                foreach ($passager_id as $id) {
+                   if($id==null){
+                    $passager_name [] = "Inconnu";
+                   }
+                }
+                
+                
+        }
+       
+    
         if (!$courses) {
             $vehicules = [];
             $chauffeur_name = null;
             $chauffeurs = [];
             $vehicule = null;
-            return view("demandes.show", compact('demandes', 'vehicule', 'courses', 'vehicules', 'chauffeur_name', 'chauffeurs'));
+            
+            return view("demandes.show", compact('demandes', 'vehicule', 'courses', 'vehicules', 'chauffeur_name', 'chauffeurs','passager_name'));
         }
         $vehicule = Vehicule::where('id', $courses->vehicule_id)->first();
 
@@ -208,8 +300,9 @@ class DemandeController extends Controller
 
 
         // dd($chauffeurs);
+    
 
-        return view("demandes.show", compact('demandes', 'courses', 'vehicules', 'chauffeur_name', 'chauffeurs', 'vehicule'));
+        return view("demandes.show", compact('demandes', 'courses', 'vehicules', 'chauffeur_name', 'chauffeurs', 'vehicule','passager_name'));
     }
 
     /**
@@ -375,30 +468,39 @@ class DemandeController extends Controller
                         $date_debut = $delegation->date_debut;
                         $date_debut_deleg = Carbon::parse($date_debut);
 
+                        
+
                         $date_fin = $delegation->date_fin;
                         $date_fin_deleg = Carbon::parse($date_fin);
                        
-                        $demandes= Demande::whereBetween('created_at', [$date_debut_deleg, $date_fin_deleg])
+                        $demandes= Demande::where('manager_id', $manager_id)
+                                            // ->whereBetween('created_at', [$date_debut_deleg, $date_fin_deleg])
                                             ->orderBy('id','desc')
                                             ->paginate(7)
                                             ;
-                        
-                        }
 
-                        $demandesGrid = Demande::orderBy('id', 'desc')->paginate(15);
+                        $demandesGrid = Demande::where('manager_id', $manager_id)
+                                            ->whereBetween('created_at', [$date_debut_deleg, $date_fin_deleg])
+                                            ->orderBy('id', 'desc')
+                                            ->paginate(15);
 
-                        if(!empty($_GET['page'])){
-                            $paginate = true;
-                        }
-            
-                        if(!empty($_GET['view'])){
-                            $view = $_GET['view'];
-                        }
-            
-                        $demandes->withPath('?view=list');
-                        $demandesGrid->withPath('?view=grid');
+                    if(!empty($_GET['page'])){
+                        $paginate = true;
+                    }
+        
+                    if(!empty($_GET['view'])){
+                        $view = $_GET['view'];
+                    }
+        
+                    $demandes->withPath('?view=list');
+                    $demandesGrid->withPath('?view=grid');
+                }
+
+
                  
-                 }
+            }
+
+
 
             return view('demandes.delegue', compact('demandes','demandesGrid','paginate','view'));
         }
@@ -459,24 +561,5 @@ class DemandeController extends Controller
 
         return back()->with("rejected", "Demande rejetée avec succès");
     }
-    public function indexprincipal()
-    {
-        if (Session::get('authUser')) {
-            $user_id = Session::get('authUser')->id;
-
-            $demandes = Demande::Where('user_id', $user_id)->orderBy('id', 'desc')->paginate(10);
-            $demandes_en_attente =Demande::where('user_id',$user_id)->where('status','0')->get()->count();
-
-            $demandes_validees = Demande::where('is_validated', 1)->get();
-            $demandes_traitees = Demande::where('status', 1)->get()->count();
-            $demandes_rejetees = Demande::where('user_id',$user_id )->where('status','2')->get()->count();
-            $vehicules = Vehicule::all();
-
-            $chauffeurs = Chauffeur::all();
-            $courses = Course::all();
-
-
-            return view('demandes.principal', compact('demandes', 'chauffeurs', 'vehicules', 'courses','demandes_en_attente','demandes_traitees','demandes_rejetees'));
-        }
-    }
+    
 }

@@ -56,7 +56,7 @@
        </x-slot>
 
     @if (session('success'))
-        <div class="flex p-4 mb-4 text-sm rounded-lg bg-red-500 " id="success-message">
+        <div class="flex p-4 mb-4 text-sm rounded-lg bg-green-500 " id="success-message">
             {{ session('success') }}
         </div>
         <script>
@@ -72,7 +72,7 @@
         <div class=" overflow-x-auto pb-4">
             <div class="min-w-full inline-block align-middle">
                 <div class="overflow-hidden  border rounded-lg border-gray-300">
-                    <table class="table-auto min-w-full rounded-xl">
+                    <table id="example" class="table-auto min-w-full rounded-xl">
                         <thead>
                             <tr class="bg-gray-100">
                                 <th scope="col" class="p-5 text-left whitespace-nowrap text-sm leading-6 font-semibold text-gray-900 capitalize">N°</th>
@@ -125,17 +125,29 @@
                                                 Supprimer
                                             </a>
                                         </button>
-
                                         
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
+                    <div class="py-1 px-3">
+                        {{ $delegations->links() }}
+                    </div> 
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        new DataTable('#example', {
+            info: false,
+            ordering: false,
+            paging: false
+
+
+        });
+    </script>
 
     <x-deleteDelegation :message="__('Voulez-vous vraiment supprimer cette delegation ?')" />
        

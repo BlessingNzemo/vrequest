@@ -47,7 +47,8 @@
 <script>
     function rejeter(event) {
        event.preventDefault()
-       const lien = event.target.getAttribute('href')
+       const a = document.querySelector("#action-rejeter")
+       const lien = a.getAttribute('href')
    
        const form=document.querySelector("#rejet-modal form")
        form.setAttribute('action', lien)

@@ -34,8 +34,8 @@
     function valider(event) {
         // alert(1)
        event.preventDefault()
-       
-       const lien = event.target.getAttribute('href')
+       const a = document.querySelector("#ButtonValider")
+       const lien = a.getAttribute('href')
     //    alert(lien)
        const form=document.querySelector("#validation-modal form")
        form.setAttribute('action', lien)
