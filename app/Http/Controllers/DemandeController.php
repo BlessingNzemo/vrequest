@@ -42,10 +42,23 @@ class DemandeController extends Controller
     public function index()
     {
         if (Session::get('authUser')) {
+            $paginate = false;
+            $view = 'grid';
             $user_id = Session::get('authUser')->id;
 
-            $demandes = Demande::Where('user_id', $user_id)->orderBy('id', 'desc')->paginate(10);
+            $demandes = Demande::Where('user_id', $user_id)->orderBy('id', 'desc')->paginate(7);
+            $demandesGrid = Demande::Where('user_id', $user_id)->orderBy('id', 'desc')->paginate(15);
 
+            if(!empty($_GET['page'])){
+                $paginate = true;
+            }
+
+            if(!empty($_GET['view'])){
+                $view = $_GET['view'];
+            }
+
+            $demandes->withPath('?view=list');
+            $demandesGrid->withPath('?view=grid');
 
             $demandes_validees = Demande::where('is_validated', 1)->get();
             $demandes_traitees = Demande::where('status', 1)->get();
@@ -56,7 +69,7 @@ class DemandeController extends Controller
             $courses = Course::all();
 
 
-            return view('demandes.index', compact('demandes', 'chauffeurs', 'vehicules', 'courses'));
+            return view('demandes.index', compact('demandes', 'demandesGrid', 'chauffeurs', 'vehicules', 'courses','paginate','view'));
         }
     }
 
@@ -302,7 +315,7 @@ class DemandeController extends Controller
         $demande->is_validated_by = $is_validated_by ;
 
         $demande->update();
-        dd($demande);
+        //dd($demande);
 
 
         return back()->with("annuler", "demande annulée avec succès");
@@ -313,6 +326,9 @@ class DemandeController extends Controller
     {
 
         if (Session::get('userIsManager')) {
+            $paginate = false;
+            $view = 'grid';
+
             $email_manager = Session::get('userIsManager')->email_manager;
 
             $collaborateurs = Session::get('userIsManager')::where('email_manager', $email_manager)->get();
@@ -320,18 +336,34 @@ class DemandeController extends Controller
                 $id[] = $collaborateur->user_id;
             }
 
-            $demandes = Demande::whereIn('user_id', $id)->orderBy('id', 'desc')->paginate(10);
+            $demandes = Demande::whereIn('user_id', $id)->paginate(7);
+            $demandesGrid = Demande::WhereIn('user_id', $id)->paginate(15);
 
-            return view('demandes.collaborateurs', compact('demandes'));
+            if(!empty($_GET['page'])){
+                $paginate = true;
+            }
+
+            if(!empty($_GET['view'])){
+                $view = $_GET['view'];
+            }
+
+            $demandes->withPath('?view=list');
+            $demandesGrid->withPath('?view=grid');
+
+            return view('demandes.collaborateurs', compact('demandes','demandesGrid','paginate','view'));
         }
     }
     public function demandeDelegue()
     {
         if (Session::get('delegation')) {
+            $paginate = false;
+            $view = 'grid';
 
             $managers_id = Session::get('delegation');
             $delg = [];
             $demandes = [];
+            $demandesGrid = [];
+
             foreach ($managers_id as $manager_id) {
                 $user_id = Session::get('authUser')->id;
                 $delegations = Delegation::where('user_id', $user_id)
@@ -346,30 +378,56 @@ class DemandeController extends Controller
                         $date_fin = $delegation->date_fin;
                         $date_fin_deleg = Carbon::parse($date_fin);
                        
-                        $demandes= Demande::where('manager_id', $manager_id)
-                                            ->whereBetween('created_at', [$date_debut_deleg, $date_fin_deleg])
-                                            ->paginate(10)
-                                            ->sortBy('status')
+                        $demandes= Demande::whereBetween('created_at', [$date_debut_deleg, $date_fin_deleg])
+                                            ->orderBy('id','desc')
+                                            ->paginate(7)
                                             ;
                         
                         }
+
+                        $demandesGrid = Demande::orderBy('id', 'desc')->paginate(15);
+
+                        if(!empty($_GET['page'])){
+                            $paginate = true;
+                        }
+            
+                        if(!empty($_GET['view'])){
+                            $view = $_GET['view'];
+                        }
+            
+                        $demandes->withPath('?view=list');
+                        $demandesGrid->withPath('?view=grid');
                  
                  }
 
-            return view('demandes.delegue', compact('demandes'));
+            return view('demandes.delegue', compact('demandes','demandesGrid','paginate','view'));
         }
     }
 
     public function demandeCharroi()
     {
         if (Session::get('authUser')->hasRole('charroi')) {
+            $paginate = false;
+            $view = 'grid';
 
-
-            $demandes = Demande::where('is_validated', 1)->orderBy('id', 'desc')->paginate(10);
+            $demandes = Demande::where('is_validated', 1)->orderBy('id', 'desc')->paginate(7);
+            $demandesGrid = Demande::Where('is_validated', 1)->orderBy('id', 'desc')->paginate(15);
+            // dd($demandes,$demandesGrid);
             $vehicules = Vehicule::where('disponibilite', 0)->get();
             $chauffeurs = Chauffeur::all();
 
-            return view('demandes.charroi', compact('demandes', 'chauffeurs', 'vehicules'));
+            if(!empty($_GET['page'])){
+                $paginate = true;
+            }
+
+            if(!empty($_GET['view'])){
+                $view = $_GET['view'];
+            }
+
+            $demandes->withPath('?view=list');
+            $demandesGrid->withPath('?view=grid');
+
+            return view('demandes.charroi', compact('demandes','demandesGrid', 'chauffeurs', 'vehicules', 'paginate','view'));
         }
     }
 
