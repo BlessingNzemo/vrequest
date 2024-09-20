@@ -41,8 +41,9 @@
 
 <script>
     function supprimer(event) {
-       event.preventDefault()
-       const lien = event.target.getAttribute('href')
+       event.preventDefault() 
+       const a = document.querySelector("#action-cancel")
+       const lien = a.getAttribute('href')
    
        const form=document.querySelector("#suppression-modal form")
        form.setAttribute('action', lien)
