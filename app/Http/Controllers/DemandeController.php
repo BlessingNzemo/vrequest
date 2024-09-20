@@ -454,53 +454,75 @@ class DemandeController extends Controller
 
             $managers_id = Session::get('delegation');
             $delg = [];
-            $demandes = [];
-            $demandesGrid = [];
+            $demandesTest = [];
+            $demandesGridTest = [];
+
+            $user_id = Session::get('authUser')->id;
+            
+            $date_now = Carbon::now();
 
             foreach ($managers_id as $manager_id) {
-                $user_id = Session::get('authUser')->id;
                 $delegations = Delegation::where('user_id', $user_id)
-                                ->where('manager_id', $manager_id)
-                                ->get();
-                // dd($managers_id);
-                foreach ($delegations as $delegation) {
+                                            ->where('manager_id', $manager_id)
+                                            ->where('date_fin','>',$date_now)
+                                            ->get();
 
-                        $date_debut = $delegation->date_debut;
-                        $date_debut_deleg = Carbon::parse($date_debut);
+                $demandes_temp = Demande::where('manager_id', $manager_id)
+                                    ->orderBy('id','desc')
+                                    ->paginate(7);
+            
+                $demandesGrid_temp = Demande::where('manager_id', $manager_id)
+                                        ->orderBy('id', 'desc')
+                                        ->paginate(15);
+            }
+            
+            foreach ($delegations as $delegation) {
+                $date_debut = $delegation->date_debut;
+                $date_fin = $delegation->date_fin;
 
-                        
+                // echo $date_debut." | ".$date_fin."<br>";
 
-                        $date_fin = $delegation->date_fin;
-                        $date_fin_deleg = Carbon::parse($date_fin);
-                       
-                        $demandes= Demande::where('manager_id', $manager_id)
-                                            // ->whereBetween('created_at', [$date_debut_deleg, $date_fin_deleg])
-                                            ->orderBy('id','desc')
-                                            ->paginate(7)
-                                            ;
-
-                        $demandesGrid = Demande::where('manager_id', $manager_id)
-                                            ->whereBetween('created_at', [$date_debut_deleg, $date_fin_deleg])
-                                            ->orderBy('id', 'desc')
-                                            ->paginate(15);
-
-                    if(!empty($_GET['page'])){
-                        $paginate = true;
+                foreach($demandes_temp as $demande_temp){
+                    // echo $demande_temp->created_at."<br>";
+                    if(($demande_temp->created_at >= $date_debut) && ($demande_temp->created_at <= $date_fin ) ){
+                        // echo $demande_temp->ticket."<br>";
+                        array_push($demandesTest,$demande_temp);
                     }
-        
-                    if(!empty($_GET['view'])){
-                        $view = $_GET['view'];
-                    }
-        
-                    $demandes->withPath('?view=list');
-                    $demandesGrid->withPath('?view=grid');
                 }
 
-
-                 
+                foreach($demandesGrid_temp as $demandeGrid_temp){
+                    // echo $demandeGrid_temp->created_at."<br>";
+                    if(($demandeGrid_temp->created_at >= $date_debut) && ($demandeGrid_temp->created_at <= $date_fin ) ){
+                        // echo $demandeGrid_temp->ticket."<br>";
+                        array_push($demandesGridTest,$demandeGrid_temp);
+                    }
+                }
             }
 
+            $demandes = Demande::orderBy('id', 'desc');
+            $demandesGrid = Demande::orderBy('id', 'desc');
 
+            foreach($demandesTest as $demandeTest){
+                $demandes = $demandes->orWhere('id', $demandeTest->id);
+            }
+
+            foreach($demandesGridTest as $demandeGridTest ){
+                $demandesGrid = $demandesGrid->orWhere("id",$demandeGridTest->id);
+            }
+
+            $demandes = $demandes->paginate(7);
+            $demandesGrid = $demandesGrid->paginate(15);
+
+            if(!empty($_GET['page'])){
+                $paginate = true;
+            }
+
+            if(!empty($_GET['view'])){
+                $view = $_GET['view'];
+            }
+
+            $demandes->withPath('?view=list');
+            $demandesGrid->withPath('?view=grid');
 
             return view('demandes.delegue', compact('demandes','demandesGrid','paginate','view'));
         }
