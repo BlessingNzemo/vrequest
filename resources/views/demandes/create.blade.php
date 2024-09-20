@@ -11,8 +11,17 @@
     </x-slot>
 
 
+
+
+    <!-- component -->
+
+    <!-- Left: Image -->
+
     <div class="py-8  px-4 mx-auto max-w-4xl lg:py-16 shadow-md sm:rounded-lg">
-        <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Remplissez ce formulaire pour demander une course </h2>
+        <h2 id="titre" class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Remplissez ce formulaire pour
+            demander
+            une course </h2>
+        <div id="error" style="color: red"></div>
         @if ($errors->any())
 
             <div class="alert alert-danger">
@@ -24,13 +33,13 @@
             </div>
         @endif
 
-        <form action="{{ route('demandes.store') }}" method="post">
+        <form action="{{ route('demandes.store') }}" method="post" id="multi-step-form">
             @csrf
-            <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
+            <div id="step1" class="grid gap-4 sm:grid-cols-2 sm:gap-6">
                 <div class="sm:col-span-2">
                     <label for="name"
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Motifs</label>
-                    <input type="text" name="motif" id="name"
+                    <input type="text" name="motif" id="motif"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                         placeholder="" required="">
                 </div>
@@ -111,7 +120,8 @@
                             </select>
                             <input type="hidden" id="longitude_destination" name="longitude_destination"
                                 value="">
-                            <input type="hidden" id="latitude_destination" name="latitude_destination" value="">
+                            <input type="hidden" id="latitude_destination" name="latitude_destination"
+                                value="">
                         </div>
 
                     </div>
@@ -157,13 +167,39 @@
                     </div>
                 </div>
             </div>
+            <button type="button" id="next-step"
+                class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Suivant</button>
 
-            <button
-                class=" button my-6 text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800">
-                Demander une course
-            </button>
+
+
+
+
+            <div id="step2" class="hidden  w-full h-full ">
+                <h2 class="text-center  font-bold"> Veuillez insérer les noms des passagers</h2>
+                <div class=" w-full h-full ">
+
+                    <div id="passagers-name">
+                        
+
+
+                    </div>
+                    <input type="hidden" id="nombre-passagers" name="nombre-passagers" value="">
+
+                    <div class="flex justify-between items-center">
+                        <button type="submit"
+                            class=" button my-6 text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800">
+                            Demander une course
+                        </button>
+
+                        <button id="retour" type="button"
+                            class="button my-6 text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800">
+                            Retour
+                        </button>
+                    </div>
+
+                </div>
+            </div>
         </form>
-
     </div>
 
     <x-dateDemande />
@@ -175,6 +211,7 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
     <script>
         // Ajoutez un écouteur d'événement pour le champ "Nombre de passagers"
         const passengerInput = document.getElementById('price');
@@ -187,5 +224,142 @@
             }
         });
     </script>
+
+
+
+
+
+    <script>
+        
+        document.getElementById('next-step').addEventListener('click', function() {
+            document.getElementById('passagers-name').innerHTML = '';
+
+            document.getElementById('error').style.display = "none";
+            // Masquer le bouton Suivant
+            if (document.getElementById('motif').value == "") {
+
+                document.getElementById('error').textContent = "Veuillez renseinger le champ motif";
+                document.getElementById('error').style.display = "block";
+
+                setTimeout(() => {
+                    document.getElementById('error').style.display = "none";
+                }, 3000);
+
+                return false;
+            }
+
+            if (document.getElementById('datetime').value === "") {
+
+                document.getElementById('error').textContent = "Veuillez renseinger le jour et heure de sortie";
+                document.getElementById('error').style.display = "block";
+
+                setTimeout(() => {
+                    document.getElementById('error').style.display = "none";
+                }, 3000);
+                return false;
+            }
+
+            var nombre = document.getElementById('price').value;
+            document.getElementById('nombre-passagers').value = nombre;
+
+
+
+            if (nombre === "" || nombre == 0) {
+                document.getElementById('error').textContent = "Veuillez renseinger le  nombre de passagers";
+                document.getElementById('error').style.display = "block";
+
+                setTimeout(() => {
+                    document.getElementById('error').style.display = "none";
+                }, 3000);
+                return false;
+            }
+            if (document.getElementById('lieuDepart').value === "" && document.getElementById('depart').value ===
+                "") {
+
+                document.getElementById('error').textContent = "Veuillez selectionner le lieu de depart";
+                document.getElementById('error').style.display = "block";
+
+                setTimeout(() => {
+                    document.getElementById('error').style.display = "none";
+                }, 3000);
+                return false;
+            }
+            if (document.getElementById('lieuArrivee').value === "" && document.getElementById('destination')
+                .value === "") {
+
+                document.getElementById('error').textContent = "Veuillez selectionner le lieu de destination";
+                document.getElementById('error').style.display = "block";
+
+                setTimeout(() => {
+                    document.getElementById('error').style.display = "none";
+                }, 3000);
+                return false;
+            }
+
+            this.style.display = 'none';
+
+            // Afficher la deuxième étape
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('titre').classList.add('hidden');
+            document.getElementById('step2').classList.remove('hidden');
+
+            var passagers = document.getElementById('passagers-name');
+            for (var i = 0; i < nombre; i++) {
+
+                var input = document.createElement("input");
+                var label = document.createElement("label");
+                label.htmlFor = "passager" + i;
+                label.textContent = "Passager " + (i + 1);
+
+                input.type = "text";
+                input.name = "passager" + i;
+                input.id = "passager" + i;
+                input.className =
+                    "typeahead bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500";
+
+                input.required = true;
+
+
+                passagers.appendChild(label);
+                passagers.appendChild(document.createElement('br'));
+
+                passagers.appendChild(input);
+
+                passagers.appendChild(document.createElement('br'));
+
+
+            }
+
+
+        });
+
+        document.getElementById('retour').addEventListener('click', function() {
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step1').classList.remove('hidden');
+            document.getElementById('titre').classList.remove('hidden');
+            document.getElementById('next-step').style.display = 'block';
+            
+
+        });
+    </script>
+          
+
+    {{-- <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script> --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min.js"></script>
+    <script type="text/javascript">
+        document.getElementById('next-step').addEventListener('click', function() {
+            var path = "{{ url('autocomplete') }}";
+            $('input.typeahead').typeahead({
+                source: function(query, process) {
+                    return $.get(path, {
+                        query: query
+                    }, function(data) {
+                        return process(data);
+                    });
+                }
+            });
+        });
+    </script>
+   
 
 </x-app-layout>
