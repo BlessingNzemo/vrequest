@@ -235,6 +235,9 @@ class DemandeController extends Controller
                 CreationDemandeMailManager::dispatch($data)->delay(now()->addMinutes(1));
             }
         }
+        else{
+            return back()->with("message","Le manager ne se trouve pas dans le système");
+        }
 
         return redirect()->route('demandes.index');
     }

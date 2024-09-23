@@ -291,8 +291,11 @@
         </div>
     </div>
     
-    <script src="{{Vite::asset('node_modules/jquery/dist/jquery.min.js')}}"></script>
-    <script src="{{Vite::asset('node_modules/bootstrap-3-typeahead/bootstrap3-typeahead.min.js')}}"></script>
+    {{-- <script src="{{Vite::asset('node_modules/jquery/dist/jquery.min.js')}}"></script>
+    <script src="{{Vite::asset('node_modules/bootstrap-3-typeahead/bootstrap3-typeahead.min.js')}}"></script> --}}
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min.js"></script>
+
     <script type="text/javascript">
         var path = "{{ url('autocomplete') }}";
         $('input.typeahead').typeahead({
