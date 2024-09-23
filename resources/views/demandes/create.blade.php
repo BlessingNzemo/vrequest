@@ -32,6 +32,18 @@
                 </ul>
             </div>
         @endif
+        
+    @if (session('message'))
+    <div id="message" class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+        <span class="font-medium"></span> {{session('message')}}
+      </div>
+    <script>
+        // Faire disparaître le message de succès après 5 secondes
+        setTimeout(function() {
+            document.getElementById('message').style.display = 'none';
+        }, 5000)
+    </script>
+@endif
 
         <form action="{{ route('demandes.store') }}" method="post" id="multi-step-form">
             @csrf
@@ -342,9 +354,11 @@
 
         });
     </script>
-  
-    <script src="{{Vite::asset('node_modules/jquery/dist/jquery.min.js')}}"></script>
-    <script src="{{Vite::asset('node_modules/bootstrap-3-typeahead/bootstrap3-typeahead.min.js')}}"></script>
+
+    {{-- <script src="{{Vite::asset('node_modules/bootstrap-3-typeahead/bootstrap3-typeahead.min.js')}}"></script> --}}
+    {{-- <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script> --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min.js"></script>
+
  
     <script type="text/javascript">
         document.getElementById('next-step').addEventListener('click', function() {
