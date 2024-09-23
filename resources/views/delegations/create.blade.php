@@ -1,6 +1,37 @@
 <x-app-layout>
+    <x-slot name="header">
+        <div class="flex items-center justify-between px-0">
+            <h2 class="font-semibold justify-center text-xl text-gray-800 dark:text-gray-200 leading-tight text-center">
+                {{ __('Créer une délégation') }}
+            </h2>
+            
+
+        </div>
+    </x-slot>
     <div class="py-8  px-4 mx-auto max-w-4xl lg:py-16 shadow-md sm:rounded-lg">
         <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Remplissez ce formulaire pour faire une délégation </h2>
+        @if (session('failed'))
+            <div class="flex p-4 mb-4 text-sm rounded-lg bg-red-600 " id="failed-message">
+                {{ session('failed') }}
+            </div>
+            <script>
+                // Faire disparaître le message de succès après 5 secondes
+                setTimeout(function() {
+                    document.getElementById('failed-message').style.display = 'none';
+                }, 5000)
+            </script>
+        @endif
+        @if (session('success'))
+            <div class="flex p-4 mb-4 text-sm rounded-lg bg-green-500 " id="success-message">
+                {{ session('success') }}
+            </div>
+            <script>
+                // Faire disparaître le message de succès après 5 secondes
+                setTimeout(function() {
+                    document.getElementById('success-message').style.display = 'none';
+                }, 5000)
+            </script>
+        @endif
         @if ($errors->any())
 
             <div class="alert alert-danger">
@@ -11,17 +42,7 @@
                 </ul>
             </div>
         @endif
-        @if (session('failed'))
-            <div class="flex p-4 mb-4 text-sm rounded-lg bg-yellow-300 " id="failed-message">
-                {{ session('failed') }}
-            </div>
-            <script>
-                // Faire disparaître le message de succès après 5 secondes
-                setTimeout(function() {
-                    document.getElementById('failed-message').style.display = 'none';
-                }, 5000)
-            </script>
-        @endif
+        
 
         <form action="{{ route('delegations.store') }}" method="post">
             @csrf
@@ -37,7 +58,7 @@
                     <label for="user_id"
                         class=" block mb-2 text-sm font-medium text-gray-900 dark:text-white" @required(true) > Votre remplaçant</label>
                     <input type="text" name="user_id" id="user_id"
-                        class="block mb-2 typeahead form-control "
+                        class="typeahead bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                         placeholder="Choisissez votre remplaçant" required="required">
 
                     {{-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> --}}
@@ -53,23 +74,20 @@
                                 });
                             }
                         });
-                    </script> --}}
-
-                    
-                    
+                    </script> --}}    
                 </div>
 
                 <div class="w-full">
-                    <label for="brand" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date de début</label>
+                    <label for="brand" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" @required(true)>Date de début</label>
                     <input type="datetime-local" name="date_debut" id="datetime"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        placeholder="" required="">
+                        placeholder="" required="required">
                 </div>
                 <div>
-                    <label for="brand" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date de Fin</label>
+                    <label for="brand" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" @required(true)>Date de Fin</label>
                     <input type="datetime-local" name="date_fin" id="datetime"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        placeholder="" required="">
+                        placeholder="" required="required">
                 </div>
                 
 
@@ -80,9 +98,13 @@
         </form>
         
     </div>
+
     <link rel="stylesheet" href="{{Vite::asset('node_modules/bootstrap/dist/css/bootstrap.min.css')}}">
     <script src="{{Vite::asset('node_modules/jquery/dist/jquery.min.js')}}"></script>
     <script src="{{Vite::asset('node_modules/bootstrap-3-typeahead/bootstrap3-typeahead.min.js')}}"></script>
+
+    
+    
         <script type="text/javascript">
             var path = "{{ url('autocomplete') }}";
             $('input.typeahead').typeahead({

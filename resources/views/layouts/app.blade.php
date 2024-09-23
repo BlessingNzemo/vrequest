@@ -95,10 +95,15 @@
             grid-template-columns: repeat(5,minmax(0,1fr))!important
         }
     }
+    .light\:bg-white{
+        background-color: rgb(235 235 235);
+    }
+    .light\:text-white{
+        color: black;
+    }
     .dark\:bg-dark{
         background-color: rgb(17 24 39);
-    }
-
+    }    
     .dark\:text-dark{
         color:white;
     }
