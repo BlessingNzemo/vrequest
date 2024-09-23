@@ -146,10 +146,10 @@
             </button>
 
         </form>
-        <script src="https://unpkg.com/jquery/dist/jquery.min.js"></script>
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="{{Vite::asset('node_modules/jquery/dist/jquery.min.js')}}"></script>
+        <script src="{{Vite::asset('node_modules/jquery-ui/dist/jquery-ui.js')}}"></script>
+        <script src="{{Vite::asset('node_modules/leaflet/dist/leaflet.js')}}"></script>
+        <script src="{{Vite::asset('node_modules/axios/dist/axios.min.js')}}"></script>
     </div>
     <x-choixDestination/>
     <x-destinationCarte />

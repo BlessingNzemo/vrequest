@@ -258,7 +258,7 @@
             </main>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="{{Vite::asset('node_modules/apexcharts/dist/apexcharts.js')}}"></script>
  
     <script>
         var chart = document.querySelector('#chartline')

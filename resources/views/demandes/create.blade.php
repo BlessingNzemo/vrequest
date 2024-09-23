@@ -207,10 +207,10 @@
     <x-destinationCarte />
     <x-destinationListe />
     <x-styleAutocomplete />
-    <script src="https://unpkg.com/jquery/dist/jquery.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="{{Vite::asset('node_modules/jquery/dist/jquery.min.js')}}"></script>
+    <script src="{{Vite::asset('node_modules/jquery-ui/dist/jquery-ui.js')}}"></script>
+    <script src="{{Vite::asset('node_modules/leaflet/dist/leaflet.js')}}"></script>
+    <script src="{{Vite::asset('node_modules/axios/dist/axios.min.js')}}"></script>
 
     <script>
         // Ajoutez un écouteur d'événement pour le champ "Nombre de passagers"
@@ -342,10 +342,10 @@
 
         });
     </script>
-          
-
-    {{-- <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script> --}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min.js"></script>
+  
+    <script src="{{Vite::asset('node_modules/jquery/dist/jquery.min.js')}}"></script>
+    <script src="{{Vite::asset('node_modules/bootstrap-3-typeahead/bootstrap3-typeahead.min.js')}}"></script>
+ 
     <script type="text/javascript">
         document.getElementById('next-step').addEventListener('click', function() {
             var path = "{{ url('autocomplete') }}";
