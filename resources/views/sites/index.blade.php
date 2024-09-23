@@ -21,7 +21,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Création de Lieux avec OpenStreetMap et Nominatim</title>
         <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-        <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+        <link rel="stylesheet" href="{{Vite::asset('node_modules/leaflet-control-geocoder/dist/Control.Geocoder.css')}}" />
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -80,7 +80,7 @@
             </form>
         </div>
 
-        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+        <script src="{{Vite::asset('node_modules/leaflet/dist/leaflet.js')}}"></script>
         <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
         <script>
             // Initialisation de la carte centrée sur Kinshasa, République Démocratique du Congo
