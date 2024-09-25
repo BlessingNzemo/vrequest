@@ -307,6 +307,16 @@
                 }, 3000);
                 return false;
             }
+            if (document.getElementById('lieuArrivee').value === document.getElementById('lieuDepart')
+                .value) {
+                document.getElementById('error').textContent = "le lieu d'arrivée doit être différent de la destination";
+                document.getElementById('error').style.display = "block";
+
+                setTimeout(() => {
+                    document.getElementById('error').style.display = "none";
+                }, 3000);
+                return false;
+            }
 
             this.style.display = 'none';
 
