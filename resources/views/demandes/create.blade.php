@@ -250,7 +250,7 @@
             // Masquer le bouton Suivant
             if (document.getElementById('motif').value == "") {
 
-                document.getElementById('error').textContent = "Veuillez renseinger le champ motif";
+                document.getElementById('error').textContent = "Veuillez renseigner le champ motif";
                 document.getElementById('error').style.display = "block";
 
                 setTimeout(() => {
@@ -262,7 +262,7 @@
 
             if (document.getElementById('datetime').value === "") {
 
-                document.getElementById('error').textContent = "Veuillez renseinger le jour et heure de sortie";
+                document.getElementById('error').textContent = "Veuillez renseigner le jour et heure de sortie";
                 document.getElementById('error').style.display = "block";
 
                 setTimeout(() => {
@@ -277,7 +277,7 @@
 
 
             if (nombre === "" || nombre == 0) {
-                document.getElementById('error').textContent = "Veuillez renseinger le  nombre de passagers";
+                document.getElementById('error').textContent = "Veuillez renseigner le  nombre de passagers";
                 document.getElementById('error').style.display = "block";
 
                 setTimeout(() => {
@@ -300,6 +300,16 @@
                 .value === "") {
 
                 document.getElementById('error').textContent = "Veuillez selectionner le lieu de destination";
+                document.getElementById('error').style.display = "block";
+
+                setTimeout(() => {
+                    document.getElementById('error').style.display = "none";
+                }, 3000);
+                return false;
+            }
+            if (document.getElementById('lieuArrivee').value === document.getElementById('lieuDepart')
+                .value) {
+                document.getElementById('error').textContent = "le lieu d'arrivée doit être différent de la destination";
                 document.getElementById('error').style.display = "block";
 
                 setTimeout(() => {
