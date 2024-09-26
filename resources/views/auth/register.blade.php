@@ -266,6 +266,17 @@
                         }, 5000)
                     </script>
                 @endif
+                @if (session('message'))
+                <div id="message" class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+                    <span class="font-medium"></span> {{session('message')}}
+                  </div>
+                <script>
+                    // Faire disparaître le message de succès après 5 secondes
+                    setTimeout(function() {
+                        document.getElementById('message').style.display = 'none';
+                    }, 5000)
+                </script>
+            @endif
                 <form method="POST" action="{{ route('register') }}">
                     @csrf
             
