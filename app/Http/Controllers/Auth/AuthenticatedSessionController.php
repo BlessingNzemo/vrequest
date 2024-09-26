@@ -157,6 +157,7 @@ class AuthenticatedSessionController extends Controller
                 $id = $responsefinal['user']['id'];
                  Session::put('user',$request->username);
                  Session::put('manager',$request->username);
+                 Session::put('userId',$id);
                 return redirect()->route('register')->with('id',$id);
             }
         
@@ -178,6 +179,7 @@ class AuthenticatedSessionController extends Controller
     {
         Session::forget('delegation');
         Session::forget('user');
+        Session::forget('userId');
         Session::forget('authUser');
         Session::forget('userIsManager');
         Auth::guard('web')->logout();

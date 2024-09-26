@@ -152,7 +152,7 @@ class CourseController extends Controller
         
         TraitementDemandeMail::dispatch($data)->delay(now()->addMinutes(1));
           
-        dd($demande);
+       
             return back()->with('success', 'Course enregistrée avec succès.');
         } 
 

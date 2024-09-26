@@ -406,7 +406,7 @@ class DemandeController extends Controller
         $is_validated = 2;
         $demande->is_validated = $is_validated;
 
-        $status = 2;
+        $status = '2';
         $demande->status = $status;
         $demande->is_validated_by = $is_validated_by ;
 
