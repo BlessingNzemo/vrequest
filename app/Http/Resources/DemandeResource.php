@@ -57,6 +57,7 @@ class DemandeResource extends JsonResource
                     "destination"=> $course->demande()->first()->destination,
                     "lieu_depart"=> $course->demande()->first()->lieu_depart,
                     "status"=> $course->demande()->first()->status,
+                    "is_validated"=> $course->demande()->first()->status,
                     "longitude"=> $course->demande()->first()->longitude_destination,
                     "latitude"=> $course->demande()->first()->latitude_destination,
                     "longitudelDestination"=> $course->demande()->first()->longitude_destination,
@@ -95,7 +96,7 @@ class DemandeResource extends JsonResource
                 'date' => $course->date,
                 'started_at' => $course->started_at,
                 'ended_at' => $course->ended_at,
-        
+
         ];
     }
 
@@ -108,6 +109,7 @@ class DemandeResource extends JsonResource
                 "lieuDestination"=> $this->resource->destination,
                 "lieuDepart"=> $this->resource->lieu_depart,
                 "status"=> $this->resource->status,
+                "is_validated"=> $this->resource->is_validated,
                 "longitude"=> $this->resource->longitude_destination,
                 "latitude"=> $this->resource->latitude_destination,
                 "longitudelDestination"=> $this->resource->longitude_destination,
