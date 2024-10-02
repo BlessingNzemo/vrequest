@@ -110,7 +110,7 @@
                         </svg>
                     </button>
                     <ul id="dropdown-example"
-                        class="{{ request()->routeIs('demandes.index') || request()->routeIs('demandes.create') || request()->routeIs('demande-collaborateurs') || request()->routeIs('demandeCharroi') || request()->routeIs('demandeDelegue')? '' : 'hidden' }} py-2 space-y-2">
+                        class="{{ request()->routeIs('demandes.index') || request()->routeIs('demande-collaborateurs') || request()->routeIs('demandeCharroi') || request()->routeIs('demandeDelegue')? '' : 'hidden' }} py-2 space-y-2">
                         <li>
                             <a href="{{ route('demandes.index') }}"
                                 class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group {{ request()->routeIs('demandes.index') ? 'bg-orange-400 text-white' : '' }} hover:bg-gray-300 dark:text-white dark:hover:bg-gray-700">
@@ -122,17 +122,7 @@
                                 Mes Demandes
                             </a>
                         </li>
-                        <li>
-                            <a href="{{ route('demandes.create') }}"
-                                class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group {{ request()->routeIs('demandes.create') ? 'bg-orange-400 text-white' : '' }} hover:bg-gray-300 dark:text-white dark:hover:bg-gray-700">
-                                <svg class="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 4v16m8-8H4" />
-                                </svg>
-                                Créer une demande
-                            </a>
-                        </li>
+                        
                         @if (Session::get('userIsManager'))
                             <li>
                                 <a href="{{ route('demande-collaborateurs') }}"
@@ -142,7 +132,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M17 20h5v-2a4 4 0 00-3-3.87M12 14a4 4 0 100-8 4 4 0 000 8zm0 2a6 6 0 00-5.33 3H2v2h10m7-4h.01" />
                                     </svg>
-                                    Demandes des collaborateurs
+                                    Demandes de mes collaborateurs
                                 </a>
                             </li>
                         @endif
@@ -179,7 +169,7 @@
                                 </svg>
                             </button>
                             <ul id="dropdown-delegation"
-                                class="{{ request()->routeIs('delegations.index') || request()->routeIs('delegations.create') || request()->routeIs('delegue-vue') ? '' : 'hidden' }} py-2 space-y-2">
+                                class="{{ request()->routeIs('delegations.index') || request()->routeIs('delegue-vue') ? '' : 'hidden' }} py-2 space-y-2">
                                 @if (Session::get('userIsManager'))
                                     <li>
                                         <a href="{{ route('delegations.index') }}"
@@ -192,17 +182,7 @@
                                             Mes Délégations
                                         </a>
                                     </li>
-                                    <li>
-                                        <a href="{{ route('delegations.create') }}"
-                                            class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group {{ request()->routeIs('delegations.create') ? 'bg-orange-400 text-white' : '' }} hover:bg-gray-300 dark:text-white dark:hover:bg-gray-700">
-                                            <svg class="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M12 4v16m8-8H4" />
-                                            </svg>
-                                            Créer une délégation
-                                        </a>
-                                    </li>
+                                    
                                 @endif
                                 @if(Session::get('delegation'))    
                                     <li>
@@ -232,13 +212,20 @@
                     <li>
                         <a href="{{ route('vehicules.index') }}"
                             class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-300 dark:hover:bg-gray-700 group {{ request()->routeIs('vehicules.index') ? 'bg-orange-400 text-white ' : '' }}">
-                            <svg class="w-6 h-6  dark:text-white" aria-hidden="true"
+                            {{-- <svg class="w-6 h-6  dark:text-white" aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
                                 viewBox="0 0 24 24">
                                 <path fill-rule="evenodd"
                                     d="M4 4a2 2 0 0 0-2 2v9a1 1 0 0 0 1 1h.535a3.5 3.5 0 1 0 6.93 0h3.07a3.5 3.5 0 1 0 6.93 0H21a1 1 0 0 0 1-1v-4a.999.999 0 0 0-.106-.447l-2-4A1 1 0 0 0 19 6h-5a2 2 0 0 0-2-2H4Zm14.192 11.59.016.02a1.5 1.5 0 1 1-.016-.021Zm-10 0 .016.02a1.5 1.5 0 1 1-.016-.021Zm5.806-5.572v-2.02h4.396l1 2.02h-5.396Z"
                                     clip-rule="evenodd" />
+                            </svg> --}}
+                            <svg class="h-8 w-8 text-black-800"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  
+                                <path stroke="none" d="M0 0h24v24H0z"/>  
+                                <circle cx="7" cy="17" r="2" />  
+                                <circle cx="17" cy="17" r="2" />  
+                                <path d="M5 17h-2v-6l2-5h9l4 5h1a2 2 0 0 1 2 2v4h-2m-4 0h-6m-6 -6h15m-6 0v-5" />
                             </svg>
+                            
                             <span class="ms-3">Vehicules</span>
                         </a>
                     </li>
@@ -251,7 +238,7 @@
                                 <path
                                     d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z" />
                             </svg>
-                            <span class="flex-1 ms-3 whitespace-nowrap">chauffeurs</span>
+                            <span class="flex-1 ms-3 whitespace-nowrap">Chauffeurs</span>
                         </a>
                     </li>
                     

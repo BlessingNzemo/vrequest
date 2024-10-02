@@ -432,8 +432,8 @@ class DemandeController extends Controller
                 $id[] = $collaborateur->user_id;
             }
 
-            $demandes = Demande::whereIn('user_id', $id)->paginate(7);
-            $demandesGrid = Demande::WhereIn('user_id', $id)->paginate(15);
+            $demandes = Demande::whereIn('user_id', $id)->where('is_validated',0)->paginate(7);
+            $demandesGrid = Demande::WhereIn('user_id', $id)->where('is_validated',0)->paginate(15);
 
             if(!empty($_GET['page'])){
                 $paginate = true;
@@ -471,10 +471,12 @@ class DemandeController extends Controller
                                             ->get();
 
                 $demandes_temp = Demande::where('manager_id', $manager_id)
+                                    ->where('is_validated',0)
                                     ->orderBy('id','desc')
                                     ->paginate(7);
             
                 $demandesGrid_temp = Demande::where('manager_id', $manager_id)
+                                        ->where('is_validated',0)
                                         ->orderBy('id', 'desc')
                                         ->paginate(15);
             }
